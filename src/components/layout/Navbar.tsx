@@ -20,6 +20,7 @@ const destinations = [
 
 const navLinks = [
   { label: "Tours", href: "/tours" },
+  { label: "Hotels", href: "/hotels" },
   { label: "Travel Styles", href: "/travel-styles" },
   { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },

@@ -1,0 +1,71 @@
+import Image from "next/image";
+import Link from "next/link";
+import { Container } from "@/components/ui/Container";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { Carousel } from "@/components/ui/Carousel";
+import { formatPrice } from "@/lib/utils";
+import { getFeaturedHotels } from "@/services/hotel.service";
+
+export async function FeaturedHotels() {
+  const hotels = await getFeaturedHotels(5);
+
+  return (
+    <section className="bg-[var(--bg-dark)] py-20 sm:py-24">
+      <Container wide>
+        <SectionHeader
+          title="Popular Stays"
+          subtitle="Handpicked hotels, guesthouses & camps across Pakistan"
+          linkText="View all hotels"
+          linkHref="/hotels"
+          light
+        />
+        <Carousel>
+          {hotels.map((hotel) => (
+            <Link
+              key={hotel.id}
+              href={`/hotels/${hotel.slug}`}
+              className="group min-w-[290px] w-[290px] sm:min-w-[310px] sm:w-[310px] rounded-[var(--radius-md)] overflow-hidden bg-[var(--bg-primary)] transition-all duration-300 hover:-translate-y-1"
+              style={{ boxShadow: "var(--shadow-sm)" }}
+            >
+              <div className="relative aspect-[3/2] overflow-hidden">
+                <Image
+                  src={hotel.image}
+                  alt={hotel.name}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  sizes="310px"
+                />
+                <div className="absolute top-3 left-3">
+                  <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[var(--primary)] text-[var(--on-dark)] rounded-[var(--radius-full)]">
+                    {hotel.tier === "luxury" ? "LUXURY" : hotel.tier === "premium" ? "PREMIUM" : hotel.tier === "standard" ? "CAMP" : "GUEST FAV"}
+                  </span>
+                </div>
+              </div>
+              <div className="p-4 sm:p-5">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
+                    {hotel.propertyType}
+                  </span>
+                  <span className="flex items-center gap-1 text-[13px]">
+                    <span className="text-[var(--primary-muted)]">★</span>
+                    <span className="font-semibold text-[var(--text-primary)]">{hotel.rating}</span>
+                  </span>
+                </div>
+                <h3 className="text-[16px] font-bold text-[var(--text-primary)] group-hover:text-[var(--primary)] transition-colors">
+                  {hotel.name}
+                </h3>
+                <p className="text-[12px] text-[var(--text-tertiary)] mt-1">{hotel.location}</p>
+                <div className="mt-3 pt-3 border-t border-[var(--border-default)]">
+                  <span className="text-[17px] font-bold text-[var(--text-primary)] tabular-nums">
+                    {formatPrice(hotel.pricePerNight)}
+                  </span>
+                  <span className="text-[12px] text-[var(--text-tertiary)]"> / night</span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </Carousel>
+      </Container>
+    </section>
+  );
+}

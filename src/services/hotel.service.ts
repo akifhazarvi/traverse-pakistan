@@ -5,12 +5,14 @@ export async function getAllHotels(): Promise<Hotel[]> {
   return hotels;
 }
 
-export async function getHotelsByDestination(
-  destinationSlug: string
-): Promise<Hotel[]> {
+export async function getHotelsByDestination(destinationSlug: string): Promise<Hotel[]> {
   return hotels.filter((h) => h.destinationSlug === destinationSlug);
 }
 
 export async function getHotelBySlug(slug: string): Promise<Hotel | null> {
   return hotels.find((h) => h.slug === slug) ?? null;
+}
+
+export async function getFeaturedHotels(limit: number = 6): Promise<Hotel[]> {
+  return hotels.slice(0, limit);
 }

@@ -1,0 +1,325 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import Image from "next/image";
+import { Container } from "@/components/ui/Container";
+import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { MosaicGallery } from "@/components/trip-detail/MosaicGallery";
+import { AccordionItem } from "@/components/ui/Accordion";
+import { formatPrice } from "@/lib/utils";
+import { getHotelBySlug, getAllHotels, getHotelsByDestination } from "@/services/hotel.service";
+import Link from "next/link";
+
+interface Props {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  const hotels = await getAllHotels();
+  return hotels.map((h) => ({ slug: h.slug }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const hotel = await getHotelBySlug(slug);
+  if (!hotel) return { title: "Hotel Not Found" };
+  return {
+    title: `${hotel.name} — ${hotel.location}`,
+    description: hotel.description,
+  };
+}
+
+export default async function HotelDetailPage({ params }: Props) {
+  const { slug } = await params;
+  const hotel = await getHotelBySlug(slug);
+  if (!hotel) notFound();
+
+  const moreHotels = (await getHotelsByDestination(hotel.destinationSlug)).filter((h) => h.slug !== slug);
+  const galleryImages = hotel.images.map((url, i) => ({ url, alt: `${hotel.name} photo ${i + 1}` }));
+
+  return (
+    <div className="py-6 sm:py-8">
+      <Container>
+        {/* Breadcrumb */}
+        <Breadcrumb
+          items={[
+            { label: "Hotels", href: "/hotels" },
+            { label: hotel.name },
+          ]}
+        />
+
+        {/* Gallery */}
+        <div className="mt-5">
+          <MosaicGallery images={galleryImages} tourName={hotel.name} />
+        </div>
+
+        {/* Title bar */}
+        <div className="mt-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div>
+            <h1 className="text-[28px] sm:text-[34px] font-bold text-[var(--text-primary)] tracking-tight">
+              {hotel.name}
+            </h1>
+            <p className="text-[14px] text-[var(--text-secondary)] mt-1 flex items-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              {hotel.location}
+            </p>
+            <div className="flex items-center gap-3 mt-2">
+              <span className="text-[var(--primary-muted)]">★★★★★</span>
+              <span className="text-[15px] font-semibold text-[var(--text-primary)]">{hotel.rating}</span>
+              <span className="text-[14px] text-[var(--text-tertiary)]">{hotel.reviewCount} reviews</span>
+              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] bg-[var(--primary-light)] text-[var(--primary)] rounded-[var(--radius-full)]">
+                Traverse Partner
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Two-column layout */}
+        <div className="mt-8 lg:grid lg:grid-cols-[1fr_380px] lg:gap-10">
+          {/* Main content */}
+          <div>
+            {/* Host strip */}
+            <div className="flex items-center justify-between py-6 border-y border-[var(--border-default)]">
+              <div>
+                <p className="text-[15px] font-semibold text-[var(--text-primary)]">
+                  {hotel.propertyType} · Entire property
+                </p>
+                <p className="text-[14px] text-[var(--text-secondary)] mt-0.5">Hosted by Traverse Pakistan</p>
+              </div>
+              <div className="w-12 h-12 rounded-full bg-[var(--bg-subtle)] flex items-center justify-center overflow-hidden">
+                <Image src="/logo.svg" alt="Traverse Pakistan" width={40} height={40} />
+              </div>
+            </div>
+
+            {/* Highlights */}
+            <div className="py-6 space-y-5 border-b border-[var(--border-default)]">
+              {hotel.highlights.map((h, i) => (
+                <div key={i} className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-[var(--radius-sm)] bg-[var(--bg-subtle)] flex items-center justify-center shrink-0">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="1.8">
+                      {i === 0 && <><path d="M1 6l11-4 11 4v4l-11 4L1 10z" /><path d="M1 10v4l11 4 11-4v-4" /></>}
+                      {i === 1 && <><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /></>}
+                      {i === 2 && <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />}
+                    </svg>
+                  </div>
+                  <p className="text-[14px] text-[var(--text-secondary)] leading-relaxed pt-2">{h}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Description */}
+            <div className="py-6 border-b border-[var(--border-default)]">
+              <p className="text-[15px] text-[var(--text-secondary)] leading-[1.7]">{hotel.description}</p>
+            </div>
+
+            {/* Rooms */}
+            <div className="py-8 border-b border-[var(--border-default)]" id="rooms">
+              <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6">Where you&apos;ll sleep</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {hotel.rooms.map((room) => (
+                  <div key={room.name} className="rounded-[var(--radius-md)] border border-[var(--border-default)] overflow-hidden">
+                    <div className="relative aspect-[3/2]">
+                      <Image src={room.image} alt={room.name} fill className="object-cover" sizes="300px" />
+                      <span className={`absolute top-2 right-2 px-2 py-0.5 text-[10px] font-bold uppercase rounded-[var(--radius-full)] ${room.available <= 2 ? "bg-[var(--warning)] text-[var(--on-dark)]" : "bg-[var(--bg-primary)]/80 backdrop-blur-sm text-[var(--text-primary)]"}`}>
+                        {room.available} left
+                      </span>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="text-[15px] font-bold text-[var(--text-primary)]">{room.name}</h3>
+                      <p className="text-[13px] text-[var(--text-tertiary)] mt-0.5">{room.beds}</p>
+                      <p className="text-[16px] font-bold text-[var(--text-primary)] mt-2 tabular-nums">
+                        {formatPrice(room.price)} <span className="text-[13px] font-normal text-[var(--text-tertiary)]">/ night</span>
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Amenities */}
+            <div className="py-8 border-b border-[var(--border-default)]" id="amenities">
+              <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6">What this place offers</h2>
+              <div className="grid grid-cols-2 gap-3">
+                {hotel.amenities.map((a) => (
+                  <div key={a} className="flex items-center gap-3 py-2 text-[14px] text-[var(--text-secondary)]">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    {a}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Reviews */}
+            {hotel.reviews.length > 0 && (
+              <div className="py-8 border-b border-[var(--border-default)]" id="reviews">
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="text-[var(--primary-muted)] text-xl">★</span>
+                  <span className="text-2xl font-bold text-[var(--text-primary)]">{hotel.rating}</span>
+                  <span className="text-[var(--text-tertiary)]">·</span>
+                  <span className="text-[15px] text-[var(--text-secondary)]">{hotel.reviewCount} reviews</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {hotel.reviews.map((review, i) => (
+                    <div key={i} className="p-5 bg-[var(--bg-subtle)] rounded-[var(--radius-md)]">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-deep)] flex items-center justify-center text-[var(--on-dark)] text-[13px] font-bold">
+                          {review.initial}
+                        </div>
+                        <div>
+                          <p className="text-[14px] font-semibold text-[var(--text-primary)]">{review.name}</p>
+                          <p className="text-[12px] text-[var(--text-tertiary)]">{review.date}</p>
+                        </div>
+                      </div>
+                      <p className="text-[14px] text-[var(--text-secondary)] leading-relaxed">{review.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Policies */}
+            <div className="py-8" id="policies">
+              <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6">Things to know</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+                <div>
+                  <h3 className="text-[14px] font-bold text-[var(--text-primary)] mb-3">Hotel rules</h3>
+                  <ul className="space-y-2">
+                    {hotel.policies.rules.map((r, i) => (
+                      <li key={i} className="text-[13px] text-[var(--text-secondary)]">{r}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-[14px] font-bold text-[var(--text-primary)] mb-3">Safety & access</h3>
+                  <ul className="space-y-2">
+                    {hotel.policies.safety.map((s, i) => (
+                      <li key={i} className="text-[13px] text-[var(--text-secondary)]">{s}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-[14px] font-bold text-[var(--text-primary)] mb-3">Cancellation policy</h3>
+                  <ul className="space-y-2">
+                    {hotel.policies.cancellation.map((c, i) => (
+                      <li key={i} className="text-[13px] text-[var(--text-secondary)]">{c}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar — Booking Card */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-[120px]">
+              <div className="bg-[var(--bg-primary)] border border-[var(--border-default)] rounded-[var(--radius-md)] p-6" style={{ boxShadow: "var(--shadow-sm)" }}>
+                <div className="flex items-baseline justify-between">
+                  <div>
+                    <span className="text-2xl font-bold text-[var(--text-primary)] tabular-nums">{formatPrice(hotel.pricePerNight)}</span>
+                    <span className="text-[14px] text-[var(--text-tertiary)]"> / night</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="text-[var(--primary-muted)] text-sm">★</span>
+                    <span className="text-[13px] font-semibold text-[var(--text-primary)]">{hotel.rating}</span>
+                    <span className="text-[12px] text-[var(--text-tertiary)]">({hotel.reviewCount})</span>
+                  </div>
+                </div>
+
+                <div className="mt-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] overflow-hidden">
+                  <div className="grid grid-cols-2">
+                    <div className="p-3 border-r border-b border-[var(--border-default)]">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--text-secondary)]">Check-in</span>
+                      <p className="text-[13px] text-[var(--text-primary)] mt-0.5">{hotel.checkIn}</p>
+                    </div>
+                    <div className="p-3 border-b border-[var(--border-default)]">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--text-secondary)]">Check-out</span>
+                      <p className="text-[13px] text-[var(--text-primary)] mt-0.5">{hotel.checkOut}</p>
+                    </div>
+                  </div>
+                  <div className="p-3">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--text-secondary)]">Guests</span>
+                    <p className="text-[13px] text-[var(--text-primary)] mt-0.5">2 guests</p>
+                  </div>
+                </div>
+
+                <a
+                  href={`https://wa.me/923216650670?text=${encodeURIComponent(`Hi! I'd like to book ${hotel.name}. Please share availability.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 w-full h-[48px] bg-[var(--primary)] text-[var(--on-dark)] text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all"
+                >
+                  Check Availability
+                </a>
+                <p className="text-center text-[12px] text-[var(--text-tertiary)] mt-2">You won&apos;t be charged yet</p>
+
+                <div className="mt-4 space-y-2 pt-4 border-t border-[var(--border-default)]">
+                  <p className="flex items-center gap-2 text-[13px] text-[var(--text-secondary)]">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
+                    Free cancellation before check-in
+                  </p>
+                  <p className="flex items-center gap-2 text-[13px] text-[var(--text-secondary)]">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
+                    24/7 WhatsApp support
+                  </p>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        {/* More hotels */}
+        {moreHotels.length > 0 && (
+          <section className="mt-16 pt-10 border-t border-[var(--border-default)]">
+            <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-8">
+              More hotels in {hotel.destinationSlug.replace(/-/g, " ")}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {moreHotels.map((h) => (
+                <Link
+                  key={h.id}
+                  href={`/hotels/${h.slug}`}
+                  className="group rounded-[var(--radius-md)] overflow-hidden bg-[var(--bg-primary)] border border-[var(--border-default)] hover:shadow-[var(--shadow-md)] transition-all duration-300"
+                >
+                  <div className="relative aspect-[3/2] overflow-hidden">
+                    <Image src={h.image} alt={h.name} fill className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" sizes="300px" />
+                  </div>
+                  <div className="p-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-[15px] font-bold text-[var(--text-primary)]">{h.name}</h3>
+                      <span className="text-[13px] font-semibold text-[var(--text-primary)]">★ {h.rating}</span>
+                    </div>
+                    <p className="text-[12px] text-[var(--text-tertiary)] mt-0.5">{h.location}</p>
+                    <p className="text-[15px] font-bold text-[var(--text-primary)] mt-2 tabular-nums">
+                      {formatPrice(h.pricePerNight)} <span className="text-[12px] font-normal text-[var(--text-tertiary)]">/ night</span>
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Mobile sticky bar */}
+        <div className="fixed bottom-0 left-0 right-0 lg:hidden z-40 bg-[var(--bg-primary)] border-t border-[var(--border-default)] px-5 py-3 flex items-center justify-between">
+          <div>
+            <span className="text-lg font-bold text-[var(--text-primary)] tabular-nums">{formatPrice(hotel.pricePerNight)}</span>
+            <span className="text-[13px] text-[var(--text-tertiary)]"> / night</span>
+            <p className="text-[12px] text-[var(--text-tertiary)]">★ {hotel.rating} · {hotel.reviewCount} reviews</p>
+          </div>
+          <a
+            href={`https://wa.me/923216650670?text=${encodeURIComponent(`Hi! I'd like to book ${hotel.name}.`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="h-11 px-6 bg-[var(--primary)] text-[var(--on-dark)] text-[14px] font-semibold rounded-[var(--radius-full)] flex items-center justify-center hover:bg-[var(--primary-hover)] transition-colors"
+          >
+            Check Availability
+          </a>
+        </div>
+      </Container>
+    </div>
+  );
+}
