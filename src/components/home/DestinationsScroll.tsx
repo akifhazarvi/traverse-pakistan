@@ -40,13 +40,13 @@ export function DestinationsScroll() {
               {/* Content */}
               <div className="relative p-6 sm:p-7">
                 {/* Region tag */}
-                <span className="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-white/15 backdrop-blur-sm text-white rounded-[var(--radius-full)] mb-3">
+                <span className="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[var(--on-dark-glass-hover)] backdrop-blur-sm text-[var(--on-dark)] rounded-[var(--radius-full)] mb-3">
                   {dest.regionSlug.replace(/-/g, " ")}
                 </span>
 
                 {/* Name — large, bold, with text shadow */}
                 <h3
-                  className="text-[24px] sm:text-[26px] font-bold text-white leading-tight tracking-[-0.02em]"
+                  className="text-[24px] sm:text-[26px] font-bold text-[var(--on-dark)] leading-tight tracking-[-0.02em]"
                   style={{ textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}
                 >
                   {dest.name}
@@ -54,7 +54,7 @@ export function DestinationsScroll() {
 
                 {/* Meta with clear contrast */}
                 <p
-                  className="text-[14px] text-white/90 mt-2 font-medium"
+                  className="text-[14px] text-[var(--on-dark)] mt-2 font-medium"
                   style={{ textShadow: "0 1px 6px rgba(0,0,0,0.5)" }}
                 >
                   From {formatPrice(dest.startingPrice)} &middot; {dest.tourCount} tours
@@ -70,7 +70,7 @@ export function DestinationsScroll() {
               </div>
 
               {/* Hover glow effect */}
-              <div className="absolute inset-0 ring-1 ring-inset ring-white/0 group-hover:ring-white/20 transition-all duration-500 rounded-[var(--radius-lg)]" />
+              <div className="absolute inset-0 ring-1 ring-inset ring-transparent group-hover:ring-[var(--on-dark-glass-hover)] transition-all duration-500 rounded-[var(--radius-lg)]" />
             </Link>
           ))}
         </Carousel>

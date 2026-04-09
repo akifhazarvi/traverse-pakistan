@@ -52,7 +52,7 @@ export function StarRating({
           className={cn(
             styles.text,
             "font-semibold",
-            light ? "text-white" : "text-[var(--text-primary)]"
+            light ? "text-[var(--on-dark)]" : "text-[var(--text-primary)]"
           )}
         >
           {rating}
@@ -62,7 +62,7 @@ export function StarRating({
         <span
           className={cn(
             styles.text,
-            light ? "text-white/60" : "text-[var(--text-tertiary)]"
+            light ? "text-[var(--on-dark-secondary)]" : "text-[var(--text-tertiary)]"
           )}
         >
           ({reviewCount.toLocaleString()} reviews)

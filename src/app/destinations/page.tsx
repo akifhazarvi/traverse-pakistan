@@ -46,8 +46,8 @@ export default async function DestinationsPage() {
                 <span className="text-[12px] font-semibold uppercase tracking-wider text-[var(--primary-muted)]">
                   {dest.regionSlug.replace("-", " ")}
                 </span>
-                <h2 className="text-2xl font-bold text-white mt-1">{dest.name}</h2>
-                <p className="text-[14px] text-white/70 mt-1">
+                <h2 className="text-2xl font-bold text-[var(--on-dark)] mt-1">{dest.name}</h2>
+                <p className="text-[14px] text-[var(--on-dark-secondary)] mt-1">
                   From {formatPrice(dest.startingPrice)} &middot; {dest.tourCount} tours &middot; {dest.rating}★
                 </p>
               </div>

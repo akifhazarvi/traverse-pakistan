@@ -1,6 +1,6 @@
 export function AwardStrip() {
   return (
-    <div className="bg-[var(--bg-dark)] text-white text-center py-2 px-4">
+    <div className="bg-[var(--bg-dark)] text-[var(--on-dark)] text-center py-2 px-4">
       <p className="text-[12px] font-medium flex items-center justify-center gap-2 flex-wrap">
         <span className="inline-flex items-center gap-1">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--primary-muted)" strokeWidth="2">
@@ -9,9 +9,9 @@ export function AwardStrip() {
           </svg>
           <span className="text-[var(--primary-muted)] font-semibold">TripAdvisor Travelers&apos; Choice 2025</span>
         </span>
-        <span className="hidden sm:inline text-white/30">|</span>
-        <span className="text-white/60">
-          Rated <span className="text-white font-semibold">4.9★</span> across 1,300+ reviews
+        <span className="hidden sm:inline text-[var(--on-dark-tertiary)]">|</span>
+        <span className="text-[var(--on-dark-secondary)]">
+          Rated <span className="text-[var(--on-dark)] font-semibold">4.9★</span> across 1,300+ reviews
         </span>
       </p>
     </div>

@@ -92,7 +92,7 @@ export function SearchWidget() {
               "px-5 py-2.5 text-[14px] font-semibold rounded-[var(--radius-full)] transition-all duration-200 cursor-pointer",
               activeTab === tab.id
                 ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
-                : "bg-white/20 text-white hover:bg-white/30"
+                : "bg-[var(--on-dark-glass-hover)] text-[var(--on-dark)] hover:bg-[var(--on-dark-glass-hover)]"
             )}
             style={activeTab === tab.id ? { boxShadow: "var(--shadow-sm)" } : undefined}
           >

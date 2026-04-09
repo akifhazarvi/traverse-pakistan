@@ -39,9 +39,9 @@ export default function TravelStylesPage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
               <div className="relative p-6">
-                <h2 className="text-2xl font-bold text-white">{style.name}</h2>
-                <p className="text-[14px] text-white/70 mt-1">{style.tourCount} tours</p>
-                <p className="text-[14px] text-white/60 mt-2 line-clamp-2">{style.description}</p>
+                <h2 className="text-2xl font-bold text-[var(--on-dark)]">{style.name}</h2>
+                <p className="text-[14px] text-[var(--on-dark-secondary)] mt-1">{style.tourCount} tours</p>
+                <p className="text-[14px] text-[var(--on-dark-secondary)] mt-2 line-clamp-2">{style.description}</p>
               </div>
             </Link>
           ))}

@@ -114,7 +114,7 @@ export default async function TripDetailPage({ params }: Props) {
                   <ul className="space-y-2">
                     {tour.highlights.map((h, i) => (
                       <li key={i} className="flex items-start gap-3 text-[14px] text-[var(--text-secondary)]">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3E7A6E" strokeWidth="2" className="shrink-0 mt-0.5">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" className="shrink-0 mt-0.5">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
                         {h}
@@ -148,7 +148,7 @@ export default async function TripDetailPage({ params }: Props) {
                   <ul className="space-y-2">
                     {tour.inclusions.map((item, i) => (
                       <li key={i} className="flex items-start gap-2 text-[14px] text-[var(--text-secondary)]">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3E7A6E" strokeWidth="2" className="shrink-0 mt-0.5">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" className="shrink-0 mt-0.5">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
                         {item}
@@ -163,7 +163,7 @@ export default async function TripDetailPage({ params }: Props) {
                   <ul className="space-y-2">
                     {tour.exclusions.map((item, i) => (
                       <li key={i} className="flex items-start gap-2 text-[14px] text-[var(--text-secondary)]">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8470A" strokeWidth="2" className="shrink-0 mt-0.5">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" strokeWidth="2" className="shrink-0 mt-0.5">
                           <line x1="18" y1="6" x2="6" y2="18" />
                           <line x1="6" y1="6" x2="18" y2="18" />
                         </svg>
@@ -204,7 +204,7 @@ export default async function TripDetailPage({ params }: Props) {
               </h2>
               <div className="space-y-4 text-[14px] text-[var(--text-secondary)]">
                 <div className="flex items-start gap-3">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3E7A6E" strokeWidth="2" className="shrink-0 mt-0.5">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" className="shrink-0 mt-0.5">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
                     <circle cx="12" cy="10" r="3" />
                   </svg>
@@ -214,7 +214,7 @@ export default async function TripDetailPage({ params }: Props) {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3E7A6E" strokeWidth="2" className="shrink-0 mt-0.5">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" className="shrink-0 mt-0.5">
                     <circle cx="12" cy="12" r="10" />
                     <path d="M12 6v6l4 2" />
                   </svg>
@@ -245,7 +245,7 @@ export default async function TripDetailPage({ params }: Props) {
                       className="p-5 bg-[var(--bg-subtle)] rounded-xl"
                     >
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[#1a4a42] flex items-center justify-center text-white text-[14px] font-bold">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-deep)] flex items-center justify-center text-white text-[14px] font-bold">
                           {review.initial}
                         </div>
                         <div>

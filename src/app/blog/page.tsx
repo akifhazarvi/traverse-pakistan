@@ -46,13 +46,13 @@ export default async function BlogPage() {
               <span className="inline-block px-3 py-1 text-[11px] font-bold uppercase bg-[var(--primary)] text-white rounded-full mb-3">
                 {featured.tag}
               </span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-white">
+              <h2 className="text-2xl sm:text-3xl font-bold text-[var(--on-dark)]">
                 {featured.title}
               </h2>
-              <p className="text-[15px] text-white/70 mt-2 max-w-xl">
+              <p className="text-[15px] text-[var(--on-dark-secondary)] mt-2 max-w-xl">
                 {featured.excerpt}
               </p>
-              <p className="text-[13px] text-white/50 mt-3">{featured.readTime}</p>
+              <p className="text-[13px] text-[var(--on-dark-tertiary)] mt-3">{featured.readTime}</p>
             </div>
           </Link>
         )}

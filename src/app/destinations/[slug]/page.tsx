@@ -62,11 +62,11 @@ export default async function DestinationDetailPage({ params }: Props) {
             light
             className="mb-4"
           />
-          <h1 className="text-[36px] sm:text-[48px] font-bold text-white tracking-tight">
+          <h1 className="text-[36px] sm:text-[48px] font-bold text-[var(--on-dark)] tracking-tight">
             {dest.name}
           </h1>
-          <p className="text-lg text-white/80 mt-2 max-w-xl">{dest.subtitle}</p>
-          <div className="flex items-center gap-6 mt-4 text-[14px] text-white/70">
+          <p className="text-lg text-[var(--on-dark-secondary)] mt-2 max-w-xl">{dest.subtitle}</p>
+          <div className="flex items-center gap-6 mt-4 text-[14px] text-[var(--on-dark-secondary)]">
             <span>{dest.tourCount} tours available</span>
             <span>{dest.rating}★ rating</span>
             <span>From {formatPrice(dest.startingPrice)}</span>

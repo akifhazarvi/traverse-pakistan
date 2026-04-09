@@ -31,7 +31,7 @@ export function PriceDisplay({
       <span
         className={cn(
           styles.price,
-          light ? "text-white" : "text-[var(--text-primary)]"
+          light ? "text-[var(--on-dark)]" : "text-[var(--text-primary)]"
         )}
       >
         {prefix} {formatPrice(price)}
@@ -41,7 +41,7 @@ export function PriceDisplay({
           className={cn(
             styles.original,
             "line-through",
-            light ? "text-white/50" : "text-[var(--text-tertiary)]"
+            light ? "text-[var(--on-dark-tertiary)]" : "text-[var(--text-tertiary)]"
           )}
         >
           {formatPrice(originalPrice)}

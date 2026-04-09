@@ -67,7 +67,7 @@ export function WhyUsSection() {
               className="group flex flex-col items-center text-center p-6 rounded-[var(--radius-md)] bg-[var(--bg-primary)] border border-[var(--border-default)] hover:border-[var(--primary)]/30 hover:shadow-[var(--shadow-md)] transition-all duration-300"
             >
               {/* Icon circle with gradient */}
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[var(--primary)] to-[#1a4a42] flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-deep)] flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform duration-300">
                 {step.icon}
               </div>
 

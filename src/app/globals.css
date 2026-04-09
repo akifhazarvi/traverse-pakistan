@@ -1,31 +1,43 @@
 @import "tailwindcss";
 
 /* =============================================================================
-   TRAVERSE PAKISTAN — DESIGN SYSTEM v2.1 (with Dark Mode)
+   TRAVERSE PAKISTAN — DESIGN SYSTEM v2.2
+   Full dark mode support. Traverse Pakistan brand colors.
    ============================================================================= */
 
 :root {
   color-scheme: light;
 
-  /* ── Primary ── */
+  /* ── Brand Primary (Traverse Pakistan teal) ── */
   --primary: #2D6A5E;
   --primary-hover: #235449;
   --primary-light: #E8F5F1;
-  --primary-muted: #A5D6A7;
+  --primary-muted: #7BC8A4;
+  --primary-deep: #1A3F37;
 
-  /* ── Neutral ── */
+  /* ── Text ── */
   --text-primary: #1A1A1A;
-  --text-secondary: #6B6B6B;
-  --text-tertiary: #9B9B9B;
+  --text-secondary: #555555;
+  --text-tertiary: #8A8A8A;
   --text-inverse: #FFFFFF;
 
+  /* ── Backgrounds ── */
   --bg-primary: #FFFFFF;
-  --bg-subtle: #F7F7F7;
+  --bg-subtle: #F5F5F4;
   --bg-elevated: #FFFFFF;
   --bg-dark: #1A2E2B;
   --bg-darker: #0F2220;
 
-  --border-default: #E0E0E0;
+  /* ── "On-dark" text (for dark bg sections — works in both themes) ── */
+  --on-dark: #FFFFFF;
+  --on-dark-secondary: rgba(255, 255, 255, 0.72);
+  --on-dark-tertiary: rgba(255, 255, 255, 0.45);
+  --on-dark-border: rgba(255, 255, 255, 0.10);
+  --on-dark-glass: rgba(255, 255, 255, 0.06);
+  --on-dark-glass-hover: rgba(255, 255, 255, 0.10);
+
+  /* ── Borders ── */
+  --border-default: #E2E2E0;
   --border-strong: #B0B0B0;
   --border-focus: #1A1A1A;
 
@@ -42,6 +54,9 @@
   --shadow-md: rgba(0, 0, 0, 0.02) 0 0 0 1px, rgba(0, 0, 0, 0.04) 0 2px 6px, rgba(0, 0, 0, 0.10) 0 4px 12px;
   --shadow-lg: rgba(0, 0, 0, 0.08) 0 1px 4px, rgba(0, 0, 0, 0.15) 0 6px 20px;
   --shadow-xl: rgba(0, 0, 0, 0.08) 0 4px 12px, rgba(0, 0, 0, 0.20) 0 16px 40px;
+
+  /* ── Hero fade (adapts to page bg) ── */
+  --hero-fade: #FFFFFF;
 
   /* ── Radius ── */
   --radius-sm: 8px;
@@ -76,22 +91,30 @@
 
   --primary: #4ECDB4;
   --primary-hover: #3CB89F;
-  --primary-light: #1A3D36;
-  --primary-muted: #6ED8B8;
+  --primary-light: #14302A;
+  --primary-muted: #5DD9BE;
+  --primary-deep: #0C1F1B;
 
-  --text-primary: #F0F0F0;
-  --text-secondary: #A0A0A0;
-  --text-tertiary: #6A6A6A;
-  --text-inverse: #1A1A1A;
+  --text-primary: #EAEAEA;
+  --text-secondary: #999999;
+  --text-tertiary: #5E5E5E;
+  --text-inverse: #0D1B19;
 
   --bg-primary: #0D1B19;
-  --bg-subtle: #142825;
+  --bg-subtle: #132422;
   --bg-elevated: #1A332F;
-  --bg-dark: #0A1412;
+  --bg-dark: #091311;
   --bg-darker: #060E0C;
 
-  --border-default: #2A4A44;
-  --border-strong: #3D6B62;
+  --on-dark: #EAEAEA;
+  --on-dark-secondary: rgba(234, 234, 234, 0.65);
+  --on-dark-tertiary: rgba(234, 234, 234, 0.35);
+  --on-dark-border: rgba(234, 234, 234, 0.08);
+  --on-dark-glass: rgba(234, 234, 234, 0.04);
+  --on-dark-glass-hover: rgba(234, 234, 234, 0.08);
+
+  --border-default: #243D38;
+  --border-strong: #3A6158;
   --border-focus: #4ECDB4;
 
   --success: #34D399;
@@ -100,10 +123,12 @@
   --info: #60A5FA;
 
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: rgba(0, 0, 0, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.2) 0 2px 6px, rgba(0, 0, 0, 0.3) 0 4px 12px;
-  --shadow-lg: rgba(0, 0, 0, 0.3) 0 1px 4px, rgba(0, 0, 0, 0.4) 0 6px 20px;
-  --shadow-xl: rgba(0, 0, 0, 0.3) 0 4px 12px, rgba(0, 0, 0, 0.5) 0 16px 40px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-md: rgba(0, 0, 0, 0.2) 0 0 0 1px, rgba(0, 0, 0, 0.15) 0 2px 6px, rgba(0, 0, 0, 0.25) 0 4px 12px;
+  --shadow-lg: rgba(0, 0, 0, 0.25) 0 1px 4px, rgba(0, 0, 0, 0.35) 0 6px 20px;
+  --shadow-xl: rgba(0, 0, 0, 0.25) 0 4px 12px, rgba(0, 0, 0, 0.45) 0 16px 40px;
+
+  --hero-fade: #0D1B19;
 }
 
 /* ── Tailwind v4 Theme ── */
@@ -130,10 +155,7 @@
 }
 
 /* ── Base ── */
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-}
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
   font-family: var(--font-sans);
@@ -146,46 +168,20 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  letter-spacing: -0.025em;
-  line-height: 1.15;
-}
-
+h1, h2, h3, h4, h5, h6 { letter-spacing: -0.025em; line-height: 1.15; }
 .tabular-nums { font-variant-numeric: tabular-nums; }
 
-/* ── Scroll utilities ── */
+/* ── Scroll ── */
 .scroll-snap-x { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
 .scroll-snap-x > * { scroll-snap-align: start; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* ── Scroll reveal ── */
-.reveal {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity var(--duration-slow) var(--ease-default), transform var(--duration-slow) var(--ease-default);
-}
-.reveal.visible { opacity: 1; transform: translateY(0); }
-
 /* ── Focus ring ── */
-:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
-}
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: var(--radius-sm); }
 
 /* ── Selection ── */
-::selection {
-  background: var(--primary-light);
-  color: var(--text-primary);
-}
+::selection { background: var(--primary-light); color: var(--text-primary); }
 
-/* ── Dark mode transitions ── */
-[data-theme="dark"] img {
-  brightness: 0.92;
-}
-
-/* ── Cinema video theater ── */
-.cinema-theater-active {
-  overflow: hidden;
-}
+/* ── Cinema theater ── */
+.cinema-theater-active { overflow: hidden; }

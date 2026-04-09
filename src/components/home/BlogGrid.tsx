@@ -34,23 +34,23 @@ export function BlogGrid() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 h-[50%] bg-gradient-to-t from-black/60 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-                <span className="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[var(--primary)] text-white rounded-[var(--radius-full)] mb-3">
+                <span className="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[var(--primary)] text-[var(--on-dark)] rounded-[var(--radius-full)] mb-3">
                   {featured.tag}
                 </span>
                 <h3
-                  className="text-xl sm:text-2xl font-bold text-white leading-snug tracking-[-0.02em]"
+                  className="text-xl sm:text-2xl font-bold text-[var(--on-dark)] leading-snug tracking-[-0.02em]"
                   style={{ textShadow: "0 2px 12px rgba(0,0,0,0.4)" }}
                 >
                   {featured.title}
                 </h3>
-                <p className="text-[14px] text-white/70 mt-2 line-clamp-2 max-w-md">
+                <p className="text-[14px] text-[var(--on-dark-secondary)] mt-2 line-clamp-2 max-w-md">
                   {featured.excerpt}
                 </p>
-                <span className="inline-flex items-center gap-1 mt-3 text-[12px] font-medium text-white/50">
+                <span className="inline-flex items-center gap-1 mt-3 text-[12px] font-medium text-[var(--on-dark-tertiary)]">
                   {featured.readTime}
                 </span>
               </div>
-              <div className="absolute inset-0 ring-1 ring-inset ring-white/0 group-hover:ring-white/15 rounded-[var(--radius-lg)] transition-all duration-500" />
+              <div className="absolute inset-0 ring-1 ring-inset ring-transparent group-hover:ring-[var(--on-dark-border)] rounded-[var(--radius-lg)] transition-all duration-500" />
             </Link>
           )}
 
@@ -74,14 +74,14 @@ export function BlogGrid() {
                   {post.tag}
                 </span>
                 <h3
-                  className="text-[15px] sm:text-[16px] font-bold text-white mt-1 line-clamp-2 leading-snug"
+                  className="text-[15px] sm:text-[16px] font-bold text-[var(--on-dark)] mt-1 line-clamp-2 leading-snug"
                   style={{ textShadow: "0 1px 6px rgba(0,0,0,0.4)" }}
                 >
                   {post.title}
                 </h3>
-                <span className="text-[11px] text-white/50 mt-1 block">{post.readTime}</span>
+                <span className="text-[11px] text-[var(--on-dark-tertiary)] mt-1 block">{post.readTime}</span>
               </div>
-              <div className="absolute inset-0 ring-1 ring-inset ring-white/0 group-hover:ring-white/15 rounded-[var(--radius-md)] transition-all duration-500" />
+              <div className="absolute inset-0 ring-1 ring-inset ring-transparent group-hover:ring-[var(--on-dark-border)] rounded-[var(--radius-md)] transition-all duration-500" />
             </Link>
           ))}
         </div>

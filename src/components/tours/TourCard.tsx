@@ -58,7 +58,7 @@ export function TourCard({
 
         {/* Duration pill — frosted glass */}
         <div className="absolute bottom-3.5 left-3.5">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-black/40 backdrop-blur-md text-white text-[11px] font-semibold rounded-[var(--radius-full)] tracking-[0.04em] uppercase border border-white/10">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-black/40 backdrop-blur-md text-white text-[11px] font-semibold rounded-[var(--radius-full)] tracking-[0.04em] uppercase border border-[var(--on-dark-border)]">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <circle cx="12" cy="12" r="10" />
               <path d="M12 6v6l4 2" />

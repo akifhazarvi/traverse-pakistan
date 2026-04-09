@@ -29,7 +29,7 @@ const companyLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-[var(--bg-dark)] text-white">
+    <footer className="bg-[var(--bg-dark)] text-[var(--on-dark)]">
       <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-16 py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
           {/* Brand */}
@@ -43,7 +43,7 @@ export function Footer() {
                 className="h-12 w-auto brightness-0 invert"
               />
             </Link>
-            <p className="mt-4 text-[14px] text-white/60 leading-relaxed max-w-xs">
+            <p className="mt-4 text-[14px] text-[var(--on-dark-secondary)] leading-relaxed max-w-xs">
               Pakistan&apos;s highest-rated tourism company. 4.9★ across 1,300+ reviews. TripAdvisor Travelers&apos; Choice 2025.
             </p>
             <div className="flex gap-3 mt-5">
@@ -51,7 +51,7 @@ export function Footer() {
                 href="https://facebook.com/traversepakistan"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                className="w-9 h-9 flex items-center justify-center rounded-full bg-[var(--on-dark-glass)] hover:bg-[var(--on-dark-glass-hover)] transition-colors"
                 aria-label="Facebook"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -62,7 +62,7 @@ export function Footer() {
                 href="https://instagram.com/traversepakistan"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                className="w-9 h-9 flex items-center justify-center rounded-full bg-[var(--on-dark-glass)] hover:bg-[var(--on-dark-glass-hover)] transition-colors"
                 aria-label="Instagram"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -85,13 +85,13 @@ export function Footer() {
 
           {/* Popular Tours */}
           <div>
-            <h3 className="text-[15px] font-bold mb-4 text-white/90">Popular Tours</h3>
+            <h3 className="text-[15px] font-bold mb-4 text-[var(--on-dark-secondary)]">Popular Tours</h3>
             <ul className="space-y-2.5">
               {tourLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-[14px] text-white/50 hover:text-white transition-colors"
+                    className="text-[14px] text-[var(--on-dark-tertiary)] hover:text-[var(--on-dark)] transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -102,13 +102,13 @@ export function Footer() {
 
           {/* Destinations */}
           <div>
-            <h3 className="text-[15px] font-bold mb-4 text-white/90">Destinations</h3>
+            <h3 className="text-[15px] font-bold mb-4 text-[var(--on-dark-secondary)]">Destinations</h3>
             <ul className="space-y-2.5">
               {destinationLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-[14px] text-white/50 hover:text-white transition-colors"
+                    className="text-[14px] text-[var(--on-dark-tertiary)] hover:text-[var(--on-dark)] transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -119,8 +119,8 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-[15px] font-bold mb-4 text-white/90">Contact Us</h3>
-            <ul className="space-y-3 text-[14px] text-white/50">
+            <h3 className="text-[15px] font-bold mb-4 text-[var(--on-dark-secondary)]">Contact Us</h3>
+            <ul className="space-y-3 text-[14px] text-[var(--on-dark-tertiary)]">
               <li className="flex items-start gap-2">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0 mt-0.5">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
@@ -129,7 +129,7 @@ export function Footer() {
                 Office #6, Plot No. 1, MPCHS E-11/1, Islamabad
               </li>
               <li>
-                <a href="tel:+923216650670" className="flex items-center gap-2 hover:text-white transition-colors">
+                <a href="tel:+923216650670" className="flex items-center gap-2 hover:text-[var(--on-dark)] transition-colors">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
                     <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
                   </svg>
@@ -137,7 +137,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="mailto:info@traversepakistan.com" className="flex items-center gap-2 hover:text-white transition-colors">
+                <a href="mailto:info@traversepakistan.com" className="flex items-center gap-2 hover:text-[var(--on-dark)] transition-colors">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                     <polyline points="22,6 12,13 2,6" />
@@ -151,7 +151,7 @@ export function Footer() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="block text-[14px] text-white/50 hover:text-white transition-colors py-1"
+                  className="block text-[14px] text-[var(--on-dark-tertiary)] hover:text-[var(--on-dark)] transition-colors py-1"
                 >
                   {link.label}
                 </Link>
@@ -161,12 +161,12 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[13px] text-white/40">
+        <div className="mt-12 pt-6 border-t border-[var(--on-dark-border)] flex flex-col sm:flex-row items-center justify-between gap-4 text-[13px] text-[var(--on-dark-tertiary)]">
           <p>&copy; {new Date().getFullYear()} Traverse Pakistan. All rights reserved.</p>
           <div className="flex gap-6">
-            <Link href="/privacy" className="hover:text-white/70 transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white/70 transition-colors">Terms & Conditions</Link>
-            <Link href="/cancellation" className="hover:text-white/70 transition-colors">Cancellation Policy</Link>
+            <Link href="/privacy" className="hover:text-[var(--on-dark-secondary)] transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-[var(--on-dark-secondary)] transition-colors">Terms & Conditions</Link>
+            <Link href="/cancellation" className="hover:text-[var(--on-dark-secondary)] transition-colors">Cancellation Policy</Link>
           </div>
         </div>
       </div>

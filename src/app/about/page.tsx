@@ -83,7 +83,7 @@ export default function AboutPage() {
                 </svg>
               </div>
               <h3 className="text-lg font-bold">Safety First</h3>
-              <p className="text-[14px] text-white/60 mt-2">Verified drivers, professional guides, and emergency support on every trip.</p>
+              <p className="text-[14px] text-[var(--on-dark-secondary)] mt-2">Verified drivers, professional guides, and emergency support on every trip.</p>
             </div>
             <div className="text-center">
               <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-4">
@@ -92,7 +92,7 @@ export default function AboutPage() {
                 </svg>
               </div>
               <h3 className="text-lg font-bold">Passion for Pakistan</h3>
-              <p className="text-[14px] text-white/60 mt-2">We exist to show the world how beautiful Pakistan truly is.</p>
+              <p className="text-[14px] text-[var(--on-dark-secondary)] mt-2">We exist to show the world how beautiful Pakistan truly is.</p>
             </div>
             <div className="text-center">
               <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-4">
@@ -102,7 +102,7 @@ export default function AboutPage() {
                 </svg>
               </div>
               <h3 className="text-lg font-bold">Responsible Tourism</h3>
-              <p className="text-[14px] text-white/60 mt-2">Supporting local communities and preserving natural beauty for future generations.</p>
+              <p className="text-[14px] text-[var(--on-dark-secondary)] mt-2">Supporting local communities and preserving natural beauty for future generations.</p>
             </div>
           </div>
         </section>

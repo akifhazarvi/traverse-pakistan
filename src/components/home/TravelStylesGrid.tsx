@@ -36,18 +36,18 @@ export function TravelStylesGrid() {
               {/* Content */}
               <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
                 <h3
-                  className="text-[17px] sm:text-[20px] font-bold text-white leading-tight"
+                  className="text-[17px] sm:text-[20px] font-bold text-[var(--on-dark)] leading-tight"
                   style={{ textShadow: "0 2px 8px rgba(0,0,0,0.4)" }}
                 >
                   {style.name}
                 </h3>
-                <p className="text-[12px] text-white/70 mt-1 font-medium">
+                <p className="text-[12px] text-[var(--on-dark-secondary)] mt-1 font-medium">
                   {style.tourCount} tours available
                 </p>
               </div>
 
               {/* Hover ring */}
-              <div className="absolute inset-0 ring-1 ring-inset ring-white/0 group-hover:ring-white/20 rounded-[var(--radius-md)] transition-all duration-500" />
+              <div className="absolute inset-0 ring-1 ring-inset ring-transparent group-hover:ring-[var(--on-dark-glass-hover)] rounded-[var(--radius-md)] transition-all duration-500" />
             </Link>
           ))}
         </div>

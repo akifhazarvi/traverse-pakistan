@@ -14,7 +14,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   primary:
     "bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] active:scale-[0.98]",
   secondary:
-    "bg-[var(--bg-dark)] text-white hover:bg-[#243f3b] active:scale-[0.98]",
+    "bg-[var(--bg-dark)] text-white hover:bg-[var(--primary-deep)] active:scale-[0.98]",
   outline:
     "border-2 border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white",
   ghost:

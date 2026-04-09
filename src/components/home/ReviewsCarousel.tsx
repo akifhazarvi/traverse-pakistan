@@ -20,7 +20,7 @@ export function ReviewsCarousel() {
           {reviews.map((review) => (
             <div
               key={review.id}
-              className="group min-w-[330px] w-[330px] sm:min-w-[370px] sm:w-[370px] bg-white/[0.05] backdrop-blur-sm border border-white/[0.08] rounded-[var(--radius-md)] p-6 flex flex-col hover:bg-white/[0.08] hover:border-white/[0.15] transition-all duration-300"
+              className="group min-w-[330px] w-[330px] sm:min-w-[370px] sm:w-[370px] bg-[var(--on-dark-glass)] backdrop-blur-sm border border-[var(--on-dark-border)] rounded-[var(--radius-md)] p-6 flex flex-col hover:bg-[var(--on-dark-glass-hover)] hover:border-[var(--on-dark-border)] transition-all duration-300"
             >
               {/* Stars */}
               <div className="flex gap-0.5 mb-4">
@@ -30,7 +30,7 @@ export function ReviewsCarousel() {
                     className={
                       i < review.rating
                         ? "text-[var(--primary-muted)] text-[15px]"
-                        : "text-white/15 text-[15px]"
+                        : "text-[var(--on-dark-tertiary)] text-[15px]"
                     }
                   >
                     ★
@@ -39,20 +39,20 @@ export function ReviewsCarousel() {
               </div>
 
               {/* Quote */}
-              <p className="text-[14px] text-white/75 leading-[1.65] flex-1 line-clamp-5">
+              <p className="text-[14px] text-[var(--on-dark-secondary)] leading-[1.65] flex-1 line-clamp-5">
                 &ldquo;{review.text}&rdquo;
               </p>
 
               {/* Author */}
               <div className="flex items-center gap-3 mt-5 pt-4 border-t border-white/8">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[#1a4a42] flex items-center justify-center text-white text-[14px] font-bold shrink-0 ring-2 ring-white/10">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-deep)] flex items-center justify-center text-white text-[14px] font-bold shrink-0 ring-2 ring-[var(--on-dark-border)]">
                   {review.initial}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[14px] font-semibold text-white truncate">
+                  <p className="text-[14px] font-semibold text-[var(--on-dark)] truncate">
                     {review.name}
                   </p>
-                  <p className="text-[11px] text-white/40 truncate">
+                  <p className="text-[11px] text-[var(--on-dark-tertiary)] truncate">
                     {review.tourName} &middot; {review.travelerType}
                   </p>
                 </div>

@@ -71,12 +71,12 @@ export function VideoStories() {
               The Journey Awaits
             </span>
             <h2
-              className="text-white font-bold tracking-[-0.03em] leading-tight"
+              className="text-[var(--on-dark)] font-bold tracking-[-0.03em] leading-tight"
               style={{ fontSize: "var(--text-4xl)" }}
             >
               Stories from the Road
             </h2>
-            <p className="mt-3 text-white/50 max-w-md mx-auto" style={{ fontSize: "var(--text-lg)" }}>
+            <p className="mt-3 text-[var(--on-dark-tertiary)] max-w-md mx-auto" style={{ fontSize: "var(--text-lg)" }}>
               Six films. Six journeys. One Pakistan you&apos;ve never seen before.
             </p>
           </div>
@@ -98,7 +98,7 @@ export function VideoStories() {
 
             {/* Play button */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 group-hover:bg-white/25 transition-all duration-300 ring-2 ring-white/20">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[var(--on-dark-glass-hover)] backdrop-blur-sm flex items-center justify-center group-hover:scale-110 group-hover:bg-[var(--on-dark-glass-hover)] transition-all duration-300 ring-2 ring-[var(--on-dark-glass-hover)]">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="white" className="ml-1">
                   <polygon points="8,5 19,12 8,19" />
                 </svg>
@@ -107,16 +107,16 @@ export function VideoStories() {
 
             {/* Meta */}
             <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-              <span className="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-white/15 backdrop-blur-sm text-white rounded-[var(--radius-full)] mb-3">
+              <span className="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[var(--on-dark-glass-hover)] backdrop-blur-sm text-[var(--on-dark)] rounded-[var(--radius-full)] mb-3">
                 Chapter {featured.chapter}
               </span>
               <h3
-                className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-[-0.02em]"
+                className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--on-dark)] tracking-[-0.02em]"
                 style={{ textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}
               >
                 {featured.title}
               </h3>
-              <p className="text-[14px] text-white/70 mt-2 max-w-lg">{featured.description}</p>
+              <p className="text-[14px] text-[var(--on-dark-secondary)] mt-2 max-w-lg">{featured.description}</p>
             </div>
           </button>
 
@@ -139,17 +139,17 @@ export function VideoStories() {
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-10 h-10 rounded-full bg-white/25 backdrop-blur-sm flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full bg-[var(--on-dark-glass-hover)] backdrop-blur-sm flex items-center justify-center">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
                         <polygon points="8,5 19,12 8,19" />
                       </svg>
                     </div>
                   </div>
-                  <span className="absolute top-2 left-2 text-[10px] font-bold text-white/70 bg-black/40 backdrop-blur-sm px-1.5 py-0.5 rounded">
+                  <span className="absolute top-2 left-2 text-[10px] font-bold text-[var(--on-dark-secondary)] bg-black/40 backdrop-blur-sm px-1.5 py-0.5 rounded">
                     {video.chapter}
                   </span>
                 </div>
-                <h4 className="text-[13px] font-semibold text-white/80 leading-snug line-clamp-2 group-hover:text-[var(--primary-muted)] transition-colors">
+                <h4 className="text-[13px] font-semibold text-[var(--on-dark-secondary)] leading-snug line-clamp-2 group-hover:text-[var(--primary-muted)] transition-colors">
                   {video.title}
                 </h4>
               </button>
@@ -162,7 +162,7 @@ export function VideoStories() {
               href="https://www.youtube.com/@TraversePakistan"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 h-11 px-6 bg-white/10 hover:bg-white/15 text-white text-[14px] font-semibold rounded-[var(--radius-full)] border border-white/10 transition-all duration-200"
+              className="inline-flex items-center gap-2.5 h-11 px-6 bg-white/10 hover:bg-[var(--on-dark-glass-hover)] text-[var(--on-dark)] text-[14px] font-semibold rounded-[var(--radius-full)] border border-[var(--on-dark-border)] transition-all duration-200"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.9 31.9 0 000 12a31.9 31.9 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.9 31.9 0 0024 12a31.9 31.9 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z" />
@@ -181,7 +181,7 @@ export function VideoStories() {
             <button
               type="button"
               onClick={closeTheater}
-              className="absolute -top-12 right-0 w-10 h-10 flex items-center justify-center text-white/60 hover:text-white bg-white/10 hover:bg-white/20 rounded-full cursor-pointer transition-colors z-10"
+              className="absolute -top-12 right-0 w-10 h-10 flex items-center justify-center text-[var(--on-dark-secondary)] hover:text-[var(--on-dark)] bg-[var(--on-dark-glass)] hover:bg-white/20 rounded-full cursor-pointer transition-colors z-10"
               aria-label="Close"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -201,7 +201,7 @@ export function VideoStories() {
               <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--primary-muted)]">
                 Chapter {videos.find((v) => v.id === activeVideo)?.chapter}
               </span>
-              <h3 className="text-lg font-bold text-white mt-1">
+              <h3 className="text-lg font-bold text-[var(--on-dark)] mt-1">
                 {videos.find((v) => v.id === activeVideo)?.title}
               </h3>
             </div>

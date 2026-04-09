@@ -34,7 +34,7 @@ export function SectionHeader({
         <h2
           className={cn(
             "font-bold tracking-[-0.025em] leading-[1.15]",
-            light ? "text-white" : "text-[var(--text-primary)]"
+            light ? "text-[var(--on-dark)]" : "text-[var(--text-primary)]"
           )}
           style={{ fontSize: "var(--text-4xl)" }}
         >
@@ -44,7 +44,7 @@ export function SectionHeader({
           <p
             className={cn(
               "mt-2 max-w-xl leading-relaxed",
-              light ? "text-white/60" : "text-[var(--text-secondary)]"
+              light ? "text-[var(--on-dark-secondary)]" : "text-[var(--text-secondary)]"
             )}
             style={{ fontSize: "var(--text-lg)" }}
           >
@@ -58,7 +58,7 @@ export function SectionHeader({
           className={cn(
             "text-[14px] font-semibold shrink-0 mt-2 sm:mt-0 transition-colors duration-[var(--duration-fast)]",
             light
-              ? "text-[var(--primary-muted)] hover:text-white"
+              ? "text-[var(--primary-muted)] hover:text-[var(--on-dark)]"
               : "text-[var(--primary)] hover:text-[var(--primary-hover)]"
           )}
         >

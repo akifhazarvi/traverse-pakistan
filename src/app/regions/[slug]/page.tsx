@@ -59,11 +59,11 @@ export default async function RegionPage({ params }: Props) {
             light
             className="mb-4"
           />
-          <h1 className="text-[36px] sm:text-[48px] font-bold text-white tracking-tight">
+          <h1 className="text-[36px] sm:text-[48px] font-bold text-[var(--on-dark)] tracking-tight">
             {region.name}
           </h1>
-          <p className="text-lg text-white/80 mt-2 max-w-xl">{region.description}</p>
-          <p className="text-[14px] text-white/60 mt-3">
+          <p className="text-lg text-[var(--on-dark-secondary)] mt-2 max-w-xl">{region.description}</p>
+          <p className="text-[14px] text-[var(--on-dark-secondary)] mt-3">
             {region.tourCount} tours &middot; {destinations.length} destinations
           </p>
         </Container>
@@ -92,8 +92,8 @@ export default async function RegionPage({ params }: Props) {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                   <div className="relative p-5">
-                    <h3 className="text-xl font-bold text-white">{dest.name}</h3>
-                    <p className="text-[14px] text-white/70 mt-1">
+                    <h3 className="text-xl font-bold text-[var(--on-dark)]">{dest.name}</h3>
+                    <p className="text-[14px] text-[var(--on-dark-secondary)] mt-1">
                       From {formatPrice(dest.startingPrice)} &middot; {dest.tourCount} tours
                     </p>
                   </div>

@@ -19,14 +19,14 @@ export function Breadcrumb({ items, light, className }: BreadcrumbProps) {
         href="/"
         className={cn(
           "font-medium transition-colors",
-          light ? "text-white/70 hover:text-white" : "text-[var(--text-tertiary)] hover:text-[var(--primary)]"
+          light ? "text-[var(--on-dark-secondary)] hover:text-[var(--on-dark)]" : "text-[var(--text-tertiary)] hover:text-[var(--primary)]"
         )}
       >
         Home
       </Link>
       {items.map((item, i) => (
         <span key={i} className="flex items-center gap-2">
-          <span className={light ? "text-white/40" : "text-[var(--text-tertiary)]/50"}>
+          <span className={light ? "text-[var(--on-dark-tertiary)]" : "text-[var(--text-tertiary)]/50"}>
             ›
           </span>
           {item.href ? (
@@ -34,13 +34,13 @@ export function Breadcrumb({ items, light, className }: BreadcrumbProps) {
               href={item.href}
               className={cn(
                 "font-medium transition-colors",
-                light ? "text-white/70 hover:text-white" : "text-[var(--text-tertiary)] hover:text-[var(--primary)]"
+                light ? "text-[var(--on-dark-secondary)] hover:text-[var(--on-dark)]" : "text-[var(--text-tertiary)] hover:text-[var(--primary)]"
               )}
             >
               {item.label}
             </Link>
           ) : (
-            <span className={cn("font-medium", light ? "text-white" : "text-[var(--text-primary)]")}>
+            <span className={cn("font-medium", light ? "text-[var(--on-dark)]" : "text-[var(--text-primary)]")}>
               {item.label}
             </span>
           )}
