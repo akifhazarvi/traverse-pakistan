@@ -1,0 +1,123 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import Image from "next/image";
+import { Container } from "@/components/ui/Container";
+import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { TourCard } from "@/components/tours/TourCard";
+import { getRegionBySlug, getAllRegions } from "@/services/region.service";
+import { getDestinationsByRegion } from "@/services/destination.service";
+import { getToursByRegion } from "@/services/tour.service";
+import { formatPrice } from "@/lib/utils";
+import Link from "next/link";
+
+interface Props {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  const regions = await getAllRegions();
+  return regions.map((r) => ({ slug: r.slug }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const region = await getRegionBySlug(slug);
+  if (!region) return { title: "Region Not Found" };
+  return { title: region.metaTitle, description: region.metaDescription };
+}
+
+export default async function RegionPage({ params }: Props) {
+  const { slug } = await params;
+  const region = await getRegionBySlug(slug);
+  if (!region) notFound();
+
+  const [destinations, tours] = await Promise.all([
+    getDestinationsByRegion(slug),
+    getToursByRegion(slug),
+  ]);
+
+  return (
+    <>
+      {/* Hero */}
+      <section className="relative h-[350px] sm:h-[420px] flex items-end">
+        <Image
+          src={region.heroImage}
+          alt={region.name}
+          fill
+          className="object-cover"
+          sizes="100vw"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+        <Container className="relative pb-10 sm:pb-14">
+          <Breadcrumb
+            items={[
+              { label: "Destinations", href: "/destinations" },
+              { label: region.name },
+            ]}
+            light
+            className="mb-4"
+          />
+          <h1 className="text-[36px] sm:text-[48px] font-bold text-white tracking-tight">
+            {region.name}
+          </h1>
+          <p className="text-lg text-white/80 mt-2 max-w-xl">{region.description}</p>
+          <p className="text-[14px] text-white/60 mt-3">
+            {region.tourCount} tours &middot; {destinations.length} destinations
+          </p>
+        </Container>
+      </section>
+
+      {/* Destinations in this region */}
+      {destinations.length > 0 && (
+        <section className="py-16 sm:py-20">
+          <Container>
+            <SectionHeader
+              title={`Destinations in ${region.name}`}
+            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {destinations.map((dest) => (
+                <Link
+                  key={dest.id}
+                  href={`/destinations/${dest.slug}`}
+                  className="group relative rounded-xl overflow-hidden h-[280px] flex flex-col justify-end"
+                >
+                  <Image
+                    src={dest.heroImage}
+                    alt={dest.name}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="relative p-5">
+                    <h3 className="text-xl font-bold text-white">{dest.name}</h3>
+                    <p className="text-[14px] text-white/70 mt-1">
+                      From {formatPrice(dest.startingPrice)} &middot; {dest.tourCount} tours
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
+
+      {/* All tours in this region */}
+      <section className="bg-[var(--bg-subtle)] py-16 sm:py-20">
+        <Container>
+          <SectionHeader
+            title={`All Tours in ${region.name}`}
+            subtitle={`${tours.length} tours to explore`}
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {tours.map((tour) => (
+              <TourCard key={tour.id} tour={tour} variant="grid" />
+            ))}
+          </div>
+        </Container>
+      </section>
+    </>
+  );
+}
