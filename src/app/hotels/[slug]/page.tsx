@@ -8,6 +8,7 @@ import { AccordionItem } from "@/components/ui/Accordion";
 import { formatPrice } from "@/lib/utils";
 import { getHotelBySlug, getAllHotels, getHotelsByDestination } from "@/services/hotel.service";
 import Link from "next/link";
+import { HotelBookingSidebar } from "@/components/hotels/HotelBookingSidebar";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -215,59 +216,7 @@ export default async function HotelDetailPage({ params }: Props) {
 
           {/* Sidebar — Booking Card */}
           <aside className="hidden lg:block">
-            <div className="sticky top-[120px]">
-              <div className="bg-[var(--bg-primary)] border border-[var(--border-default)] rounded-[var(--radius-md)] p-6" style={{ boxShadow: "var(--shadow-sm)" }}>
-                <div className="flex items-baseline justify-between">
-                  <div>
-                    <span className="text-2xl font-bold text-[var(--text-primary)] tabular-nums">{formatPrice(hotel.pricePerNight)}</span>
-                    <span className="text-[14px] text-[var(--text-tertiary)]"> / night</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-[var(--primary-muted)] text-sm">★</span>
-                    <span className="text-[13px] font-semibold text-[var(--text-primary)]">{hotel.rating}</span>
-                    <span className="text-[12px] text-[var(--text-tertiary)]">({hotel.reviewCount})</span>
-                  </div>
-                </div>
-
-                <div className="mt-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] overflow-hidden">
-                  <div className="grid grid-cols-2">
-                    <div className="p-3 border-r border-b border-[var(--border-default)]">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--text-secondary)]">Check-in</span>
-                      <p className="text-[13px] text-[var(--text-primary)] mt-0.5">{hotel.checkIn}</p>
-                    </div>
-                    <div className="p-3 border-b border-[var(--border-default)]">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--text-secondary)]">Check-out</span>
-                      <p className="text-[13px] text-[var(--text-primary)] mt-0.5">{hotel.checkOut}</p>
-                    </div>
-                  </div>
-                  <div className="p-3">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--text-secondary)]">Guests</span>
-                    <p className="text-[13px] text-[var(--text-primary)] mt-0.5">2 guests</p>
-                  </div>
-                </div>
-
-                <a
-                  href={`https://wa.me/923216650670?text=${encodeURIComponent(`Hi! I'd like to book ${hotel.name}. Please share availability.`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 w-full h-[48px] bg-[var(--primary)] text-[var(--on-dark)] text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all"
-                >
-                  Check Availability
-                </a>
-                <p className="text-center text-[12px] text-[var(--text-tertiary)] mt-2">You won&apos;t be charged yet</p>
-
-                <div className="mt-4 space-y-2 pt-4 border-t border-[var(--border-default)]">
-                  <p className="flex items-center gap-2 text-[13px] text-[var(--text-secondary)]">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
-                    Free cancellation before check-in
-                  </p>
-                  <p className="flex items-center gap-2 text-[13px] text-[var(--text-secondary)]">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
-                    24/7 WhatsApp support
-                  </p>
-                </div>
-              </div>
-            </div>
+            <HotelBookingSidebar hotel={hotel} />
           </aside>
         </div>
 
