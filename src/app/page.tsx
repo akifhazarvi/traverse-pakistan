@@ -2,6 +2,7 @@ import { HeroSection } from "@/components/home/HeroSection";
 import { StatsBar } from "@/components/home/StatsBar";
 import { PopularToursCarousel } from "@/components/home/PopularToursCarousel";
 import { TravelStylesGrid } from "@/components/home/TravelStylesGrid";
+import { FeaturedPackagesCarousel } from "@/components/home/FeaturedPackagesCarousel";
 import { DestinationsScroll } from "@/components/home/DestinationsScroll";
 import { FeaturedHotels } from "@/components/home/FeaturedHotels";
 import { BlogGrid } from "@/components/home/BlogGrid";
@@ -14,10 +15,11 @@ export default function Home() {
     <>
       <HeroSection />
       <StatsBar />
+      <FeaturedPackagesCarousel />
       <PopularToursCarousel />
-      <TravelStylesGrid />
-      <DestinationsScroll />
       <FeaturedHotels />
+      <DestinationsScroll />
+      <TravelStylesGrid />
       <BlogGrid />
       <VideoStories />
       <WhyUsSection />

@@ -65,15 +65,14 @@ export function HeroSection() {
             textShadow: "0 2px 16px rgba(0,0,0,0.3)",
           }}
         >
-          Discover the Beauty of{" "}
-          <span className="text-[var(--primary-muted)]">Pakistan</span>
-        </h1>
+          <span className="text-[#A5D6A7]">Pakistan</span> Like Never Before!
+                  </h1>
 
         <p
           className="mt-3 text-[16px] sm:text-[17px] text-[var(--on-dark-secondary)] max-w-[480px] mx-auto leading-relaxed text-center"
           style={{ textShadow: "0 1px 6px rgba(0,0,0,0.3)" }}
         >
-          Explore breathtaking destinations with Pakistan&apos;s highest-rated tour operator
+          From K2 Base Camp to the Makran Coast — expert guides, verified drivers, unforgettable memories.
         </p>
 
         {/* Search Widget */}
