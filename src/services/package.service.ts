@@ -10,7 +10,7 @@ export async function getPackageBySlug(slug: string): Promise<Package | null> {
   return packages.find((p) => p.slug === slug) ?? null;
 }
 
-export async function getFeaturedPackages(limit = 4): Promise<Package[]> {
+export async function getFeaturedPackages(limit = 5): Promise<Package[]> {
   return packages.slice(0, limit);
 }
 
