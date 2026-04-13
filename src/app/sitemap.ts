@@ -5,6 +5,8 @@ import { regions } from "@/data/regions";
 import { blogPosts } from "@/data/blog-posts";
 import { travelStyles } from "@/data/travel-styles";
 
+export const dynamic = "force-static";
+
 const BASE_URL = "https://traversepakistan.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
