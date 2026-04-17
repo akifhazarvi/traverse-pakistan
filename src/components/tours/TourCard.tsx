@@ -1,9 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { formatPrice } from "@/lib/utils";
-import { Badge } from "@/components/ui/Badge";
-import { WishlistButton } from "@/components/ui/WishlistButton";
+import { cn, formatPrice } from "@/lib/utils";
 import type { Tour } from "@/types/tour";
 
 interface TourCardProps {
@@ -12,133 +9,142 @@ interface TourCardProps {
   className?: string;
 }
 
-export function TourCard({
-  tour,
-  variant = "carousel",
-  className,
-}: TourCardProps) {
+const badgeConfig: Record<string, { label: string; className: string }> = {
+  bestseller: { label: "Top Seller", className: "bg-[var(--primary)] text-white" },
+  "on-sale":  { label: "On Sale",   className: "bg-[var(--primary)] text-white" },
+  "epic-trek":{ label: "Epic Trek", className: "bg-[var(--primary)] text-white" },
+  new:        { label: "New",       className: "bg-blue-500 text-white" },
+};
+
+export function TourCard({ tour, variant = "carousel", className }: TourCardProps) {
+  const routeStops = tour.route.split(/\s*→\s*/);
+  const startingCity = routeStops[0];
+  const endCity = routeStops[routeStops.length - 1];
+  const uniqueStops = [...new Set(routeStops)];
+  const destTooltip = uniqueStops.join(", ");
+  const routeLabel = startingCity === endCity
+    ? `${startingCity} to ${startingCity}`
+    : `${startingCity} to ${endCity}`;
+
+  const discount = tour.originalPrice
+    ? Math.round((1 - tour.pricing.islamabad / tour.originalPrice) * 100)
+    : null;
+
+  const badge = tour.badge ? badgeConfig[tour.badge] : null;
+
+  const departureDate = tour.departureDate
+    ? new Date(tour.departureDate).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })
+    : null;
+
   return (
     <Link
-      href={`/tours/${tour.slug}`}
+      href={`/grouptours/${tour.slug}`}
       className={cn(
         "group flex flex-col rounded-[var(--radius-md)] overflow-hidden bg-[var(--bg-primary)]",
-        "transition-all duration-[350ms] ease-[cubic-bezier(0.2,0,0,1)]",
-        "hover:-translate-y-1 hover:shadow-[rgba(0,0,0,0.08)_0_4px_12px,rgba(0,0,0,0.04)_0_0_0_1px]",
+        "transition-all duration-[350ms] ease-[cubic-bezier(0.2,0,0,1)] hover:-translate-y-1",
         variant === "carousel"
-          ? "min-w-[290px] w-[290px] sm:min-w-[310px] sm:w-[310px]"
+          ? "min-w-[290px] w-[290px] sm:min-w-[320px] sm:w-[320px]"
           : "w-full",
         className
       )}
-      style={{ boxShadow: "rgba(0,0,0,0.04) 0 0 0 1px, rgba(0,0,0,0.06) 0 2px 8px" }}
+      style={{ boxShadow: "rgba(0,0,0,0.04) 0 0 0 1px, rgba(0,0,0,0.08) 0 2px 10px" }}
     >
-      {/* Image */}
-      <div className="relative aspect-[3/2] overflow-hidden">
+      {/* Image — landscape */}
+      <div className="relative aspect-[4/3] overflow-hidden">
         <Image
           src={tour.images[0]?.url || "/placeholder.jpg"}
           alt={tour.images[0]?.alt || tour.name}
           fill
           className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.2,0,0,1)] group-hover:scale-[1.04]"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 310px"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px"
         />
 
-        {/* Top gradient for badge area */}
-        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/30 to-transparent" />
-
-        {/* Badge */}
-        {tour.badge && (
-          <div className="absolute top-3.5 left-3.5">
-            <Badge type={tour.badge} />
+        {/* Badge — top right */}
+        {badge && (
+          <div className="absolute top-3 right-3">
+            <span className={cn("px-2.5 py-1 text-[11px] font-bold rounded-full tracking-wide uppercase", badge.className)}>
+              {badge.label}
+            </span>
           </div>
         )}
 
-        {/* Wishlist */}
-        <div className="absolute top-3.5 right-3.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <WishlistButton tourSlug={tour.slug} />
-        </div>
-
-        {/* Duration pill — frosted glass */}
-        <div className="absolute bottom-3.5 left-3.5">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-black/40 backdrop-blur-md text-white text-[11px] font-semibold rounded-[var(--radius-full)] tracking-[0.04em] uppercase border border-[var(--on-dark-border)]">
+        {/* Quick View — bottom left on hover */}
+        <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-[var(--primary)] text-[11px] font-bold rounded-[var(--radius-sm)] shadow-md">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 6v6l4 2" />
+              <polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" />
+              <line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" />
             </svg>
-            {tour.duration} days
+            Quick View
           </span>
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex flex-col flex-1 p-4 sm:p-5">
-        {/* Category + Rating row */}
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--primary)]">
-            {tour.category.replace("-", " ")}
-          </span>
-          <div className="flex items-center gap-1">
-            <span className="text-[var(--primary-muted)] text-[13px]">★</span>
-            <span className="text-[13px] font-semibold text-[var(--text-primary)]">{tour.rating}</span>
-            <span className="text-[11px] text-[var(--text-tertiary)]">({tour.reviewCount})</span>
-          </div>
-        </div>
+      <div className="flex flex-col flex-1 px-4 pt-3 pb-4">
+        {/* Category */}
+        <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--text-tertiary)] mb-1">
+          {tour.category.replace(/-/g, " ")}
+        </span>
 
         {/* Name */}
-        <h3 className="text-[16px] sm:text-[17px] font-bold text-[var(--text-primary)] leading-snug tracking-[-0.01em] group-hover:text-[var(--primary)] transition-colors duration-200 line-clamp-2">
+        <h3 className="text-[15px] font-bold text-[var(--text-primary)] leading-snug group-hover:text-[var(--primary)] transition-colors duration-200 line-clamp-2 mb-2.5">
           {tour.name}
         </h3>
 
-        {/* Route */}
-        <p className="text-[13px] text-[var(--text-tertiary)] mt-1.5 flex items-center gap-1.5">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-            <circle cx="12" cy="10" r="3" />
-          </svg>
-          {tour.route}
-        </p>
-
-        {/* Trust signals */}
-        <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2.5">
-          {tour.freeCancellation && (
-            <span className="flex items-center gap-1 text-[11px] font-medium text-[var(--success)]">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              Free cancellation
-            </span>
-          )}
-          {tour.reserveNowPayLater && (
-            <span className="flex items-center gap-1 text-[11px] font-medium text-[var(--info)]">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              Pay later
-            </span>
-          )}
+        {/* Duration + Route */}
+        <div className="flex items-center gap-3 text-[12px] text-[var(--text-secondary)] mb-1.5">
+          <span className="flex items-center gap-1">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--text-tertiary)]">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            {tour.duration} days
+          </span>
+          <span className="relative group/dest flex items-center gap-1 cursor-default">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--text-tertiary)]">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span className="border-b border-dashed border-[var(--border-default)]">{routeLabel}</span>
+            {/* Tooltip */}
+            <div className="absolute bottom-full left-0 mb-1.5 z-10 invisible group-hover/dest:visible opacity-0 group-hover/dest:opacity-100 transition-all duration-200 pointer-events-none">
+              <div className="bg-[var(--bg-darker)] text-white text-[11px] px-3 py-2 rounded-lg shadow-xl whitespace-nowrap">
+                {destTooltip}
+                <div className="absolute top-full left-3 border-4 border-transparent border-t-[var(--bg-darker)]" />
+              </div>
+            </div>
+          </span>
         </div>
 
         <div className="flex-1" />
 
         {/* Price row */}
-        <div className="mt-3.5 pt-3.5 border-t border-[var(--border-default)]">
-          <div className="flex items-baseline justify-between">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-[12px] text-[var(--text-tertiary)] font-medium">From</span>
+        <div className="flex items-end justify-between gap-2 pt-2.5 border-t border-[var(--border-default)]">
+          <div>
+            <div className="flex items-baseline gap-1.5 flex-wrap">
               <span className="text-[18px] font-bold text-[var(--text-primary)] tabular-nums tracking-tight">
                 {formatPrice(tour.pricing.islamabad)}
               </span>
               {tour.originalPrice && (
-                <span className="text-[12px] text-[var(--text-tertiary)] line-through tabular-nums">
-                  {formatPrice(tour.originalPrice)}
+                <span className="text-[12px] text-[var(--text-tertiary)]">
+                  Reg. {formatPrice(tour.originalPrice)}
+                  {discount && (
+                    <span className="ml-1 px-1.5 py-0.5 bg-[var(--primary)] text-white text-[10px] font-bold rounded align-middle">
+                      -{discount}%
+                    </span>
+                  )}
                 </span>
               )}
             </div>
-            <span className="text-[11px] text-[var(--text-tertiary)]">per person</span>
+            {departureDate && (
+              <p className="text-[11px] text-[var(--text-tertiary)] italic mt-0.5">
+                Departs on {departureDate}
+              </p>
+            )}
           </div>
-          {tour.pricing.lahore && (
-            <p className="text-[11px] text-[var(--text-tertiary)] mt-0.5">
-              {formatPrice(tour.pricing.lahore)} from Lahore
-            </p>
-          )}
+
+          <span className="shrink-0 px-4 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white text-[12px] font-bold rounded-lg transition-colors">
+            View tour
+          </span>
         </div>
       </div>
     </Link>

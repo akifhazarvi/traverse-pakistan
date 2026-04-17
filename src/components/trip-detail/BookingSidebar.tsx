@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { formatPrice, getWhatsAppUrl } from "@/lib/utils";
+import Link from "next/link";
+import { formatPrice } from "@/lib/utils";
 import { StarRating } from "@/components/ui/StarRating";
 import type { Tour } from "@/types/tour";
 
@@ -161,14 +162,12 @@ export function BookingSidebar({ tour }: BookingSidebarProps) {
         </div>
 
         {/* CTA */}
-        <a
-          href={getWhatsAppUrl(whatsappMessage)}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href={`/grouptours/${tour.slug}/checkout?departure=${departure}&adults=${adults}&children=${children}`}
           className="mt-5 w-full h-[52px] bg-[var(--primary)] text-white text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all"
         >
-          Check Availability
-        </a>
+          Book Now
+        </Link>
 
         {/* Guarantees */}
         <div className="mt-5 space-y-2">

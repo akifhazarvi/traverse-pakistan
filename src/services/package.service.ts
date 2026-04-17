@@ -10,10 +10,14 @@ export async function getPackageBySlug(slug: string): Promise<Package | null> {
   return packages.find((p) => p.slug === slug) ?? null;
 }
 
-export async function getFeaturedPackages(limit = 4): Promise<Package[]> {
+export async function getFeaturedPackages(limit = 5): Promise<Package[]> {
   return packages.slice(0, limit);
 }
 
 export async function getPackageItinerary(slug: string) {
   return packageItineraries.find((i) => i.packageSlug === slug) ?? null;
+}
+
+export async function getPackagesByDestination(destinationSlug: string): Promise<Package[]> {
+  return packages.filter((p) => p.destinationSlug === destinationSlug);
 }

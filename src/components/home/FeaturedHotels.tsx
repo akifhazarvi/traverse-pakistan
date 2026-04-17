@@ -24,10 +24,10 @@ export async function FeaturedHotels() {
             <Link
               key={hotel.id}
               href={`/hotels/${hotel.slug}`}
-              className="group min-w-[290px] w-[290px] sm:min-w-[310px] sm:w-[310px] rounded-[var(--radius-md)] overflow-hidden bg-[var(--bg-primary)] transition-all duration-300 hover:-translate-y-1"
+              className="group min-w-[300px] w-[300px] sm:min-w-[340px] sm:w-[340px] rounded-[var(--radius-md)] overflow-hidden bg-[var(--bg-dark)] transition-all duration-300 hover:-translate-y-1"
               style={{ boxShadow: "var(--shadow-sm)" }}
             >
-              <div className="relative aspect-[3/2] overflow-hidden">
+              <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
                   src={hotel.image}
                   alt={hotel.name}
@@ -41,7 +41,7 @@ export async function FeaturedHotels() {
                   </span>
                 </div>
               </div>
-              <div className="p-4 sm:p-5">
+              <div className="p-4 sm:p-5 bg-white">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
                     {hotel.propertyType}

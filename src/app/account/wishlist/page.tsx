@@ -14,7 +14,7 @@ export default function WishlistPage() {
           <p className="text-[var(--text-tertiary)] mt-2">
             Save tours you love by tapping the heart icon. Persistent wishlist coming in Phase 2!
           </p>
-          <Link href="/tours" className="inline-block mt-6">
+          <Link href="/grouptours" className="inline-block mt-6">
             <Button size="lg">Explore Tours</Button>
           </Link>
         </div>

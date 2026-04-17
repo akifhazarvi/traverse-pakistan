@@ -259,14 +259,12 @@ export default async function HotelDetailPage({ params }: Props) {
             <span className="text-[13px] text-[var(--text-tertiary)]"> / night</span>
             <p className="text-[12px] text-[var(--text-tertiary)]">★ {hotel.rating} · {hotel.reviewCount} reviews</p>
           </div>
-          <a
-            href={`https://wa.me/923216650670?text=${encodeURIComponent(`Hi! I'd like to book ${hotel.name}.`)}`}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href={`/hotels/${hotel.slug}/checkout`}
             className="h-11 px-6 bg-[var(--primary)] text-[var(--on-dark)] text-[14px] font-semibold rounded-[var(--radius-full)] flex items-center justify-center hover:bg-[var(--primary-hover)] transition-colors"
           >
-            Check Availability
-          </a>
+            Book Now
+          </Link>
         </div>
       </Container>
     </div>

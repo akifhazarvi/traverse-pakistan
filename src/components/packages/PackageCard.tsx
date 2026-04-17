@@ -26,7 +26,7 @@ export function PackageCard({ pkg, variant = "carousel", className }: PackageCar
       style={{ boxShadow: "rgba(0,0,0,0.04) 0 0 0 1px, rgba(0,0,0,0.06) 0 2px 8px" }}
     >
       {/* Image */}
-      <div className="relative aspect-[3/2] overflow-hidden">
+      <div className="relative aspect-[5/4] overflow-hidden">
         <Image
           src={pkg.images[0]?.url || "/placeholder.jpg"}
           alt={pkg.images[0]?.alt || pkg.name}
@@ -42,7 +42,6 @@ export function PackageCard({ pkg, variant = "carousel", className }: PackageCar
           </div>
         )}
 
-        {/* Tier badges */}
         <div className="absolute top-3.5 right-3.5 flex gap-1.5">
           <span className="px-2 py-1 bg-black/40 backdrop-blur-md text-white text-[10px] font-bold rounded-full border border-white/20 uppercase tracking-wide">
             Deluxe
@@ -52,7 +51,6 @@ export function PackageCard({ pkg, variant = "carousel", className }: PackageCar
           </span>
         </div>
 
-        {/* Duration pill */}
         <div className="absolute bottom-3.5 left-3.5">
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-black/40 backdrop-blur-md text-white text-[11px] font-semibold rounded-full tracking-[0.04em] uppercase border border-[var(--on-dark-border)]">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -62,7 +60,6 @@ export function PackageCard({ pkg, variant = "carousel", className }: PackageCar
           </span>
         </div>
 
-        {/* Custom dates tag */}
         <div className="absolute bottom-3.5 right-3.5">
           <span className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-black/40 backdrop-blur-md text-[#A5D6A7] text-[10px] font-bold rounded-full border border-[#A5D6A7]/30 uppercase tracking-wide">
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">

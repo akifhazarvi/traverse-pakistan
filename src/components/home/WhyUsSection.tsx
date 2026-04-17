@@ -53,7 +53,7 @@ const steps = [
 
 export function WhyUsSection() {
   return (
-    <section className="py-20 sm:py-24 bg-[var(--bg-subtle)]">
+    <section className="py-20 sm:py-24 bg-[var(--bg-primary)]">
       <Container>
         <SectionHeader
           title="Why Travel With Us"

@@ -14,7 +14,7 @@ export default function TripsPage() {
           <p className="text-[var(--text-tertiary)] mt-2">
             Once you book a tour, your trips will appear here. Booking feature coming in Phase 2!
           </p>
-          <Link href="/tours" className="inline-block mt-6">
+          <Link href="/grouptours" className="inline-block mt-6">
             <Button size="lg">Browse Tours</Button>
           </Link>
         </div>

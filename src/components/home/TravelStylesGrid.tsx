@@ -6,13 +6,14 @@ import { travelStyles } from "@/data/travel-styles";
 
 export function TravelStylesGrid() {
   return (
-    <section className="py-20 sm:py-24">
-      <Container>
+    <section className="py-20 sm:py-24 bg-[var(--bg-dark)]">
+      <Container wide>
         <SectionHeader
           title="Travel Your Way"
           subtitle="Choose a travel style that matches your vibe"
           linkText="View all styles"
           linkHref="/travel-styles"
+          light
         />
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
           {travelStyles.map((style, index) => (

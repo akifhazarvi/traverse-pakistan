@@ -145,6 +145,9 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
     ? new Date(checkIn.getFullYear(), checkIn.getMonth(), checkIn.getDate() + pkg.duration - 1)
     : null;
 
+  // Departure city
+  const [departureCity, setDepartureCity] = useState<"islamabad" | "lahore">("islamabad");
+
   // Rooms & travelers
   const [rooms, setRooms] = useState(1);
   const [adults, setAdults] = useState(2);
@@ -185,7 +188,8 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
   const defaultRooms = Math.ceil(adults / 3);
   const extraRooms = Math.max(0, rooms - defaultRooms);
   const singleSupp = pricing.singleSupplement ?? 0;
-  const baseTotal = pricing.islamabad * adults;
+  const pricePerPerson = departureCity === "lahore" && pricing.lahore ? pricing.lahore : pricing.islamabad;
+  const baseTotal = pricePerPerson * adults;
   const roomSurcharge = extraRooms * singleSupp;
   const totalPrice = baseTotal + roomSurcharge;
 
@@ -195,6 +199,7 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
 
   const whatsappMessage =
     `Hi! I'd like to book the "${pkg.name}" package.\n\n` +
+    `Departure: ${departureCity === "lahore" ? "Lahore" : "Islamabad"}\n` +
     `Tier: ${selectedTier === "deluxe" ? "Deluxe" : "Luxury"}\n` +
     (checkIn && checkOut ? `Dates: ${formatDateShort(checkIn)} – ${formatDateShort(checkOut)} (${nights} nights)\n` : "") +
     `Adults: ${adults}\nRooms: ${rooms}\nTotal: ${formatPrice(totalPrice)}\n\nPlease confirm availability.`;
@@ -222,18 +227,36 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
           </div>
         </div>
 
+        {/* Departure City */}
+        {pricing.lahore && (
+          <div className="mb-5">
+            <label className="text-[12px] font-bold uppercase tracking-[0.08em] text-[var(--text-secondary)] block mb-2">Starting Location</label>
+            <div className="grid grid-cols-2 gap-2">
+              {(["islamabad", "lahore"] as const).map((city) => (
+                <button key={city} type="button" onClick={() => setDepartureCity(city)}
+                  className={`h-11 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer ${
+                    departureCity === city
+                      ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                      : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--primary)]"
+                  }`}
+                >
+                  {city === "islamabad" ? "Islamabad" : "Lahore"}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Price display */}
         <div className="flex items-baseline gap-2 flex-wrap">
           <span className="text-2xl font-bold text-[var(--text-primary)] tabular-nums">{formatPrice(totalPrice)}</span>
           <span className="text-[14px] text-[var(--text-tertiary)]">total</span>
         </div>
         <p className="text-[12px] text-[var(--text-tertiary)] mt-0.5">
-          {formatPrice(pricing.islamabad)} × {adults} person{adults > 1 ? "s" : ""}
+          {formatPrice(pricePerPerson)} × {adults} person{adults > 1 ? "s" : ""}
           {roomSurcharge > 0 && ` + ${formatPrice(roomSurcharge)} room supplement`}
         </p>
-        {pricing.lahore && (
-          <p className="text-[12px] text-[var(--text-tertiary)]">{formatPrice(pricing.lahore)} per person from Lahore</p>
-        )}
+
 
         {/* Rating */}
         <div className="mt-2">
@@ -327,7 +350,7 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
           <div className="flex items-center justify-between px-4 py-3 bg-[var(--bg-subtle)]">
             <div>
               <p className="text-[13px] font-semibold text-[var(--text-primary)]">Adults</p>
-              <p className="text-[11px] text-[var(--text-tertiary)]">{formatPrice(pricing.islamabad)} / person</p>
+              <p className="text-[11px] text-[var(--text-tertiary)]">{formatPrice(pricePerPerson)} / person</p>
             </div>
             <div className="flex items-center gap-3">
               <button type="button"
@@ -358,7 +381,7 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
         {/* Price breakdown */}
         <div className="mb-4 space-y-1.5">
           <div className="flex justify-between text-[13px]">
-            <span className="text-[var(--text-secondary)]">{formatPrice(pricing.islamabad)} × {adults} person{adults > 1 ? "s" : ""}</span>
+            <span className="text-[var(--text-secondary)]">{formatPrice(pricePerPerson)} × {adults} person{adults > 1 ? "s" : ""}</span>
             <span className="text-[var(--text-primary)] font-medium tabular-nums">{formatPrice(baseTotal)}</span>
           </div>
           {roomSurcharge > 0 && (
