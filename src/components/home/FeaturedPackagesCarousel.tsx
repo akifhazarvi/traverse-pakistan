@@ -18,7 +18,7 @@ export async function FeaturedPackagesCarousel() {
       <Container wide className="relative">
         <SectionHeader
           title="Design Your Dream Journey"
-          subtitle="Your dates. Your tier. Deluxe comfort or Luxury indulgence — with hand-picked hotels that change as you upgrade."
+          subtitle="Your dates. Your tier. Tailor Made tours with hand-picked hotels that elevates the journey as you Traverse beyond the maps"
           linkText="View all packages"
           linkHref="/packages"
           light

@@ -17,3 +17,7 @@ export async function getFeaturedPackages(limit = 5): Promise<Package[]> {
 export async function getPackageItinerary(slug: string) {
   return packageItineraries.find((i) => i.packageSlug === slug) ?? null;
 }
+
+export async function getPackagesByDestination(destinationSlug: string): Promise<Package[]> {
+  return packages.filter((p) => p.destinationSlug === destinationSlug);
+}

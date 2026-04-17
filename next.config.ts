@@ -1,8 +1,10 @@
 import type { NextConfig } from "next";
 
+const isProd = process.env.NODE_ENV === "production";
+
 const nextConfig: NextConfig = {
-  output: "export",
-  basePath: "/traverse-pakistan",
+  output: isProd ? "export" : undefined,
+  basePath: isProd ? "/traverse-pakistan" : "",
   images: {
     remotePatterns: [
       {
@@ -29,6 +31,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "img.youtube.com",
         pathname: "/vi/**",
+      },
+      {
+        protocol: "https",
+        hostname: "placehold.co",
       },
     ],
     // Use unoptimized for external WordPress images to avoid SSL cert issues

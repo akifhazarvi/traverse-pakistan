@@ -3,12 +3,12 @@ import Image from "next/image";
 import { getWhatsAppUrl } from "@/lib/utils";
 
 const tourLinks = [
-  { label: "Blossom Trip to Hunza", href: "/tours/blossom-trip-to-hunza" },
-  { label: "Fairy Meadows & Nanga Parbat", href: "/tours/fairy-meadows-nanga-parbat" },
-  { label: "Autumn Trip to Skardu", href: "/tours/autumn-trip-to-skardu" },
-  { label: "K2 Base Camp Trek", href: "/tours/k2-base-camp-trek" },
-  { label: "Luxury Trip to Kumrat", href: "/tours/luxury-trip-to-kumrat" },
-  { label: "Chitral & Kalash", href: "/tours/chitral-kalash-gol-national-park" },
+  { label: "Blossom Trip to Hunza", href: "/grouptours/blossom-trip-to-hunza" },
+  { label: "Fairy Meadows & Nanga Parbat", href: "/grouptours/fairy-meadows-nanga-parbat" },
+  { label: "Autumn Trip to Skardu", href: "/grouptours/autumn-trip-to-skardu" },
+  { label: "K2 Base Camp Trek", href: "/grouptours/k2-base-camp-trek" },
+  { label: "Luxury Trip to Kumrat", href: "/grouptours/luxury-trip-to-kumrat" },
+  { label: "Chitral & Kalash", href: "/grouptours/chitral-kalash-gol-national-park" },
 ];
 
 const destinationLinks = [
@@ -36,11 +36,11 @@ export function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/">
               <Image
-                src="/logo.svg"
+                src="/logo-white.png"
                 alt="Traverse Pakistan"
                 width={160}
                 height={48}
-                className="h-12 w-auto brightness-0 invert"
+                className="h-12 w-auto"
               />
             </Link>
             <p className="mt-4 text-[14px] text-[var(--on-dark-secondary)] leading-relaxed max-w-xs">

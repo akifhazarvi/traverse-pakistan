@@ -52,7 +52,7 @@ export default async function TripDetailPage({ params }: Props) {
         {/* Breadcrumb */}
         <Breadcrumb
           items={[
-            { label: "Tours", href: "/tours" },
+            { label: "Group Tours", href: "/grouptours" },
             { label: tour.name },
           ]}
         />

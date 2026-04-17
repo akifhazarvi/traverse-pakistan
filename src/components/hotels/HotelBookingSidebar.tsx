@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { formatPrice, getWhatsAppUrl } from "@/lib/utils";
+import Link from "next/link";
+import { formatPrice } from "@/lib/utils";
 import type { Hotel, HotelRoom } from "@/types/hotel";
 
 /* ─── Helpers ───────────────────────────────────────────────────────────────── */
@@ -176,8 +177,19 @@ interface HotelBookingSidebarProps {
   hotel: Hotel;
 }
 
-const MAX_GUESTS = 10;
-const MAX_ROOMS = 5;
+const MAX_GUESTS = 20;
+const MAX_ROOMS = 10;
+
+/** Guests per room: Suite/Family/Presidential rooms fit 5; standard rooms fit 3 */
+function getRoomCapacity(roomName: string): number {
+  const large = /suite|family|presidential/i.test(roomName);
+  return large ? 5 : 3;
+}
+
+/** Minimum rooms needed given guest count and room capacity */
+function minRoomsNeeded(totalGuests: number, capacity: number): number {
+  return Math.max(1, Math.ceil(totalGuests / capacity));
+}
 
 export function HotelBookingSidebar({ hotel }: HotelBookingSidebarProps) {
   const today = new Date();
@@ -293,7 +305,7 @@ export function HotelBookingSidebar({ hotel }: HotelBookingSidebarProps) {
               <button
                 key={room.name}
                 type="button"
-                onClick={() => setSelectedRoom(room)}
+                onClick={() => { setSelectedRoom(room); setNumRooms(minRoomsNeeded(adults + children, getRoomCapacity(room.name))); }}
                 className={`w-full text-left px-3 py-2.5 border rounded-[var(--radius-sm)] transition-colors cursor-pointer ${
                   selectedRoom.name === room.name
                     ? "border-[var(--primary)] bg-[var(--primary-light)]"
@@ -415,28 +427,54 @@ export function HotelBookingSidebar({ hotel }: HotelBookingSidebarProps) {
                 <Counter
                   label="Adults" sub="Age 13+"
                   value={adults}
-                  onDec={() => setAdults(a => Math.max(1, a - 1))}
-                  onInc={() => setAdults(a => Math.min(MAX_GUESTS - children, a + 1))}
+                  onDec={() => {
+                    const newAdults = Math.max(1, adults - 1);
+                    setAdults(newAdults);
+                    const needed = minRoomsNeeded(newAdults + children, getRoomCapacity(selectedRoom.name));
+                    setNumRooms(r => Math.max(needed, r > needed ? r - 1 : needed));
+                  }}
+                  onInc={() => {
+                    const newAdults = Math.min(MAX_GUESTS - children, adults + 1);
+                    setAdults(newAdults);
+                    setNumRooms(r => Math.max(r, minRoomsNeeded(newAdults + children, getRoomCapacity(selectedRoom.name))));
+                  }}
                   disableDec={adults <= 1}
                   disableInc={adults + children >= MAX_GUESTS}
                 />
                 <Counter
                   label="Children" sub="Ages 2–12"
                   value={children}
-                  onDec={() => setChildren(c => Math.max(0, c - 1))}
-                  onInc={() => setChildren(c => Math.min(MAX_GUESTS - adults, c + 1))}
+                  onDec={() => {
+                    const newChildren = Math.max(0, children - 1);
+                    setChildren(newChildren);
+                    const needed = minRoomsNeeded(adults + newChildren, getRoomCapacity(selectedRoom.name));
+                    setNumRooms(r => Math.max(needed, r > needed ? r - 1 : needed));
+                  }}
+                  onInc={() => {
+                    const newChildren = Math.min(MAX_GUESTS - adults, children + 1);
+                    setChildren(newChildren);
+                    setNumRooms(r => Math.max(r, minRoomsNeeded(adults + newChildren, getRoomCapacity(selectedRoom.name))));
+                  }}
                   disableDec={children <= 0}
                   disableInc={adults + children >= MAX_GUESTS}
                 />
                 <Counter
-                  label="Rooms" sub={`${selectedRoom.name}`}
+                  label="Rooms" sub={`${getRoomCapacity(selectedRoom.name)} guests per room · auto-adjusted`}
                   value={numRooms}
-                  onDec={() => setNumRooms(r => Math.max(1, r - 1))}
+                  onDec={() => {
+                    const needed = minRoomsNeeded(adults + children, getRoomCapacity(selectedRoom.name));
+                    setNumRooms(r => Math.max(needed, r - 1));
+                  }}
                   onInc={() => setNumRooms(r => Math.min(Math.min(MAX_ROOMS, selectedRoom.available), r + 1))}
-                  disableDec={numRooms <= 1}
+                  disableDec={numRooms <= minRoomsNeeded(adults + children, getRoomCapacity(selectedRoom.name))}
                   disableInc={numRooms >= Math.min(MAX_ROOMS, selectedRoom.available)}
                 />
               </div>
+              {numRooms > 1 && numRooms === minRoomsNeeded(adults + children, getRoomCapacity(selectedRoom.name)) && (
+                <p className="text-[11px] text-[var(--primary)] text-center pb-2 font-medium">
+                  {numRooms} rooms added — {getRoomCapacity(selectedRoom.name)} guests max per room
+                </p>
+              )}
               <button
                 type="button"
                 onClick={() => setGuestsOpen(false)}
@@ -468,14 +506,12 @@ export function HotelBookingSidebar({ hotel }: HotelBookingSidebarProps) {
         </div>
 
         {/* CTA */}
-        <a
-          href={getWhatsAppUrl(whatsappMsg)}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href={`/hotels/${hotel.slug}/checkout?room=${encodeURIComponent(selectedRoom.name)}&checkin=${checkIn ? checkIn.toISOString().split("T")[0] : ""}&checkout=${checkOut ? checkOut.toISOString().split("T")[0] : ""}&adults=${adults}&children=${children}&rooms=${numRooms}&guests=${adults + children}`}
           className="w-full h-[52px] bg-[var(--primary)] text-white text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all"
         >
-          Check Availability
-        </a>
+          {checkIn && checkOut ? "Book Now" : "Check Availability"}
+        </Link>
         <p className="text-center text-[12px] text-[var(--text-tertiary)] mt-2">You won&apos;t be charged yet</p>
 
         {/* Guarantees */}

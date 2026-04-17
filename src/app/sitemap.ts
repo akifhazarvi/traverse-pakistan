@@ -12,7 +12,7 @@ const BASE_URL = "https://traversepakistan.com";
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
     { url: BASE_URL, lastModified: new Date(), changeFrequency: "weekly", priority: 1 },
-    { url: `${BASE_URL}/tours`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
+    { url: `${BASE_URL}/grouptours`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/destinations`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/blog`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/travel-styles`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
@@ -21,7 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const tourPages: MetadataRoute.Sitemap = tours.map((t) => ({
-    url: `${BASE_URL}/tours/${t.slug}`,
+    url: `${BASE_URL}/grouptours/${t.slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly",
     priority: 0.8,

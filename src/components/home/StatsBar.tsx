@@ -54,7 +54,7 @@ function AnimatedNumber({ value, suffix, isDecimal }: { value: number; suffix: s
 
 export function StatsBar() {
   return (
-    <section className="py-10 sm:py-12 border-b border-[var(--border-default)]">
+    <section className="py-10 sm:py-12 bg-[var(--bg-primary)] border-b border-[var(--border-default)]">
       <Container>
         <div className="flex items-center justify-between gap-6 overflow-x-auto no-scrollbar">
           {stats.map((stat) => (

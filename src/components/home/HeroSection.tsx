@@ -81,22 +81,7 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Image indicators */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex gap-2">
-        {heroImages.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            onClick={() => setCurrent(i)}
-            className={`h-1 rounded-full transition-all duration-500 cursor-pointer ${
-              i === current
-                ? "w-6 bg-[var(--on-dark)]"
-                : "w-1.5 bg-[var(--on-dark-tertiary)] hover:bg-[var(--on-dark-secondary)]"
-            }`}
-            aria-label={`Show image ${i + 1}`}
-          />
-        ))}
-      </div>
+
 
       {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[var(--hero-fade)] to-transparent z-[5]" />

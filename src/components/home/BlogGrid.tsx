@@ -9,8 +9,8 @@ export function BlogGrid() {
   const rest = blogPosts.slice(1, 5);
 
   return (
-    <section className="py-20 sm:py-24">
-      <Container>
+    <section className="py-20 sm:py-24 bg-[var(--bg-primary)]">
+      <Container wide>
         <SectionHeader
           title="Stories & Guides"
           subtitle="Travel tips, destination guides, and inspiration"

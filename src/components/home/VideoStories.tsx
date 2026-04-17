@@ -61,11 +61,11 @@ export function VideoStories() {
 
   return (
     <>
-      <section className="relative bg-[var(--bg-darker)] py-20 sm:py-24 overflow-hidden">
+      <section className="relative bg-[var(--bg-dark)] py-20 sm:py-24 overflow-hidden">
         {/* Subtle grain */}
         <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "32px 32px" }} />
 
-        <Container className="relative">
+        <Container wide className="relative">
           <div className="text-center mb-12">
             <span className="inline-block text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--primary-muted)] mb-3">
               The Journey Awaits

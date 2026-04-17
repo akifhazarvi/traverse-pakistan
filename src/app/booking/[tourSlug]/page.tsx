@@ -31,7 +31,7 @@ export default async function BookingPage({ params }: Props) {
       <Container>
         <Breadcrumb
           items={[
-            { label: "Tours", href: "/tours" },
+            { label: "Tours", href: "/grouptours" },
             { label: tour.name, href: `/tours/${tour.slug}` },
             { label: "Booking" },
           ]}

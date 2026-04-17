@@ -8,14 +8,13 @@ import { destinations } from "@/data/destinations";
 
 export function DestinationsScroll() {
   return (
-    <section className="bg-[var(--bg-darker)] py-20 sm:py-24">
+    <section className="bg-[var(--bg-primary)] py-20 sm:py-24">
       <Container wide>
         <SectionHeader
           title="Explore Destinations"
           subtitle="From the peaks of Karakoram to the beaches of Makran"
           linkText="View all destinations"
           linkHref="/destinations"
-          light
         />
         <Carousel>
           {destinations.map((dest) => (
