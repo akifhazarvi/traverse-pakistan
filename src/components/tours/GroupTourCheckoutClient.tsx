@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { formatPrice, getWhatsAppUrl } from "@/lib/utils";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { createBooking, getNextOpenDeparture } from "@/services/booking.service";
+import type { Departure } from "@/types/booking";
 import type { Tour } from "@/types/tour";
 
 function fmtDate(dateStr: string) {
@@ -14,6 +17,7 @@ function fmtDate(dateStr: string) {
 
 export function GroupTourCheckoutClient({ tour }: { tour: Tour }) {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const departure = (searchParams.get("departure") ?? "islamabad") as "islamabad" | "lahore";
   const initAdults = Number(searchParams.get("adults") ?? 2);
@@ -31,6 +35,18 @@ export function GroupTourCheckoutClient({ tour }: { tour: Tour }) {
   const [children, setChildren] = useState(initChildren);
   const [depCity, setDepCity] = useState<"islamabad" | "lahore">(departure);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [liveDeparture, setLiveDeparture] = useState<Departure | null>(null);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+    let cancelled = false;
+    getNextOpenDeparture(tour.slug)
+      .then((d) => { if (!cancelled) setLiveDeparture(d); })
+      .catch(() => { /* silent — fall back to WhatsApp flow */ });
+    return () => { cancelled = true; };
+  }, [tour.slug]);
 
   const basePrice = depCity === "lahore" && tour.pricing.lahore
     ? tour.pricing.lahore
@@ -48,10 +64,8 @@ export function GroupTourCheckoutClient({ tour }: { tour: Tour }) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
-    const msg =
+  function buildWhatsAppMessage() {
+    return (
       `Hi! I'd like to book the "${tour.name}" tour.\n\n` +
       `*Tour:* ${tour.name}\n` +
       `*Departure:* ${depCity === "lahore" ? "Lahore" : "Islamabad"}\n` +
@@ -66,9 +80,46 @@ export function GroupTourCheckoutClient({ tour }: { tour: Tour }) {
       `Email: ${form.email}\n` +
       `Phone: ${form.phone}\n` +
       (form.specialRequests ? `Special Requests: ${form.specialRequests}\n` : "") +
-      `\nPlease confirm availability.`;
+      `\nPlease confirm availability.`
+    );
+  }
 
-    window.open(getWhatsAppUrl(msg), "_blank");
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+
+    // Supabase online booking path
+    if (isSupabaseConfigured && liveDeparture && liveDeparture.seatsAvailable >= totalTravelers) {
+      setSubmitting(true);
+      try {
+        const result = await createBooking({
+          departureId: liveDeparture.id,
+          seats: totalTravelers,
+          departureCity: depCity,
+          singleRooms: singleSupplement > 0 ? 1 : 0,
+          contact: {
+            name: `${form.firstName} ${form.lastName}`.trim(),
+            email: form.email,
+            phone: form.phone,
+          },
+          participants: [
+            {
+              fullName: `${form.firstName} ${form.lastName}`.trim(),
+            },
+          ],
+          notes: form.specialRequests || undefined,
+        });
+        router.push(`/grouptours/${tour.slug}/checkout/success?ref=${result.bookingRef}`);
+        return;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to create booking");
+        setSubmitting(false);
+        return;
+      }
+    }
+
+    // WhatsApp fallback
+    window.open(getWhatsAppUrl(buildWhatsAppMessage()), "_blank");
     setSubmitted(true);
   }
 
@@ -92,7 +143,7 @@ export function GroupTourCheckoutClient({ tour }: { tour: Tour }) {
                   onClick={() => setDepCity(city)}
                   className={`h-12 rounded-[var(--radius-sm)] text-[14px] font-semibold border transition-colors cursor-pointer capitalize ${
                     depCity === city
-                      ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                      ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
                       : "bg-[var(--bg-subtle)] text-[var(--text-primary)] border-[var(--border-default)] hover:border-[var(--primary)]"
                   }`}
                 >
@@ -139,7 +190,7 @@ export function GroupTourCheckoutClient({ tour }: { tour: Tour }) {
             <p className="mt-2 text-[12px] text-[var(--warning)] font-medium">Max group size of {tour.maxGroupSize} reached</p>
           )}
           {singleSupplement > 0 && (
-            <p className="mt-2 text-[12px] text-amber-600 font-medium flex items-center gap-1.5">
+            <p className="mt-2 text-[12px] text-[var(--accent-warm)] font-medium flex items-center gap-1.5">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               Single traveller supplement: {formatPrice(singleSupplement)}
             </p>
@@ -152,35 +203,35 @@ export function GroupTourCheckoutClient({ tour }: { tour: Tour }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-[12px] font-semibold text-[var(--text-secondary)] mb-1.5 uppercase tracking-wide">
-                First name <span className="text-red-500">*</span>
+                First name <span className="text-[var(--error)]" aria-hidden="true">*</span>
               </label>
               <input name="firstName" type="text" required value={form.firstName} onChange={handleChange}
                 placeholder="Ali"
-                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-colors" />
+                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-colors" />
             </div>
             <div>
               <label className="block text-[12px] font-semibold text-[var(--text-secondary)] mb-1.5 uppercase tracking-wide">
-                Last name <span className="text-red-500">*</span>
+                Last name <span className="text-[var(--error)]" aria-hidden="true">*</span>
               </label>
               <input name="lastName" type="text" required value={form.lastName} onChange={handleChange}
                 placeholder="Khan"
-                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-colors" />
+                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-colors" />
             </div>
             <div>
               <label className="block text-[12px] font-semibold text-[var(--text-secondary)] mb-1.5 uppercase tracking-wide">
-                Email <span className="text-red-500">*</span>
+                Email <span className="text-[var(--error)]" aria-hidden="true">*</span>
               </label>
               <input name="email" type="email" required value={form.email} onChange={handleChange}
                 placeholder="ali@example.com"
-                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-colors" />
+                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-colors" />
             </div>
             <div>
               <label className="block text-[12px] font-semibold text-[var(--text-secondary)] mb-1.5 uppercase tracking-wide">
-                Phone <span className="text-red-500">*</span>
+                Phone <span className="text-[var(--error)]" aria-hidden="true">*</span>
               </label>
               <input name="phone" type="tel" required value={form.phone} onChange={handleChange}
                 placeholder="+92 300 0000000"
-                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-colors" />
+                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-colors" />
             </div>
           </div>
         </section>
@@ -190,32 +241,53 @@ export function GroupTourCheckoutClient({ tour }: { tour: Tour }) {
           <h2 className="text-[18px] font-bold text-[var(--text-primary)] mb-4">Special requests</h2>
           <textarea name="specialRequests" value={form.specialRequests} onChange={handleChange}
             rows={3} placeholder="Dietary requirements, accessibility needs, room preferences…"
-            className="w-full px-4 py-3 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-colors resize-none" />
+            className="w-full px-4 py-3 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-colors resize-none" />
         </section>
 
         {/* Cancellation */}
-        <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-[var(--radius-md)]">
+        <div className="p-4 bg-[var(--primary-light)] border border-[var(--primary)]/20 rounded-[var(--radius-md)]">
           <div className="flex items-start gap-3">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2" className="mt-0.5 shrink-0">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2" className="mt-0.5 shrink-0">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             </svg>
             <div>
-              <p className="text-[13px] font-bold text-emerald-800 mb-1">Free cancellation</p>
-              <p className="text-[12px] text-emerald-700">Cancel up to 7 days before departure for a full refund.</p>
+              <p className="text-[13px] font-bold text-[var(--primary-deep)] mb-1">Free cancellation</p>
+              <p className="text-[12px] text-[var(--text-secondary)]">Cancel up to 7 days before departure for a full refund.</p>
             </div>
           </div>
         </div>
 
+        {/* Live availability banner */}
+        {liveDeparture && (
+          <div className="p-3 bg-[var(--bg-subtle)] border border-[var(--border-default)] rounded-[var(--radius-sm)] text-[12px] text-[var(--text-secondary)] flex items-center gap-2">
+            <span className={`inline-block w-2 h-2 rounded-full ${liveDeparture.seatsAvailable > 0 ? "bg-[var(--success)]" : "bg-[var(--error)]"}`} />
+            {liveDeparture.seatsAvailable > 0
+              ? `${liveDeparture.seatsAvailable} seat${liveDeparture.seatsAvailable !== 1 ? "s" : ""} left on this departure`
+              : "This departure is sold out — message us on WhatsApp for alternatives"}
+          </div>
+        )}
+
+        {/* Error banner */}
+        {error && (
+          <div className="p-3 bg-[var(--error)]/10 border border-[var(--error)]/30 rounded-[var(--radius-sm)] text-[13px] text-[var(--error)]">
+            {error}
+          </div>
+        )}
+
         {/* Submit */}
         {submitted ? (
-          <div className="p-5 bg-emerald-50 border border-emerald-200 rounded-[var(--radius-md)] text-center">
-            <p className="text-[16px] font-bold text-emerald-800 mb-1">Booking request sent!</p>
-            <p className="text-[13px] text-emerald-700">Our team will confirm your booking via WhatsApp shortly.</p>
+          <div className="p-5 bg-[var(--primary-light)] border border-[var(--primary)]/30 rounded-[var(--radius-md)] text-center">
+            <p className="text-[16px] font-bold text-[var(--primary-deep)] mb-1">Booking request sent!</p>
+            <p className="text-[13px] text-[var(--text-secondary)]">Our team will confirm your booking via WhatsApp shortly.</p>
           </div>
         ) : (
-          <button type="submit" disabled={!isValid}
-            className="w-full h-[52px] bg-[var(--primary)] text-white text-[15px] font-bold rounded-[var(--radius-sm)] hover:bg-[var(--primary-hover)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]">
-            Confirm via WhatsApp
+          <button type="submit" disabled={!isValid || submitting}
+            className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-bold rounded-[var(--radius-sm)] hover:bg-[var(--primary-hover)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]">
+            {submitting
+              ? "Processing…"
+              : (isSupabaseConfigured && liveDeparture && liveDeparture.seatsAvailable >= totalTravelers)
+                ? `Confirm booking · ${formatPrice(grandTotal)}`
+                : "Confirm via WhatsApp"}
           </button>
         )}
         <p className="text-center text-[12px] text-[var(--text-tertiary)] -mt-4">

@@ -1,0 +1,138 @@
+"use client";
+
+import { getSupabaseBrowser } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
+import type {
+  BookingRow,
+  CreateBookingArgs,
+  CreateBookingResult,
+  DepartureRow,
+} from "@/lib/supabase/types";
+import type {
+  Booking,
+  BookingSummary,
+  CreateBookingInput,
+  Departure,
+} from "@/types/booking";
+
+function toDeparture(row: DepartureRow): Departure {
+  return {
+    id: row.id,
+    tourSlug: row.tour_slug,
+    departureDate: row.departure_date,
+    maxSeats: row.max_seats,
+    seatsBooked: row.seats_booked,
+    seatsAvailable: Math.max(0, row.max_seats - row.seats_booked),
+    status: row.status,
+    pricing: {
+      islamabad: row.price_islamabad,
+      lahore: row.price_lahore,
+      singleSupplement: row.single_supplement,
+    },
+  };
+}
+
+export async function getNextOpenDeparture(
+  tourSlug: string
+): Promise<Departure | null> {
+  if (!isSupabaseConfigured) return null;
+  const supabase = getSupabaseBrowser();
+  const today = new Date().toISOString().slice(0, 10);
+
+  const { data, error } = await supabase
+    .from("departures")
+    .select("*")
+    .eq("tour_slug", tourSlug)
+    .eq("status", "open")
+    .gte("departure_date", today)
+    .order("departure_date", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  return data ? toDeparture(data) : null;
+}
+
+function toBooking(row: BookingRow): Booking {
+  return {
+    id: row.id,
+    bookingRef: row.booking_ref,
+    departureId: row.departure_id,
+    seats: row.seats,
+    departureCity: row.departure_city,
+    singleRooms: row.single_rooms,
+    totalAmount: row.total_amount,
+    currency: row.currency,
+    status: row.status,
+    contact: {
+      name: row.contact_name,
+      email: row.contact_email,
+      phone: row.contact_phone,
+    },
+    notes: row.notes,
+    createdAt: row.created_at,
+  };
+}
+
+export async function createBooking(
+  input: CreateBookingInput
+): Promise<BookingSummary> {
+  if (!isSupabaseConfigured) {
+    throw new Error("Online booking is not available. Please use WhatsApp.");
+  }
+  const supabase = getSupabaseBrowser();
+
+  const args: CreateBookingArgs = {
+    p_departure_id: input.departureId,
+    p_seats: input.seats,
+    p_departure_city: input.departureCity,
+    p_single_rooms: input.singleRooms,
+    p_contact_name: input.contact.name,
+    p_contact_email: input.contact.email,
+    p_contact_phone: input.contact.phone,
+    p_participants: input.participants.map((p) => ({
+      full_name: p.fullName,
+      cnic_or_passport: p.cnicOrPassport ?? null,
+      date_of_birth: p.dateOfBirth ?? null,
+      dietary: p.dietary ?? null,
+      emergency_contact: p.emergencyContact ?? null,
+    })),
+    p_notes: input.notes ?? null,
+  };
+
+  const { data, error } = await supabase.rpc("create_booking", args);
+
+  if (error) throw new Error(error.message);
+
+  const result = Array.isArray(data) ? (data[0] as CreateBookingResult) : null;
+  if (!result) throw new Error("Booking creation returned no data");
+
+  return {
+    bookingId: result.booking_id,
+    bookingRef: result.booking_ref,
+    totalAmount: result.total_amount,
+  };
+}
+
+export async function getMyBookings(): Promise<Booking[]> {
+  const supabase = getSupabaseBrowser();
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) throw new Error(error.message);
+  return (data ?? []).map(toBooking);
+}
+
+export async function getBookingByRef(ref: string): Promise<Booking | null> {
+  const supabase = getSupabaseBrowser();
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*")
+    .eq("booking_ref", ref)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  return data ? toBooking(data) : null;
+}

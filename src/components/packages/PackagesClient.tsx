@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PackageCard } from "@/components/packages/PackageCard";
@@ -20,20 +20,12 @@ const allDestinations = [
 
 export function PackagesClient({ packages }: { packages: Package[] }) {
   const searchParams = useSearchParams();
-  const [filtered, setFiltered] = useState<Package[]>(packages);
-  const [destFilter, setDestFilter] = useState("");
-  const [dateFilter, setDateFilter] = useState("");
+  const destFilter = searchParams.get("destination") ?? "";
+  const dateFilter = searchParams.get("checkin") ?? "";
 
-  useEffect(() => {
-    const destination = searchParams.get("destination") ?? "";
-    const checkin = searchParams.get("checkin") ?? "";
-    setDestFilter(destination);
-    setDateFilter(checkin);
-
-    let result = packages;
-    if (destination) result = result.filter((p) => p.destinationSlug === destination);
-    setFiltered(result);
-  }, [searchParams, packages]);
+  const filtered = useMemo(() => (
+    destFilter ? packages.filter((p) => p.destinationSlug === destFilter) : packages
+  ), [packages, destFilter]);
 
   const destName = allDestinations.find((d) => d.slug === destFilter)?.name;
   const hasFilters = !!(destFilter || dateFilter);
@@ -66,7 +58,7 @@ export function PackagesClient({ packages }: { packages: Package[] }) {
           <div className="text-center py-20">
             <p className="text-[18px] font-semibold text-[var(--text-primary)]">No packages found</p>
             <p className="text-[14px] text-[var(--text-tertiary)] mt-2">Try a different destination or clear your filters</p>
-            <Link href="/packages" className="inline-block mt-4 px-6 py-2.5 bg-[var(--primary)] text-white text-[14px] font-semibold rounded-full hover:bg-[var(--primary-hover)] transition-colors">
+            <Link href="/packages" className="inline-block mt-4 px-6 py-2.5 bg-[var(--primary)] text-[var(--text-inverse)] text-[14px] font-semibold rounded-full hover:bg-[var(--primary-hover)] transition-colors">
               Show all packages
             </Link>
           </div>

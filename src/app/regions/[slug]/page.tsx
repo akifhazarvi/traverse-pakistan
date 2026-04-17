@@ -5,6 +5,13 @@ import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { TourCard } from "@/components/tours/TourCard";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildMetadata } from "@/lib/seo/metadata";
+import {
+  regionSchema,
+  breadcrumbSchema,
+  combineSchemas,
+} from "@/lib/seo/schema";
 import { getRegionBySlug, getAllRegions } from "@/services/region.service";
 import { getDestinationsByRegion } from "@/services/destination.service";
 import { getToursByRegion } from "@/services/tour.service";
@@ -23,8 +30,21 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const region = await getRegionBySlug(slug);
-  if (!region) return { title: "Region Not Found" };
-  return { title: region.metaTitle, description: region.metaDescription };
+  if (!region) {
+    return buildMetadata({
+      title: "Region Not Found",
+      path: `/regions/${slug}`,
+      noIndex: true,
+    });
+  }
+  return buildMetadata({
+    title: region.metaTitle,
+    description: region.metaDescription,
+    path: `/regions/${region.slug}`,
+    image: region.heroImage,
+    imageAlt: `${region.name}, Pakistan`,
+    tags: [region.name, "Pakistan", "tourism"],
+  });
 }
 
 export default async function RegionPage({ params }: Props) {
@@ -37,8 +57,18 @@ export default async function RegionPage({ params }: Props) {
     getToursByRegion(slug),
   ]);
 
+  const schema = combineSchemas(
+    regionSchema(region),
+    breadcrumbSchema([
+      { name: "Home", url: "/" },
+      { name: "Regions", url: "/destinations" },
+      { name: region.name, url: `/regions/${region.slug}` },
+    ])
+  );
+
   return (
     <>
+      <JsonLd data={schema} id={`region-${region.slug}-jsonld`} />
       {/* Hero */}
       <section className="relative h-[350px] sm:h-[420px] flex items-end">
         <Image

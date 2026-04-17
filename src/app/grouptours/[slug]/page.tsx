@@ -8,6 +8,13 @@ import { MosaicGallery } from "@/components/trip-detail/MosaicGallery";
 import { BookingSidebar } from "@/components/trip-detail/BookingSidebar";
 import { ItineraryAccordion } from "@/components/trip-detail/ItineraryAccordion";
 import { TourCard } from "@/components/tours/TourCard";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildMetadata } from "@/lib/seo/metadata";
+import {
+  tourSchema,
+  breadcrumbSchema,
+  combineSchemas,
+} from "@/lib/seo/schema";
 import {
   getTourBySlug,
   getAllTours,
@@ -28,11 +35,22 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const tour = await getTourBySlug(slug);
-  if (!tour) return { title: "Tour Not Found" };
-  return {
+  if (!tour) {
+    return buildMetadata({
+      title: "Tour Not Found",
+      path: `/grouptours/${slug}`,
+      noIndex: true,
+    });
+  }
+  return buildMetadata({
     title: tour.metaTitle,
     description: tour.metaDescription,
-  };
+    path: `/grouptours/${tour.slug}`,
+    image: tour.images[0]?.url,
+    imageAlt: tour.images[0]?.alt,
+    type: "product",
+    tags: [...tour.travelStyleSlugs, tour.destinationSlug, tour.regionSlug],
+  });
 }
 
 export default async function TripDetailPage({ params }: Props) {
@@ -46,8 +64,18 @@ export default async function TripDetailPage({ params }: Props) {
     getSimilarTours(slug, 4),
   ]);
 
+  const schema = combineSchemas(
+    tourSchema(tour),
+    breadcrumbSchema([
+      { name: "Home", url: "/" },
+      { name: "Group Tours", url: "/grouptours" },
+      { name: tour.name, url: `/grouptours/${tour.slug}` },
+    ])
+  );
+
   return (
     <div className="py-6 sm:py-8">
+      <JsonLd data={schema} id={`tour-${tour.slug}-jsonld`} />
       <Container>
         {/* Breadcrumb */}
         <Breadcrumb
@@ -176,8 +204,8 @@ export default async function TripDetailPage({ params }: Props) {
 
               {/* Know before you go */}
               {tour.knowBeforeYouGo.length > 0 && (
-                <div className="mt-8 p-5 bg-amber-50 border border-amber-200 rounded-xl">
-                  <h3 className="text-[14px] font-bold text-amber-800 mb-3 flex items-center gap-2">
+                <div className="mt-8 p-5 bg-[var(--accent-warm-light)] border border-[var(--accent-warm)]/30 rounded-xl">
+                  <h3 className="text-[14px] font-bold text-[var(--accent-warm)] mb-3 flex items-center gap-2">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <circle cx="12" cy="12" r="10" />
                       <line x1="12" y1="8" x2="12" y2="12" />
@@ -187,8 +215,8 @@ export default async function TripDetailPage({ params }: Props) {
                   </h3>
                   <ul className="space-y-1.5">
                     {tour.knowBeforeYouGo.map((item, i) => (
-                      <li key={i} className="text-[14px] text-amber-700 flex items-start gap-2">
-                        <span className="shrink-0 mt-1">•</span>
+                      <li key={i} className="text-[14px] text-[var(--text-secondary)] flex items-start gap-2">
+                        <span className="shrink-0 mt-1 text-[var(--accent-warm)]">•</span>
                         {item}
                       </li>
                     ))}
@@ -245,7 +273,7 @@ export default async function TripDetailPage({ params }: Props) {
                       className="p-5 bg-[var(--bg-subtle)] rounded-xl"
                     >
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-deep)] flex items-center justify-center text-white text-[14px] font-bold">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-deep)] flex items-center justify-center text-[var(--text-inverse)] text-[14px] font-bold">
                           {review.initial}
                         </div>
                         <div>
@@ -263,7 +291,7 @@ export default async function TripDetailPage({ params }: Props) {
                               className={
                                 i < review.rating
                                   ? "text-[var(--primary-muted)] text-sm"
-                                  : "text-gray-200 text-sm"
+                                  : "text-[var(--border-default)] text-sm"
                               }
                             >
                               ★
@@ -301,7 +329,7 @@ export default async function TripDetailPage({ params }: Props) {
             )}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="h-11 px-6 bg-[var(--primary)] text-white text-[14px] font-semibold rounded-full flex items-center justify-center hover:bg-[var(--primary)]-dark transition-colors"
+            className="h-11 px-6 bg-[var(--primary)] text-[var(--text-inverse)] text-[14px] font-semibold rounded-full flex items-center justify-center hover:bg-[var(--primary-hover)] transition-colors"
           >
             Check Availability
           </a>

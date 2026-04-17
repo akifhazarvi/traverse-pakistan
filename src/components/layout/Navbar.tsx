@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 import { NavSearchBar } from "./NavSearchBar";
+import { UserMenu } from "@/components/auth/UserMenu";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -39,6 +40,7 @@ export function Navbar() {
         {/* Right CTAs — fixed height so they never move when search expands */}
         <div className="flex items-center justify-end gap-1.5 h-[76px]">
           <ThemeToggle className="hidden sm:flex" />
+          <UserMenu />
           <a
             href="tel:+923216650670"
             className="hidden md:flex items-center gap-1.5 text-[13px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors px-3 py-2 rounded-[var(--radius-sm)] hover:bg-[var(--bg-subtle)]"

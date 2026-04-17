@@ -43,7 +43,7 @@ export default async function BlogPage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-              <span className="inline-block px-3 py-1 text-[11px] font-bold uppercase bg-[var(--primary)] text-white rounded-full mb-3">
+              <span className="inline-block px-3 py-1 text-[11px] font-bold uppercase bg-[var(--primary)] text-[var(--text-inverse)] rounded-full mb-3">
                 {featured.tag}
               </span>
               <h2 className="text-2xl sm:text-3xl font-bold text-[var(--on-dark)]">

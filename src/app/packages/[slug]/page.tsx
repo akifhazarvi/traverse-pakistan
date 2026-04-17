@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PackageDetailClient } from "@/components/packages/PackageDetailClient";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildMetadata } from "@/lib/seo/metadata";
+import {
+  packageSchema,
+  breadcrumbSchema,
+  combineSchemas,
+} from "@/lib/seo/schema";
 import { getAllPackages, getPackageBySlug, getPackageItinerary } from "@/services/package.service";
 import { getAllHotels } from "@/services/hotel.service";
 import type { Hotel } from "@/types/hotel";
@@ -17,8 +24,22 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const pkg = await getPackageBySlug(slug);
-  if (!pkg) return { title: "Package Not Found" };
-  return { title: pkg.metaTitle, description: pkg.metaDescription };
+  if (!pkg) {
+    return buildMetadata({
+      title: "Package Not Found",
+      path: `/packages/${slug}`,
+      noIndex: true,
+    });
+  }
+  return buildMetadata({
+    title: pkg.metaTitle,
+    description: pkg.metaDescription,
+    path: `/packages/${pkg.slug}`,
+    image: pkg.images[0]?.url,
+    imageAlt: pkg.images[0]?.alt || pkg.name,
+    type: "product",
+    tags: [pkg.destinationSlug, pkg.regionSlug, "Pakistan holiday package"],
+  });
 }
 
 export default async function PackageDetailPage({ params }: Props) {
@@ -40,12 +61,24 @@ export default async function PackageDetailPage({ params }: Props) {
 
   const relatedPackages = allPackages.filter((p) => p.slug !== slug);
 
+  const schema = combineSchemas(
+    packageSchema(pkg),
+    breadcrumbSchema([
+      { name: "Home", url: "/" },
+      { name: "Holiday Packages", url: "/packages" },
+      { name: pkg.name, url: `/packages/${pkg.slug}` },
+    ])
+  );
+
   return (
-    <PackageDetailClient
-      pkg={pkg}
-      itinerary={itinerary}
-      hotelsMap={hotelsMap}
-      relatedPackages={relatedPackages}
-    />
+    <>
+      <JsonLd data={schema} id={`package-${pkg.slug}-jsonld`} />
+      <PackageDetailClient
+        pkg={pkg}
+        itinerary={itinerary}
+        hotelsMap={hotelsMap}
+        relatedPackages={relatedPackages}
+      />
+    </>
   );
 }

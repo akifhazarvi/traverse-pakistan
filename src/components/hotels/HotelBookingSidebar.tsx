@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
 import type { Hotel, HotelRoom } from "@/types/hotel";
@@ -21,9 +21,6 @@ function isSameDay(a: Date, b: Date) {
 }
 function isBefore(a: Date, b: Date) {
   return startOfDay(a) < startOfDay(b);
-}
-function addDays(d: Date, n: number) {
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
 }
 function diffDays(a: Date, b: Date) {
   return Math.round((startOfDay(b).getTime() - startOfDay(a).getTime()) / 86400000);
@@ -127,7 +124,7 @@ function CalendarGrid({ checkIn, checkOut, hovered, selecting, onHover, onSelect
                 className={[
                   "w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-medium transition-all duration-100 cursor-pointer select-none",
                   past ? "text-[var(--text-tertiary)] opacity-30 cursor-not-allowed" : "",
-                  (isCI || isCO) ? "bg-[var(--primary)] text-white font-bold shadow-sm" : "",
+                  (isCI || isCO) ? "bg-[var(--primary)] text-[var(--text-inverse)] font-bold shadow-sm" : "",
                   !isCI && !isCO && !past ? "hover:bg-[var(--primary-light)] hover:text-[var(--primary)]" : "",
                   isToday && !isCI && !isCO ? "border border-[var(--primary)] text-[var(--primary)]" : "",
                   inRange && !isCI && !isCO ? "text-[var(--primary)] font-semibold" : "",
@@ -215,15 +212,14 @@ export function HotelBookingSidebar({ hotel }: HotelBookingSidebarProps) {
   const calRef = useRef<HTMLDivElement>(null);
   const guestsRef = useRef<HTMLDivElement>(null);
 
-  const handleOutside = useCallback((e: MouseEvent) => {
-    if (calRef.current && !calRef.current.contains(e.target as Node)) setCalOpen(false);
-    if (guestsRef.current && !guestsRef.current.contains(e.target as Node)) setGuestsOpen(false);
-  }, []);
-
   useEffect(() => {
+    function handleOutside(e: MouseEvent) {
+      if (calRef.current && !calRef.current.contains(e.target as Node)) setCalOpen(false);
+      if (guestsRef.current && !guestsRef.current.contains(e.target as Node)) setGuestsOpen(false);
+    }
     document.addEventListener("mousedown", handleOutside);
     return () => document.removeEventListener("mousedown", handleOutside);
-  }, [handleOutside]);
+  }, []);
 
   function openFor(s: Selecting) {
     setSelecting(s);
@@ -508,7 +504,7 @@ export function HotelBookingSidebar({ hotel }: HotelBookingSidebarProps) {
         {/* CTA */}
         <Link
           href={`/hotels/${hotel.slug}/checkout?room=${encodeURIComponent(selectedRoom.name)}&checkin=${checkIn ? checkIn.toISOString().split("T")[0] : ""}&checkout=${checkOut ? checkOut.toISOString().split("T")[0] : ""}&adults=${adults}&children=${children}&rooms=${numRooms}&guests=${adults + children}`}
-          className="w-full h-[52px] bg-[var(--primary)] text-white text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all"
+          className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all"
         >
           {checkIn && checkOut ? "Book Now" : "Check Availability"}
         </Link>

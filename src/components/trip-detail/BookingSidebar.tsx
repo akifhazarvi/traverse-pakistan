@@ -21,11 +21,29 @@ export function BookingSidebar({ tour }: BookingSidebarProps) {
   const totalTravelers = adults + children;
   const totalPrice = basePrice * totalTravelers;
 
-  const whatsappMessage = `Hi! I'd like to book the "${tour.name}" tour.\n\nDeparture: ${departure === "islamabad" ? "Islamabad" : "Lahore"}\nDate: ${tour.departureDate}\nAdults: ${adults}\nChildren: ${children}\nTotal: ${formatPrice(totalPrice)}\n\nPlease confirm availability.`;
-
   return (
     <div className="sticky top-[120px]">
       <div className="bg-[var(--bg-primary)] border border-[var(--border-default)] rounded-[var(--radius-md)] p-6" style={{ boxShadow: "var(--shadow-sm)" }}>
+        {/* Trust layer — above price for Airbnb-style confidence */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-4 text-[12px] text-[var(--text-secondary)]">
+          {tour.freeCancellation && (
+            <span className="inline-flex items-center gap-1">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+              Free cancellation
+            </span>
+          )}
+          {tour.reserveNowPayLater && (
+            <span className="inline-flex items-center gap-1">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+              Reserve, pay later
+            </span>
+          )}
+          <span className="inline-flex items-center gap-1">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+            Lowest price
+          </span>
+        </div>
+
         {/* Price */}
         <div className="flex items-baseline gap-2 flex-wrap">
           <span className="text-2xl font-bold text-[var(--text-primary)] tabular-nums">
@@ -58,7 +76,7 @@ export function BookingSidebar({ tour }: BookingSidebarProps) {
                 onClick={() => setDeparture("islamabad")}
                 className={`h-10 rounded-[var(--radius-sm)] text-[13px] font-medium border transition-colors cursor-pointer ${
                   departure === "islamabad"
-                    ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                    ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
                     : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--primary)]"
                 }`}
               >
@@ -69,7 +87,7 @@ export function BookingSidebar({ tour }: BookingSidebarProps) {
                 onClick={() => setDeparture("lahore")}
                 className={`h-10 rounded-[var(--radius-sm)] text-[13px] font-medium border transition-colors cursor-pointer ${
                   departure === "lahore"
-                    ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                    ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
                     : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--primary)]"
                 }`}
               >
@@ -164,41 +182,24 @@ export function BookingSidebar({ tour }: BookingSidebarProps) {
         {/* CTA */}
         <Link
           href={`/grouptours/${tour.slug}/checkout?departure=${departure}&adults=${adults}&children=${children}`}
-          className="mt-5 w-full h-[52px] bg-[var(--primary)] text-white text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all"
+          className="mt-5 w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all"
         >
           Book Now
         </Link>
 
-        {/* Guarantees */}
-        <div className="mt-5 space-y-2">
-          {tour.freeCancellation && (
-            <p className="flex items-center gap-2 text-[13px] text-[var(--text-secondary)]">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              Free cancellation
-            </p>
-          )}
-          {tour.reserveNowPayLater && (
-            <p className="flex items-center gap-2 text-[13px] text-[var(--text-secondary)]">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              Reserve now, pay later
-            </p>
-          )}
-          <p className="flex items-center gap-2 text-[13px] text-[var(--text-secondary)]">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            Lowest price guarantee
+        {/* Response-time promise — reduces abandonment fear */}
+        <p className="mt-3 text-center text-[12px] text-[var(--text-tertiary)] flex items-center justify-center gap-1.5">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+          </svg>
+          You won&apos;t be charged yet · Avg. reply in 1 hour
+        </p>
+
+        {tour.pricing.singleSupplement && (
+          <p className="text-[12px] text-[var(--text-tertiary)] mt-4 pt-4 border-t border-[var(--border-default)]">
+            Single room supplement: {formatPrice(tour.pricing.singleSupplement)}
           </p>
-          {tour.pricing.singleSupplement && (
-            <p className="text-[12px] text-[var(--text-tertiary)] mt-2">
-              Single room supplement: {formatPrice(tour.pricing.singleSupplement)}
-            </p>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );

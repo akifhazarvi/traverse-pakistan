@@ -19,8 +19,8 @@ const TIER_LABELS: Record<PackageTier, string> = {
 };
 
 const TIER_COLORS: Record<PackageTier, string> = {
-  deluxe: "bg-blue-50 text-blue-700 border-blue-200",
-  luxury: "bg-amber-50 text-amber-700 border-amber-200",
+  deluxe: "bg-[var(--primary-light)] text-[var(--primary-deep)] border-[var(--primary)]/20",
+  luxury: "bg-[var(--accent-warm-light)] text-[var(--accent-warm)] border-[var(--accent-warm)]/30",
 };
 
 export function PackageItineraryAccordion({ days, selectedTier, hotelsMap }: PackageItineraryAccordionProps) {
@@ -36,7 +36,7 @@ export function PackageItineraryAccordion({ days, selectedTier, hotelsMap }: Pac
             defaultOpen={day.dayNumber === 1}
             title={
               <div className="flex items-center gap-3">
-                <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--primary)] text-white text-[13px] font-bold flex items-center justify-center">
+                <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--primary)] text-[var(--text-inverse)] text-[13px] font-bold flex items-center justify-center">
                   {day.dayNumber}
                 </span>
                 <span className="text-[15px] font-semibold text-[var(--text-primary)]">

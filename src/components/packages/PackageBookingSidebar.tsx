@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { formatPrice, getWhatsAppUrl } from "@/lib/utils";
 import { StarRating } from "@/components/ui/StarRating";
 import type { Package, PackageTier } from "@/types/package";
@@ -106,7 +106,7 @@ function CalendarGrid({ checkIn, checkOut, onSelect, year, month, onPrev, onNext
                 className={[
                   "w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-medium transition-all duration-100 cursor-pointer select-none",
                   past ? "text-[var(--text-tertiary)] opacity-30 cursor-not-allowed" : "",
-                  (isStart || isEnd) ? "bg-[var(--primary)] text-white font-bold" : "",
+                  (isStart || isEnd) ? "bg-[var(--primary)] text-[var(--text-inverse)] font-bold" : "",
                   !isStart && !isEnd && !past ? "hover:bg-[var(--primary-light)] hover:text-[var(--primary)]" : "",
                   isToday && !isStart && !isEnd ? "border border-[var(--primary)] text-[var(--primary)]" : "",
                   inRange && !isStart && !isEnd ? "text-[var(--primary)]" : "",
@@ -154,16 +154,16 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
 
   const calWrapRef = useRef<HTMLDivElement>(null);
 
-  const handleOutside = useCallback((e: MouseEvent) => {
-    if (calWrapRef.current && !calWrapRef.current.contains(e.target as Node)) {
-      setCalOpen(false);
-    }
-  }, []);
-
   useEffect(() => {
-    if (calOpen) document.addEventListener("mousedown", handleOutside);
+    if (!calOpen) return;
+    function handleOutside(e: MouseEvent) {
+      if (calWrapRef.current && !calWrapRef.current.contains(e.target as Node)) {
+        setCalOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleOutside);
     return () => document.removeEventListener("mousedown", handleOutside);
-  }, [calOpen, handleOutside]);
+  }, [calOpen]);
 
   function handleDateSelect(date: Date) {
     setCheckIn(date);
@@ -216,7 +216,7 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
               <button key={tier} type="button" onClick={() => onTierChange(tier)}
                 className={`h-11 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer flex flex-col items-center justify-center gap-0.5 ${
                   selectedTier === tier
-                    ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                    ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
                     : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--primary)]"
                 }`}
               >
@@ -236,7 +236,7 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
                 <button key={city} type="button" onClick={() => setDepartureCity(city)}
                   className={`h-11 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer ${
                     departureCity === city
-                      ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                      ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
                       : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--primary)]"
                   }`}
                 >
@@ -401,7 +401,7 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
           href={getWhatsAppUrl(whatsappMessage)}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full h-[52px] bg-[var(--primary)] text-white text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all"
+          className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all"
         >
           Check Availability
         </a>

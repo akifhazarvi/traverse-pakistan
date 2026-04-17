@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { TourGrid } from "@/components/tours/TourGrid";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { breadcrumbSchema } from "@/lib/seo/schema";
 import { travelStyles } from "@/data/travel-styles";
 import { getToursByStyle } from "@/services/tour.service";
 
@@ -17,11 +20,19 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const style = travelStyles.find((s) => s.slug === slug);
-  if (!style) return { title: "Not Found" };
-  return {
-    title: `${style.name} Tours`,
-    description: style.description,
-  };
+  if (!style) {
+    return buildMetadata({
+      title: "Not Found",
+      path: `/travel-styles/${slug}`,
+      noIndex: true,
+    });
+  }
+  return buildMetadata({
+    title: `${style.name} Tours in Pakistan`,
+    description: `${style.description} Browse Pakistan ${style.name.toLowerCase()} tours with dual-city departures, expert guides, and 4.9-star reviews.`.slice(0, 160),
+    path: `/travel-styles/${style.slug}`,
+    tags: [style.name, "Pakistan tours", style.slug],
+  });
 }
 
 export default async function TravelStyleDetailPage({ params }: Props) {
@@ -31,8 +42,15 @@ export default async function TravelStyleDetailPage({ params }: Props) {
 
   const tours = await getToursByStyle(slug);
 
+  const schema = breadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Travel Styles", url: "/travel-styles" },
+    { name: style.name, url: `/travel-styles/${style.slug}` },
+  ]);
+
   return (
     <div className="py-8 sm:py-12">
+      <JsonLd data={schema} id={`travel-style-${style.slug}-jsonld`} />
       <Container>
         <Breadcrumb
           items={[

@@ -25,7 +25,9 @@ export function NavSearchBar() {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>(getDefaultTab(pathname));
   const [mounted, setMounted] = useState(false);
+  const [heroVisible, setHeroVisible] = useState(pathname !== "/");
   const ref = useRef<HTMLDivElement>(null);
+  const isHome = pathname === "/";
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -44,7 +46,26 @@ export function NavSearchBar() {
     setOpen(false);
   }, [pathname]);
 
-  if (pathname === "/") return null;
+  // On home: observe hero search widget; when it scrolls out of view, reveal nav pill.
+  useEffect(() => {
+    if (!isHome) {
+      setHeroVisible(false);
+      return;
+    }
+    const hero = document.getElementById("hero-search");
+    if (!hero) { setHeroVisible(false); return; }
+
+    setHeroVisible(true);
+    const io = new IntersectionObserver(
+      ([entry]) => setHeroVisible(entry.isIntersecting),
+      { threshold: 0, rootMargin: "-48px 0px 0px 0px" }
+    );
+    io.observe(hero);
+    return () => io.disconnect();
+  }, [isHome, pathname]);
+
+  const merged = isHome && !heroVisible;
+  const hidden = isHome && heroVisible;
 
   return (
     <>
@@ -57,7 +78,17 @@ export function NavSearchBar() {
         document.body
       )}
 
-      <div ref={ref} className="relative flex justify-center items-center w-full">
+      <div
+        ref={ref}
+        aria-hidden={hidden}
+        className={cn(
+          "relative flex justify-center items-center w-full transition-all duration-[400ms] ease-[cubic-bezier(0.2,0,0,1)]",
+          hidden
+            ? "opacity-0 -translate-y-2 pointer-events-none"
+            : "opacity-100 translate-y-0",
+          merged && "motion-safe:animate-[navSearchDrop_420ms_cubic-bezier(0.2,0,0,1)]"
+        )}
+      >
 
         {/* CLOSED: compact pill */}
         {!open && (

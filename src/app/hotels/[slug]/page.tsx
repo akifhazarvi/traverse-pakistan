@@ -5,6 +5,13 @@ import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { MosaicGallery } from "@/components/trip-detail/MosaicGallery";
 import { AccordionItem } from "@/components/ui/Accordion";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildMetadata } from "@/lib/seo/metadata";
+import {
+  hotelSchema,
+  breadcrumbSchema,
+  combineSchemas,
+} from "@/lib/seo/schema";
 import { formatPrice } from "@/lib/utils";
 import { getHotelBySlug, getAllHotels, getHotelsByDestination } from "@/services/hotel.service";
 import Link from "next/link";
@@ -22,11 +29,24 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const hotel = await getHotelBySlug(slug);
-  if (!hotel) return { title: "Hotel Not Found" };
-  return {
-    title: `${hotel.name} — ${hotel.location}`,
-    description: hotel.description,
-  };
+  if (!hotel) {
+    return buildMetadata({
+      title: "Hotel Not Found",
+      path: `/hotels/${slug}`,
+      noIndex: true,
+    });
+  }
+  const title = `${hotel.name} — ${hotel.location}`;
+  const description = `${hotel.description.slice(0, 150)}${hotel.description.length > 150 ? "…" : ""}`;
+  return buildMetadata({
+    title,
+    description,
+    path: `/hotels/${hotel.slug}`,
+    image: hotel.images[0],
+    imageAlt: `${hotel.name} — ${hotel.location}`,
+    type: "product",
+    tags: [hotel.tier, hotel.propertyType, hotel.destinationSlug],
+  });
 }
 
 export default async function HotelDetailPage({ params }: Props) {
@@ -37,8 +57,18 @@ export default async function HotelDetailPage({ params }: Props) {
   const moreHotels = (await getHotelsByDestination(hotel.destinationSlug)).filter((h) => h.slug !== slug);
   const galleryImages = hotel.images.map((url, i) => ({ url, alt: `${hotel.name} photo ${i + 1}` }));
 
+  const schema = combineSchemas(
+    hotelSchema(hotel),
+    breadcrumbSchema([
+      { name: "Home", url: "/" },
+      { name: "Hotels", url: "/hotels" },
+      { name: hotel.name, url: `/hotels/${hotel.slug}` },
+    ])
+  );
+
   return (
     <div className="py-6 sm:py-8">
+      <JsonLd data={schema} id={`hotel-${hotel.slug}-jsonld`} />
       <Container>
         {/* Breadcrumb */}
         <Breadcrumb
