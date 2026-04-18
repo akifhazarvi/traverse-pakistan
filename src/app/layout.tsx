@@ -12,7 +12,7 @@ import {
   websiteSchema,
   combineSchemas,
 } from "@/lib/seo/schema";
-import { SITE } from "@/lib/seo/site";
+import { SITE, IS_GITHUB_PAGES } from "@/lib/seo/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -77,18 +77,26 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   manifest: "/site.webmanifest",
-  robots: {
-    index: true,
-    follow: true,
-    nocache: false,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
+  robots: IS_GITHUB_PAGES
+    ? {
+        // Internal GitHub Pages previews are not public — noindex everything.
+        index: false,
+        follow: false,
+        nocache: true,
+        googleBot: { index: false, follow: false, noimageindex: true },
+      }
+    : {
+        index: true,
+        follow: true,
+        nocache: false,
+        googleBot: {
+          index: true,
+          follow: true,
+          "max-video-preview": -1,
+          "max-image-preview": "large",
+          "max-snippet": -1,
+        },
+      },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
     other: {

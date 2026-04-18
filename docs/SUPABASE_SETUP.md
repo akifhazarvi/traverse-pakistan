@@ -152,12 +152,56 @@ Commit the regenerated `types.ts`. If you skip this step after changing the sche
 
 ---
 
-## 10. Deploy to Vercel
+## 10. Deploy to Vercel (production)
 
 1. Import the repo into Vercel.
 2. Add all the env vars from `.env.local` to **Project Settings → Environment Variables** (all three environments: Production, Preview, Development).
 3. In Supabase → **Auth → URL Configuration**, add the Vercel preview + prod URLs to **Redirect URLs**.
 4. Push. Done.
+
+## 11. Deploy to GitHub Pages (internal testing only)
+
+GitHub Pages is a static host — no Node runtime, no image optimization, no
+edge headers. We support it anyway for internal previews. The `GITHUB_PAGES=true`
+build switch:
+
+- Enables `output: "export"` + `basePath: "/traverse-pakistan"`
+- Sets `images.unoptimized: true`
+- Emits a site-wide `noindex, nofollow` `<meta>` and a `disallow: /` `robots.txt`
+  so search engines skip the preview URL
+- Skips `next.config.ts` `headers()` (ignored under static export anyway)
+
+Supabase auth + bookings still work because the anon client runs in the browser.
+
+### Set up once
+
+1. **Repo Settings → Pages → Source**: pick **GitHub Actions**.
+2. **Repo Settings → Secrets and variables → Actions → New repository secret**:
+   - `NEXT_PUBLIC_SUPABASE_URL` = your Supabase project URL
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` = your Supabase anon key
+3. In Supabase → **Auth → URL Configuration → Redirect URLs**, add
+   `https://<your-github-username>.github.io/traverse-pakistan/auth/callback`.
+
+### Deploy
+
+Push to `main`, or trigger manually from **Actions → Deploy to GitHub Pages →
+Run workflow**. The job at `.github/workflows/deploy.yml` builds with
+`GITHUB_PAGES=true`, writes the static bundle to `./out`, and deploys.
+
+Site will be live at `https://<your-github-username>.github.io/traverse-pakistan/`.
+
+### Known limitations of the GitHub Pages build
+
+| Feature | Behavior |
+|---|---|
+| Image optimization | Off (full-size JPEGs from the CDN) |
+| Security headers | Not applied (GitHub Pages doesn't read `next.config.ts`) |
+| Sitemap | Generated at build only, not revalidated |
+| Indexing | Noindex site-wide (intentional — internal preview) |
+| Route handlers / middleware | Unsupported (we don't use any) |
+| Supabase auth + booking | Works (browser-to-Supabase direct) |
+
+For the production site, use Vercel.
 
 ---
 

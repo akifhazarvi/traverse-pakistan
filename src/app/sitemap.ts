@@ -6,7 +6,7 @@ import { blogPosts } from "@/data/blog-posts";
 import { travelStyles } from "@/data/travel-styles";
 import { packages } from "@/data/packages";
 import { hotels } from "@/data/hotels";
-import { SITE } from "@/lib/seo/site";
+import { absoluteUrl } from "@/lib/seo/site";
 
 export const dynamic = "force-static";
 export const revalidate = 86400; // regenerate once per day
@@ -29,7 +29,7 @@ function entry(
   lastModified: string | Date = today
 ): MetadataRoute.Sitemap[number] {
   return {
-    url: `${SITE.url}${path}`,
+    url: absoluteUrl(path),
     lastModified:
       typeof lastModified === "string" ? new Date(lastModified) : lastModified,
     changeFrequency,

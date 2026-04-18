@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { SITE, absoluteUrl } from "./site";
+import { SITE, absoluteUrl, IS_GITHUB_PAGES } from "./site";
 
 interface PageMetaInput {
   title?: string;
@@ -90,28 +90,29 @@ export function buildMetadata(input: PageMetaInput): Metadata {
       creator: "@traversepakistan",
       site: "@traversepakistan",
     },
-    robots: noIndex
-      ? {
-          index: false,
-          follow: false,
-          nocache: true,
-          googleBot: {
+    robots:
+      noIndex || IS_GITHUB_PAGES
+        ? {
             index: false,
             follow: false,
-            noimageindex: true,
-          },
-        }
-      : {
-          index: true,
-          follow: true,
-          googleBot: {
+            nocache: true,
+            googleBot: {
+              index: false,
+              follow: false,
+              noimageindex: true,
+            },
+          }
+        : {
             index: true,
             follow: true,
-            "max-video-preview": -1,
-            "max-image-preview": "large",
-            "max-snippet": -1,
+            googleBot: {
+              index: true,
+              follow: true,
+              "max-video-preview": -1,
+              "max-image-preview": "large",
+              "max-snippet": -1,
+            },
           },
-        },
     keywords: tags,
   };
 
