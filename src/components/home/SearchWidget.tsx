@@ -571,7 +571,7 @@ export function SearchWidget({
                   onClick={() => setActiveField(activeField === "travelers" ? null : "travelers")} />
                 <button type="button" onClick={handleSearch}
                   className={cn(
-                    "shrink-0 bg-[var(--primary)] rounded-full flex items-center justify-center text-white hover:bg-[var(--primary-hover)] active:scale-95 transition-all duration-200 cursor-pointer",
+                    "shrink-0 bg-[var(--primary)] rounded-full flex items-center justify-center text-[var(--text-inverse)] hover:bg-[var(--primary-hover)] active:scale-95 transition-all duration-200 cursor-pointer",
                     mode === "filter" ? "gap-2 px-5 py-3 h-auto" : "w-12 h-12 sm:w-14 sm:h-14"
                   )}
                   style={{ boxShadow: "var(--shadow-sm)" }} aria-label="Search">
@@ -602,7 +602,7 @@ export function SearchWidget({
                   onClick={() => setActiveField(activeField === "groupsize" ? null : "groupsize")} />
                 <button type="button" onClick={handleSearch}
                   className={cn(
-                    "shrink-0 bg-[var(--primary)] rounded-full flex items-center justify-center text-white hover:bg-[var(--primary-hover)] active:scale-95 transition-all duration-200 cursor-pointer",
+                    "shrink-0 bg-[var(--primary)] rounded-full flex items-center justify-center text-[var(--text-inverse)] hover:bg-[var(--primary-hover)] active:scale-95 transition-all duration-200 cursor-pointer",
                     mode === "filter" ? "gap-2 px-5 py-3 h-auto" : "w-12 h-12 sm:w-14 sm:h-14"
                   )}
                   style={{ boxShadow: "var(--shadow-sm)" }} aria-label="Search">
@@ -633,7 +633,7 @@ export function SearchWidget({
                   onClick={() => setActiveField(activeField === "guests" ? null : "guests")} />
                 <button type="button" onClick={handleSearch}
                   className={cn(
-                    "shrink-0 bg-[var(--primary)] rounded-full flex items-center justify-center text-white hover:bg-[var(--primary-hover)] active:scale-95 transition-all duration-200 cursor-pointer",
+                    "shrink-0 bg-[var(--primary)] rounded-full flex items-center justify-center text-[var(--text-inverse)] hover:bg-[var(--primary-hover)] active:scale-95 transition-all duration-200 cursor-pointer",
                     mode === "filter" ? "gap-2 px-5 py-3 h-auto" : "w-12 h-12 sm:w-14 sm:h-14"
                   )}
                   style={{ boxShadow: "var(--shadow-sm)" }} aria-label="Search">

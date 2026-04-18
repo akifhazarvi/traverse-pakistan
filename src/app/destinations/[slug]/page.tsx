@@ -8,6 +8,14 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { TourCard } from "@/components/tours/TourCard";
 import { PackageCard } from "@/components/packages/PackageCard";
 import { AccordionItem } from "@/components/ui/Accordion";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildMetadata } from "@/lib/seo/metadata";
+import {
+  destinationSchema,
+  faqPageSchema,
+  breadcrumbSchema,
+  combineSchemas,
+} from "@/lib/seo/schema";
 import { formatPrice } from "@/lib/utils";
 import {
   getDestinationBySlug,
@@ -30,8 +38,21 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const dest = await getDestinationBySlug(slug);
-  if (!dest) return { title: "Destination Not Found" };
-  return { title: dest.metaTitle, description: dest.metaDescription };
+  if (!dest) {
+    return buildMetadata({
+      title: "Destination Not Found",
+      path: `/destinations/${slug}`,
+      noIndex: true,
+    });
+  }
+  return buildMetadata({
+    title: dest.metaTitle,
+    description: dest.metaDescription,
+    path: `/destinations/${dest.slug}`,
+    image: dest.heroImage,
+    imageAlt: `${dest.name} — ${dest.subtitle}`,
+    tags: [dest.name, dest.regionSlug, "Pakistan tourism"],
+  });
 }
 
 export default async function DestinationDetailPage({ params }: Props) {
@@ -46,8 +67,19 @@ export default async function DestinationDetailPage({ params }: Props) {
     getHotelsByDestination(slug),
   ]);
 
+  const schema = combineSchemas(
+    destinationSchema(dest),
+    breadcrumbSchema([
+      { name: "Home", url: "/" },
+      { name: "Destinations", url: "/destinations" },
+      { name: dest.name, url: `/destinations/${dest.slug}` },
+    ]),
+    faqs.length > 0 ? faqPageSchema(faqs) : null
+  );
+
   return (
     <>
+      <JsonLd data={schema} id={`destination-${dest.slug}-jsonld`} />
       {/* Hero */}
       <section className="relative h-[400px] sm:h-[480px] flex items-end">
         <Image
@@ -208,10 +240,10 @@ export default async function DestinationDetailPage({ params }: Props) {
                   <h3 className="text-[15px] font-bold text-[var(--text-primary)] mt-2 capitalize">{s.season}</h3>
                   <p className="text-[13px] text-[var(--text-tertiary)]">{s.months}</p>
                   <span className={`inline-block mt-2 px-3 py-1 text-[11px] font-bold uppercase rounded-full ${
-                    s.badgeColor === "green" ? "bg-emerald-100 text-emerald-700"
-                    : s.badgeColor === "yellow" ? "bg-amber-100 text-amber-700"
-                    : s.badgeColor === "blue" ? "bg-blue-100 text-blue-700"
-                    : "bg-red-100 text-red-700"
+                    s.badgeColor === "green" ? "bg-[var(--primary-light)] text-[var(--primary-deep)]"
+                    : s.badgeColor === "yellow" ? "bg-[var(--accent-warm-light)] text-[var(--accent-warm)]"
+                    : s.badgeColor === "blue" ? "bg-[var(--bg-subtle)] text-[var(--info)]"
+                    : "bg-[var(--bg-subtle)] text-[var(--error)]"
                   }`}>
                     {s.badge}
                   </span>

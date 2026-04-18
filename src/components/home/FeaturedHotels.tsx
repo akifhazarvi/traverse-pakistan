@@ -41,7 +41,7 @@ export async function FeaturedHotels() {
                   </span>
                 </div>
               </div>
-              <div className="p-4 sm:p-5 bg-white">
+              <div className="p-4 sm:p-5 bg-[var(--bg-primary)]">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
                     {hotel.propertyType}
@@ -49,6 +49,7 @@ export async function FeaturedHotels() {
                   <span className="flex items-center gap-1 text-[13px]">
                     <span className="text-[var(--primary-muted)]">★</span>
                     <span className="font-semibold text-[var(--text-primary)]">{hotel.rating}</span>
+                    <span className="text-[var(--text-tertiary)]">({hotel.reviewCount})</span>
                   </span>
                 </div>
                 <h3 className="text-[16px] font-bold text-[var(--text-primary)] group-hover:text-[var(--primary)] transition-colors">

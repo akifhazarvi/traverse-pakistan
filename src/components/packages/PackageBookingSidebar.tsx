@@ -1,9 +1,18 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { formatPrice, getWhatsAppUrl } from "@/lib/utils";
 import { StarRating } from "@/components/ui/StarRating";
+import { QuoteRequestDialog } from "@/components/quote/QuoteRequestDialog";
 import type { Package, PackageTier } from "@/types/package";
+
+function toIsoDate(d: Date | null) {
+  if (!d) return undefined;
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
 
 /* ─── Calendar helpers ─────────────────────────────────────────────────────── */
 
@@ -106,7 +115,7 @@ function CalendarGrid({ checkIn, checkOut, onSelect, year, month, onPrev, onNext
                 className={[
                   "w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-medium transition-all duration-100 cursor-pointer select-none",
                   past ? "text-[var(--text-tertiary)] opacity-30 cursor-not-allowed" : "",
-                  (isStart || isEnd) ? "bg-[var(--primary)] text-white font-bold" : "",
+                  (isStart || isEnd) ? "bg-[var(--primary)] text-[var(--text-inverse)] font-bold" : "",
                   !isStart && !isEnd && !past ? "hover:bg-[var(--primary-light)] hover:text-[var(--primary)]" : "",
                   isToday && !isStart && !isEnd ? "border border-[var(--primary)] text-[var(--primary)]" : "",
                   inRange && !isStart && !isEnd ? "text-[var(--primary)]" : "",
@@ -152,18 +161,21 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
   const [rooms, setRooms] = useState(1);
   const [adults, setAdults] = useState(2);
 
+  // Quote request dialog
+  const [quoteOpen, setQuoteOpen] = useState(false);
+
   const calWrapRef = useRef<HTMLDivElement>(null);
 
-  const handleOutside = useCallback((e: MouseEvent) => {
-    if (calWrapRef.current && !calWrapRef.current.contains(e.target as Node)) {
-      setCalOpen(false);
-    }
-  }, []);
-
   useEffect(() => {
-    if (calOpen) document.addEventListener("mousedown", handleOutside);
+    if (!calOpen) return;
+    function handleOutside(e: MouseEvent) {
+      if (calWrapRef.current && !calWrapRef.current.contains(e.target as Node)) {
+        setCalOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleOutside);
     return () => document.removeEventListener("mousedown", handleOutside);
-  }, [calOpen, handleOutside]);
+  }, [calOpen]);
 
   function handleDateSelect(date: Date) {
     setCheckIn(date);
@@ -216,7 +228,7 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
               <button key={tier} type="button" onClick={() => onTierChange(tier)}
                 className={`h-11 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer flex flex-col items-center justify-center gap-0.5 ${
                   selectedTier === tier
-                    ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                    ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
                     : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--primary)]"
                 }`}
               >
@@ -236,7 +248,7 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
                 <button key={city} type="button" onClick={() => setDepartureCity(city)}
                   className={`h-11 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer ${
                     departureCity === city
-                      ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                      ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
                       : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--primary)]"
                   }`}
                 >
@@ -397,14 +409,36 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
         </div>
 
         {/* CTA */}
+        <button
+          type="button"
+          onClick={() => setQuoteOpen(true)}
+          className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all cursor-pointer"
+        >
+          Request Quote
+        </button>
         <a
           href={getWhatsAppUrl(whatsappMessage)}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full h-[52px] bg-[var(--primary)] text-white text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all"
+          className="mt-2 w-full h-10 flex items-center justify-center gap-2 text-[13px] font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
         >
-          Check Availability
+          or ask on WhatsApp →
         </a>
+
+        <QuoteRequestDialog
+          open={quoteOpen}
+          onClose={() => setQuoteOpen(false)}
+          requestType="package"
+          slug={pkg.slug}
+          displayName={pkg.name}
+          tier={selectedTier === "deluxe" ? "Deluxe" : "Luxury"}
+          defaultAdults={adults}
+          defaultRooms={rooms}
+          defaultStartDate={toIsoDate(checkIn)}
+          defaultEndDate={toIsoDate(checkOut)}
+          defaultDepartureCity={departureCity}
+          whatsappFallbackMessage={whatsappMessage}
+        />
 
         {/* Guarantees */}
         <div className="mt-5 space-y-2">

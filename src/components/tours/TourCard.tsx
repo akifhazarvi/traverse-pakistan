@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { cn, formatPrice } from "@/lib/utils";
+import { cn, formatPrice, getSavedCountForSlug } from "@/lib/utils";
+import { WishlistButton } from "@/components/ui/WishlistButton";
 import type { Tour } from "@/types/tour";
 
 interface TourCardProps {
@@ -10,10 +11,10 @@ interface TourCardProps {
 }
 
 const badgeConfig: Record<string, { label: string; className: string }> = {
-  bestseller: { label: "Top Seller", className: "bg-[var(--primary)] text-white" },
-  "on-sale":  { label: "On Sale",   className: "bg-[var(--primary)] text-white" },
-  "epic-trek":{ label: "Epic Trek", className: "bg-[var(--primary)] text-white" },
-  new:        { label: "New",       className: "bg-blue-500 text-white" },
+  bestseller: { label: "Top Seller", className: "bg-[var(--primary)] text-[var(--text-inverse)]" },
+  "on-sale":  { label: "On Sale",   className: "bg-[var(--accent-warm)] text-[var(--text-inverse)]" },
+  "epic-trek":{ label: "Epic Trek", className: "bg-[var(--primary-deep)] text-[var(--text-inverse)]" },
+  new:        { label: "New",       className: "bg-[var(--info)] text-[var(--text-inverse)]" },
 };
 
 export function TourCard({ tour, variant = "carousel", className }: TourCardProps) {
@@ -31,6 +32,10 @@ export function TourCard({ tour, variant = "carousel", className }: TourCardProp
     : null;
 
   const badge = tour.badge ? badgeConfig[tour.badge] : null;
+  const savedCount = getSavedCountForSlug(
+    tour.slug,
+    Math.round((tour.rating - 4) * 80) + Math.min(tour.reviewCount / 6, 60)
+  );
 
   const departureDate = tour.departureDate
     ? new Date(tour.departureDate).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })
@@ -59,18 +64,26 @@ export function TourCard({ tour, variant = "carousel", className }: TourCardProp
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px"
         />
 
-        {/* Badge — top right */}
+        {/* Badge — top left (frees top-right for wishlist + FOMO) */}
         {badge && (
-          <div className="absolute top-3 right-3">
-            <span className={cn("px-2.5 py-1 text-[11px] font-bold rounded-full tracking-wide uppercase", badge.className)}>
+          <div className="absolute top-3 left-3">
+            <span className={cn("px-2.5 py-1 text-[11px] font-bold rounded-full tracking-wide uppercase shadow-sm", badge.className)}>
               {badge.label}
             </span>
           </div>
         )}
 
+        {/* Wishlist + social-proof saved count — top right */}
+        <div className="absolute top-3 right-3">
+          <WishlistButton savedCount={savedCount} />
+        </div>
+
         {/* Quick View — bottom left on hover */}
         <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-[var(--primary)] text-[11px] font-bold rounded-[var(--radius-sm)] shadow-md">
+          <span
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold rounded-[var(--radius-sm)] shadow-md backdrop-blur-sm"
+            style={{ background: "rgba(255,255,255,0.94)", color: "var(--primary-deep)" }}
+          >
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" />
               <line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" />
@@ -88,9 +101,21 @@ export function TourCard({ tour, variant = "carousel", className }: TourCardProp
         </span>
 
         {/* Name */}
-        <h3 className="text-[15px] font-bold text-[var(--text-primary)] leading-snug group-hover:text-[var(--primary)] transition-colors duration-200 line-clamp-2 mb-2.5">
+        <h3 className="text-[15px] font-bold text-[var(--text-primary)] leading-snug group-hover:text-[var(--primary)] transition-colors duration-200 line-clamp-2 mb-1.5">
           {tour.name}
         </h3>
+
+        {/* Rating + review count — trust signal */}
+        {tour.rating > 0 && (
+          <div className="flex items-center gap-1 text-[12px] mb-2">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--primary)" stroke="none">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+            <span className="font-semibold text-[var(--text-primary)] tabular-nums">{tour.rating.toFixed(1)}</span>
+            <span className="text-[var(--text-tertiary)]">·</span>
+            <span className="text-[var(--text-tertiary)]">{tour.reviewCount.toLocaleString()} reviews</span>
+          </div>
+        )}
 
         {/* Duration + Route */}
         <div className="flex items-center gap-3 text-[12px] text-[var(--text-secondary)] mb-1.5">
@@ -115,6 +140,20 @@ export function TourCard({ tour, variant = "carousel", className }: TourCardProp
           </span>
         </div>
 
+        {/* Guide credibility — Airbnb-style trust anchor */}
+        <div className="flex items-center gap-1.5 text-[11px] text-[var(--text-tertiary)] mb-2">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="var(--primary)" stroke="none" aria-hidden="true">
+            <path d="M9 12l2 2 4-4" stroke="var(--text-inverse)" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M12 1l3 2h3l1 3 3 1-1 3 1 3-3 1-1 3h-3l-3 2-3-2H5l-1-3-3-1 1-3-1-3 3-1 1-3h3z" fill="var(--primary)" stroke="none" />
+            <path d="M9 12l2 2 4-4" stroke="var(--text-inverse)" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <span>
+            {tour.guide
+              ? <>Guided by <span className="font-semibold text-[var(--text-secondary)]">{tour.guide.name}</span> · {tour.guide.yearsGuiding} yrs</>
+              : <>Expert local guide · <span className="font-semibold text-[var(--text-secondary)]">Verified</span></>}
+          </span>
+        </div>
+
         <div className="flex-1" />
 
         {/* Price row */}
@@ -126,9 +165,9 @@ export function TourCard({ tour, variant = "carousel", className }: TourCardProp
               </span>
               {tour.originalPrice && (
                 <span className="text-[12px] text-[var(--text-tertiary)]">
-                  Reg. {formatPrice(tour.originalPrice)}
+                  <span className="line-through">{formatPrice(tour.originalPrice)}</span>
                   {discount && (
-                    <span className="ml-1 px-1.5 py-0.5 bg-[var(--primary)] text-white text-[10px] font-bold rounded align-middle">
+                    <span className="ml-1 px-1.5 py-0.5 bg-[var(--accent-warm)] text-[var(--text-inverse)] text-[10px] font-bold rounded align-middle">
                       -{discount}%
                     </span>
                   )}
@@ -142,7 +181,7 @@ export function TourCard({ tour, variant = "carousel", className }: TourCardProp
             )}
           </div>
 
-          <span className="shrink-0 px-4 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white text-[12px] font-bold rounded-lg transition-colors">
+          <span className="shrink-0 px-4 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--text-inverse)] text-[12px] font-bold rounded-lg transition-colors">
             View tour
           </span>
         </div>

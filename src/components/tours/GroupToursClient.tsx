@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { FilterTag } from "@/components/ui/FilterTag";
@@ -40,15 +40,8 @@ export function GroupToursClient({ tours }: { tours: Tour[] }) {
   const searchParams = useSearchParams();
   const [activeFilter, setActiveFilter] = useState("all");
   const [sort, setSort] = useState("recommended");
-  const [destFilter, setDestFilter] = useState("");
-  const [dateFilter, setDateFilter] = useState("");
-
-  useEffect(() => {
-    const destination = searchParams.get("destination") ?? "";
-    const when = searchParams.get("checkin") ?? "";
-    setDestFilter(destination);
-    setDateFilter(when);
-  }, [searchParams]);
+  const destFilter = searchParams.get("destination") ?? "";
+  const dateFilter = searchParams.get("checkin") ?? "";
 
   const filtered = tours
     .filter((t) => activeFilter === "all" || t.category === activeFilter)
@@ -116,7 +109,7 @@ export function GroupToursClient({ tours }: { tours: Tour[] }) {
           <div className="text-center py-20">
             <p className="text-[18px] font-semibold text-[var(--text-primary)]">No tours found</p>
             <p className="text-[14px] text-[var(--text-tertiary)] mt-2">Try a different destination or clear your filters</p>
-            <Link href="/grouptours" className="inline-block mt-4 px-6 py-2.5 bg-[var(--primary)] text-white text-[14px] font-semibold rounded-full hover:bg-[var(--primary-hover)] transition-colors">
+            <Link href="/grouptours" className="inline-block mt-4 px-6 py-2.5 bg-[var(--primary)] text-[var(--text-inverse)] text-[14px] font-semibold rounded-full hover:bg-[var(--primary-hover)] transition-colors">
               Show all tours
             </Link>
           </div>

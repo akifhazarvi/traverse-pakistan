@@ -4,6 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildMetadata } from "@/lib/seo/metadata";
+import {
+  articleSchema,
+  breadcrumbSchema,
+  combineSchemas,
+} from "@/lib/seo/schema";
 import { getBlogPostBySlug, getAllBlogPosts } from "@/services/blog.service";
 
 interface Props {
@@ -18,8 +25,25 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogPostBySlug(slug);
-  if (!post) return { title: "Post Not Found" };
-  return { title: post.metaTitle, description: post.metaDescription };
+  if (!post) {
+    return buildMetadata({
+      title: "Post Not Found",
+      path: `/blog/${slug}`,
+      noIndex: true,
+    });
+  }
+  return buildMetadata({
+    title: post.metaTitle,
+    description: post.metaDescription,
+    path: `/blog/${post.slug}`,
+    image: post.image,
+    imageAlt: post.title,
+    type: "article",
+    publishedAt: post.publishedAt,
+    updatedAt: post.updatedAt,
+    authors: [post.author],
+    tags: post.tags,
+  });
 }
 
 export default async function BlogPostPage({ params }: Props) {
@@ -27,8 +51,18 @@ export default async function BlogPostPage({ params }: Props) {
   const post = await getBlogPostBySlug(slug);
   if (!post) notFound();
 
+  const schema = combineSchemas(
+    articleSchema(post, post.updatedAt),
+    breadcrumbSchema([
+      { name: "Home", url: "/" },
+      { name: "Blog", url: "/blog" },
+      { name: post.title, url: `/blog/${post.slug}` },
+    ])
+  );
+
   return (
     <div className="py-8 sm:py-12">
+      <JsonLd data={schema} id={`blog-${post.slug}-jsonld`} />
       <Container>
         <div className="max-w-[800px] mx-auto">
           <Breadcrumb
@@ -40,7 +74,7 @@ export default async function BlogPostPage({ params }: Props) {
 
           <div className="mt-6">
             <div className="flex flex-wrap gap-2">
-              <span className="inline-block px-3 py-1 text-[11px] font-bold uppercase bg-[var(--primary)] text-white rounded-full">
+              <span className="inline-block px-3 py-1 text-[11px] font-bold uppercase bg-[var(--primary)] text-[var(--text-inverse)] rounded-full">
                 {post.tag}
               </span>
               {post.tags.slice(0, 3).map((t) => (

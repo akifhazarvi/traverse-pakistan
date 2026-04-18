@@ -3,12 +3,16 @@ import { Suspense } from "react";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { PackagesClient } from "@/components/packages/PackagesClient";
+import { buildMetadata } from "@/lib/seo/metadata";
 import { getAllPackages } from "@/services/package.service";
 
-export const metadata: Metadata = {
-  title: "Holiday Packages — Custom Dates | Traverse Pakistan",
-  description: "Choose your own dates. Pick Deluxe or Luxury. Explore Pakistan's most iconic destinations with expert guides and hand-picked hotels.",
-};
+export const metadata: Metadata = buildMetadata({
+  title: "Pakistan Holiday Packages — Custom Dates, Deluxe & Luxury Tiers",
+  description:
+    "Custom-date holiday packages across Pakistan. Choose Deluxe or Luxury, travel with expert guides and hand-picked hotels in Hunza, Skardu, Chitral, and beyond.",
+  path: "/packages",
+  tags: ["Pakistan holiday package", "custom tour", "luxury Pakistan tour"],
+});
 
 export default async function PackagesPage() {
   const packages = await getAllPackages();

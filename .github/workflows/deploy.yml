@@ -1,4 +1,14 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages (internal preview)
+
+# This workflow builds the site for static hosting on GitHub Pages.
+# It is NOT the production deploy — production ships to Vercel from `main`
+# with full image optimization, edge headers, and revalidating sitemap.
+#
+# GitHub Pages previews:
+#   - Served at https://<owner>.github.io/traverse-pakistan/
+#   - Fully noindex'd (robots.txt + <meta name="robots">)
+#   - Supabase auth + bookings work because Supabase is called from the browser
+#   - Triggered on push to main, or manually on any branch via workflow_dispatch
 
 on:
   push:
@@ -17,6 +27,14 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_PAGES: "true"
+      # GITHUB_PAGES_BASE_PATH defaults to /traverse-pakistan.
+      # Override here only if the repo name differs.
+      # GITHUB_PAGES_BASE_PATH: "/my-repo-name"
+      NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,8 +48,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build (static export)
         run: npm run build
+
+      - name: Add .nojekyll (so _next paths are served as-is)
+        run: touch ./out/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

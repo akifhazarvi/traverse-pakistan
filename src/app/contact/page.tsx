@@ -2,12 +2,16 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { Button } from "@/components/ui/Button";
+import { buildMetadata } from "@/lib/seo/metadata";
 import { getWhatsAppUrl } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "Contact Us",
-  description: "Get in touch with Traverse Pakistan. Call, WhatsApp, or visit our office in Islamabad.",
-};
+export const metadata: Metadata = buildMetadata({
+  title: "Contact Traverse Pakistan — Phone, WhatsApp, Email & Office",
+  description:
+    "Reach Traverse Pakistan by phone (+92-321-6650670), WhatsApp, email (info@traversepakistan.com), or visit our office in E-11/1, Islamabad. Reply within 1 hour.",
+  path: "/contact",
+  tags: ["contact Traverse Pakistan", "Pakistan tour operator contact", "Islamabad travel agency"],
+});
 
 export default function ContactPage() {
   return (

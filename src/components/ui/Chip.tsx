@@ -9,8 +9,8 @@ interface ChipProps {
 
 const variantStyles = {
   default: "bg-[var(--bg-subtle)] text-[var(--text-secondary)] border-[var(--border-default)]",
-  success: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  info: "bg-blue-50 text-blue-700 border-blue-200",
+  success: "bg-[var(--primary-light)] text-[var(--primary-deep)] border-[var(--primary)]/20",
+  info: "bg-[var(--bg-subtle)] text-[var(--info)] border-[var(--info)]/20",
 };
 
 export function Chip({

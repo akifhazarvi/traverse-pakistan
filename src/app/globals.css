@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* Exclude audit snapshots so Tailwind doesn't scan raw HTML for class names.
+   Without this the RSC flight payload inside those snapshots gets parsed as
+   malformed Tailwind classes (e.g. text-[var(--text-tertia"])</script>…). */
+@source not "../../.seo-audit";
+@source not "../../.next";
+
 /* =============================================================================
    TRAVERSE PAKISTAN — DESIGN SYSTEM v2.2
    Full dark mode support. Traverse Pakistan brand colors.
@@ -8,25 +14,30 @@
 :root {
   color-scheme: light;
 
-  /* ── Brand Primary (Traverse Pakistan teal) ── */
-  --primary: #2D6A5E;
-  --primary-hover: #235449;
-  --primary-light: #E8F5F1;
+  /* ── Brand Primary (Traverse Pakistan emerald — flag-rooted, richer than old teal) ── */
+  --primary: #1E6A52;
+  --primary-hover: #165340;
+  --primary-light: #E7F3EE;
   --primary-muted: #7BC8A4;
-  --primary-deep: #1A3F37;
+  --primary-deep: #0F3A2C;
+
+  /* ── Accent Warm (Himalayan sunset terracotta — urgency, sale badges, trust highlights) ── */
+  --accent-warm: #C97C3C;
+  --accent-warm-hover: #B26A2F;
+  --accent-warm-light: #FBEFE2;
 
   /* ── Text ── */
-  --text-primary: #1A1A1A;
-  --text-secondary: #555555;
+  --text-primary: #151515;
+  --text-secondary: #525252;
   --text-tertiary: #8A8A8A;
   --text-inverse: #FFFFFF;
 
   /* ── Backgrounds ── */
   --bg-primary: #FFFFFF;
-  --bg-subtle: #F5F5F4;
+  --bg-subtle: #F6F5F2;
   --bg-elevated: #FFFFFF;
-  --bg-dark: #1A2E2B;
-  --bg-darker: #0F2220;
+  --bg-dark: #12302A;
+  --bg-darker: #0A1F1B;
 
   /* ── "On-dark" text (for dark bg sections — works in both themes) ── */
   --on-dark: #FFFFFF;
@@ -89,11 +100,15 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --primary: #4ECDB4;
-  --primary-hover: #3CB89F;
-  --primary-light: #14302A;
-  --primary-muted: #5DD9BE;
-  --primary-deep: #0C1F1B;
+  --primary: #4DD6B0;
+  --primary-hover: #3EC29D;
+  --primary-light: #122E26;
+  --primary-muted: #7BE6C6;
+  --primary-deep: #08221C;
+
+  --accent-warm: #E89A5C;
+  --accent-warm-hover: #D4864A;
+  --accent-warm-light: #2E1C10;
 
   --text-primary: #EAEAEA;
   --text-secondary: #999999;
@@ -137,6 +152,9 @@
   --color-primary-hover: var(--primary-hover);
   --color-primary-light: var(--primary-light);
   --color-primary-muted: var(--primary-muted);
+  --color-accent-warm: var(--accent-warm);
+  --color-accent-warm-hover: var(--accent-warm-hover);
+  --color-accent-warm-light: var(--accent-warm-light);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-tertiary: var(--text-tertiary);
@@ -185,3 +203,17 @@ h1, h2, h3, h4, h5, h6 { letter-spacing: -0.025em; line-height: 1.15; }
 
 /* ── Cinema theater ── */
 .cinema-theater-active { overflow: hidden; }
+
+/* ── Nav search drop-in (home page merge) ── */
+@keyframes navSearchDrop {
+  0%   { opacity: 0; transform: translateY(-14px) scale(0.96); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Wishlist heart pop ── */
+@keyframes wishlistPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.28); }
+  100% { transform: scale(1); }
+}

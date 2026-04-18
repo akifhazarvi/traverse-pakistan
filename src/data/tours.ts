@@ -57,8 +57,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses & shopping", "Travel insurance", "Any activity not mentioned in itinerary", "Tips for guide & driver"],
     knowBeforeYouGo: ["Moderate fitness level required", "Warm layers recommended — temperatures drop at night", "CNIC/passport required at checkpoints"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Blossom Trip to Hunza — 6 Days | Traverse Pakistan",
-    metaDescription: "6-day blossom tour to Hunza Valley. Cherry blossoms, Baltit Fort, Eagle's Nest & KKH from Rs 47,000.",
+    metaTitle: "Blossom Trip to Hunza — 6-Day Cherry Blossom Tour",
+    metaDescription: "6-day cherry blossom tour to Hunza Valley. Drive the Karakoram Highway, visit Baltit & Altit Forts, sunrise at Eagle's Nest. From Rs 47,000. 4.9★ rated.",
   },
   {
     id: "tour-2",
@@ -95,8 +95,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["Khunjerab Pass is at 4,693m — dress warmly", "CNIC/passport required for Khunjerab", "Naltar road requires 4x4"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Hunza, Naltar & Khunjerab — 7 Days | Traverse Pakistan",
-    metaDescription: "7-day tour covering Hunza, Naltar Valley & Khunjerab Pass from Rs 48,000.",
+    metaTitle: "Hunza, Naltar & Khunjerab Pass — 7-Day Tour",
+    metaDescription: "7-day Hunza tour covering Naltar Valley tri-colored lakes, Attabad boat ride, and Khunjerab Pass (4,693m) border with China. From Rs 48,000. Dual-city.",
   },
   {
     id: "tour-3",
@@ -132,8 +132,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["Autumn temperatures: 5-15°C", "CNIC required at checkpoints"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Autumn Trip to Hunza, Nagar & Khunjerab — 7 Days | Traverse Pakistan",
-    metaDescription: "7-day autumn tour to Hunza with golden foliage, Eagle's Nest & Khunjerab from Rs 42,000.",
+    metaTitle: "Autumn Hunza, Nagar & Khunjerab — 7 Days",
+    metaDescription: "7-day autumn foliage tour: Hunza, Nagar, and Khunjerab Pass. Golden poplar colors, Eagle's Nest sunrise, Attabad Lake. From Rs 42,000. 4.9★ rated.",
   },
   {
     id: "tour-4",
@@ -169,8 +169,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal trekking gear", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["Good fitness required — 5-6 hours trekking per day", "Altitude reaches 4,200m"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Patundas Meadows Trek — 6 Days | Traverse Pakistan",
-    metaDescription: "6-day trek to Patundas Meadows in Upper Hunza from Rs 65,000.",
+    metaTitle: "Patundas Meadows Trek — 6 Days, Upper Hunza",
+    metaDescription: "6-day Patundas Meadows trek at 4,200m in Upper Hunza. Ancient juniper forests, 360° Karakoram panorama, expert-guided small groups. From Rs 65,000.",
   },
 
   // ─── SKARDU TOURS ───
@@ -209,8 +209,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["Spring temperatures: 10-20°C", "Road to Skardu takes 20+ hours"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Blossom Trip to Skardu — 7 Days | Traverse Pakistan",
-    metaDescription: "7-day spring blossom tour to Skardu from PKR 53,000.",
+    metaTitle: "Blossom Trip to Skardu — 7-Day Spring Tour",
+    metaDescription: "7-day Skardu cherry & apricot blossom tour. Shangrila Resort, 400-year-old Shigar Fort, Sadpara Lake, Cold Desert. From Rs 53,000. 4.9★ rated.",
   },
   {
     id: "tour-6",
@@ -246,8 +246,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["Autumn temperatures: 5-15°C", "Road to Skardu takes 20+ hours"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Autumn Trip to Skardu — 6 Days | Traverse Pakistan",
-    metaDescription: "6-day autumn tour to Skardu from Rs 52,000.",
+    metaTitle: "Autumn Trip to Skardu — 6-Day Fall Tour",
+    metaDescription: "6-day autumn tour to Skardu Valley. Golden foliage, Shangrila Resort, Shigar Fort, Deosai edges. From Rs 52,000. Islamabad + Lahore departures.",
   },
   {
     id: "tour-7",
@@ -283,8 +283,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["Deosai accessible June-October only", "Carry warm clothing for Deosai (0-10°C)"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Skardu, Basho, Deosai & Khaplu — 7 Days | Traverse Pakistan",
-    metaDescription: "7-day Skardu tour with Basho, Deosai & Khaplu from Rs 54,000.",
+    metaTitle: "Skardu, Basho, Deosai & Khaplu — 7 Days",
+    metaDescription: "7-day deep Skardu tour: Basho pine forests, Deosai brown bear habitat, historic Khaplu Palace. Expert guides, 4.9★ reviews. From Rs 54,000.",
   },
   {
     id: "tour-8",
@@ -321,8 +321,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["High altitude (4,100m at Deosai)", "Weather changes rapidly — waterproofs essential"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Minimarg, Deosai & Astore — 5 Days | Traverse Pakistan",
-    metaDescription: "5-day adventure to Deosai Plains & Minimarg from Rs 45,500.",
+    metaTitle: "Minimarg, Deosai & Astore — 5-Day Adventure",
+    metaDescription: "5-day Minimarg, Deosai Plains & Astore tour. World's second-highest plateau, Himalayan brown bear habitat, pristine meadows. From Rs 45,500. 4.9★.",
   },
   {
     id: "tour-9",
@@ -361,8 +361,8 @@ export const tours: Tour[] = [
     exclusions: ["Flights to Skardu", "Personal trekking gear", "Travel insurance (mandatory)", "Hotel stays in Islamabad & Skardu", "Tips"],
     knowBeforeYouGo: ["Extreme fitness required — 6-8 hours trekking daily", "Maximum altitude: 5,150m+", "Travel insurance mandatory (helicopter evacuation coverage)"],
     meetingPoint: { ...defaultMeetingPoint, address: "Hotel in Skardu (details shared before departure)", departureTime: "06:00 AM on Day 1", pickupOffered: false, pickupDescription: "" },
-    metaTitle: "K2 Base Camp Trek & Gondogoro La — 18 Days | Traverse Pakistan",
-    metaDescription: "18-day K2 Base Camp trek via Baltoro Glacier & Concordia from Rs 470,000.",
+    metaTitle: "K2 Base Camp & Gondogoro La Trek — 18 Days",
+    metaDescription: "18-day K2 Base Camp & Gondogoro La trek via Baltoro Glacier and Concordia. Stand below 8,611m K2. Expert team, from Rs 470,000. Limited spots.",
   },
 
   // ─── FAIRY MEADOWS ───
@@ -401,8 +401,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal trekking gear", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["Good fitness required — 3-4 hour trek each way", "Altitude: 3,300m", "No ATMs at Fairy Meadows — carry cash"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Fairy Meadows & Nanga Parbat — 5 Days | Traverse Pakistan",
-    metaDescription: "5-day trek to Fairy Meadows with Nanga Parbat views from Rs 42,000.",
+    metaTitle: "Fairy Meadows & Nanga Parbat — 5-Day Trek",
+    metaDescription: "5-day Fairy Meadows trek at 3,300m with Nanga Parbat (8,126m) views. Thrilling Raikot jeep road, alpine cabin stays. From Rs 42,000. 4.9★ rated.",
   },
 
   // ─── CHITRAL / KALASH ───
@@ -441,8 +441,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["Festival dates may vary", "Respect Kalash customs", "Accommodation is basic during peak festival time"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Chilam Joshi Festival, Kalash & Chitral — 4 Days | Traverse Pakistan",
-    metaDescription: "4-day trip to Chilam Joshi Festival in Kalash Valley from Rs 35,000.",
+    metaTitle: "Chilam Joshi Festival, Kalash & Chitral — 4 Days",
+    metaDescription: "4-day Chilam Joshi spring festival tour to Kalash Valley. Traditional Kalasha dance, Bumburet & Rumbur villages. From Rs 35,000. Dual-city departures.",
   },
   {
     id: "tour-12",
@@ -477,8 +477,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["December weather is cold (0-5°C)", "Lowari Pass may have snow"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Choimus Festival Trip — 4 Days | Traverse Pakistan",
-    metaDescription: "4-day trip to the Choimus winter festival in Kalash Valley from Rs 35,000.",
+    metaTitle: "Choimus Festival, Kalash Valley — 4 Days",
+    metaDescription: "4-day Choimus winter solstice festival in Kalash Valley. Bonfire ceremonies, indigenous Kalasha rituals, snow-capped Chitral. From Rs 35,000. 4.9★.",
   },
 
   // ─── GHIZAR / PHANDAR ───
@@ -517,8 +517,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["Roads can be rough in places", "Limited mobile coverage"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Ghizar, Phandar, Shandur & Yasin — 6 Days | Traverse Pakistan",
-    metaDescription: "6-day tour to Ghizar, Phandar Lake & Shandur from Rs 47,000.",
+    metaTitle: "Ghizar, Phandar, Shandur & Yasin — 6 Days",
+    metaDescription: "6-day Ghizar tour: turquoise Phandar Lake, Shandur (world's highest polo field), mystical Yasin Valley. From Rs 47,000. Expert guides. 4.9★ rated.",
   },
   {
     id: "tour-14",
@@ -554,8 +554,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["Blossom season varies — late March to mid-April"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Blossom Trip to Ghizar — 5 Days | Traverse Pakistan",
-    metaDescription: "5-day spring blossom tour to Ghizar & Phandar Lake from Rs 36,000.",
+    metaTitle: "Blossom Trip to Ghizar & Phandar — 5 Days",
+    metaDescription: "5-day Ghizar Valley cherry blossom tour. Turquoise Phandar Lake, Khalti Lake, apricot orchards, Shandur road. From Rs 36,000. Dual-city. 4.9★.",
   },
   {
     id: "tour-15",
@@ -590,8 +590,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["Autumn is October — beautiful but cool"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Autumn Trip to Ghizar — 5 Days | Traverse Pakistan",
-    metaDescription: "5-day autumn tour to Ghizar & Phandar from Rs 32,500.",
+    metaTitle: "Autumn Trip to Ghizar — 5 Days",
+    metaDescription: "5-day autumn tour to Ghizar, Phandar Lake & Yasin Valley. Golden foliage, turquoise lakes, hidden valleys. From Rs 32,500. 4.9★ rated trips.",
   },
 
   // ─── KUMRAT ───
@@ -630,8 +630,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["4x4 vehicles required", "Limited mobile coverage"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Luxury Trip to Kumrat — 3 Days | Traverse Pakistan",
-    metaDescription: "3-day luxury trip to Kumrat Valley from Rs 32,500.",
+    metaTitle: "Luxury Trip to Kumrat Valley — 3 Days",
+    metaDescription: "3-day luxury camping in Kumrat Valley. Pristine pine forests, crystal Panjkora River, Jahaz Banda meadow. From Rs 32,500. Small-group trips. 4.9★.",
   },
 
   // ─── COASTAL / MAKRAN ───
@@ -670,8 +670,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["November-February is ideal — cool weather", "Long driving distances between stops", "Carry sunscreen"],
     meetingPoint: { ...defaultMeetingPoint, address: "Hotel pickup in Karachi", endPoint: "Karachi" },
-    metaTitle: "Gwadar, Ormara & Kund Malir — 4 Days | Traverse Pakistan",
-    metaDescription: "4-day Makran Coast tour — Gwadar, Ormara & Kund Malir from Rs 25,000.",
+    metaTitle: "Gwadar, Ormara & Kund Malir — 4-Day Coast Tour",
+    metaDescription: "4-day Makran Coast tour: Kund Malir beach, Hingol Park mud volcanoes, Princess of Hope rock, Gwadar. From Rs 50,000. Dual-city departures.",
   },
 
   // ─── NEELAM VALLEY / AJK ───
@@ -710,8 +710,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["CNIC mandatory for all travelers", "Road conditions can be challenging after rain", "Limited mobile coverage in upper Neelam"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Ultimate Neelam Valley Trip — 5 Days | Traverse Pakistan",
-    metaDescription: "5-day trip to Neelam Valley — Arang Kel, Ratti Gali Lake & Sharda from Rs 42,000.",
+    metaTitle: "Ultimate Neelam Valley Trip — 5 Days",
+    metaDescription: "5-day Neelam Valley trip: Arang Kel (Heaven on Earth), Ratti Gali Lake trek, Sharda ruins, Keran village. From Rs 42,000. Islamabad + Lahore.",
   },
 
   // ─── SINDH / CULTURAL ───
@@ -748,8 +748,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["November is ideal — cool & dry", "Modest dress at shrines"],
     meetingPoint: { ...defaultMeetingPoint, address: "Hotel pickup in Karachi", endPoint: "Karachi" },
-    metaTitle: "Trip to Interior Sindh — 4 Days | Traverse Pakistan",
-    metaDescription: "4-day cultural tour to Interior Sindh from Rs 49,000.",
+    metaTitle: "Interior Sindh Cultural Tour — 4 Days",
+    metaDescription: "4-day cultural tour to interior Sindh: 4,500-year-old Mohenjo-daro, Shah Jahan Mosque Thatta, UNESCO Makli Necropolis. From Rs 49,000. Small groups.",
   },
   {
     id: "tour-20",
@@ -783,8 +783,8 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Travel insurance", "Tips"],
     knowBeforeYouGo: ["Best in winter (Nov-Feb)", "Desert safari may involve off-road driving"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Multan & Bahawalpur — 4 Days | Traverse Pakistan",
-    metaDescription: "4-day cultural tour to Multan & Bahawalpur from Rs 35,000.",
+    metaTitle: "Multan & Bahawalpur Cultural Tour — 4 Days",
+    metaDescription: "4-day Multan & Bahawalpur cultural tour: Derawar Fort, Noor Mahal Palace, Cholistan Desert, Sufi shrines. From Rs 35,000. 4.9★ rated trips.",
   },
 
   // ─── SKIING ───
@@ -819,8 +819,8 @@ export const tours: Tour[] = [
     exclusions: ["Ski equipment rental", "Personal expenses", "Tips"],
     knowBeforeYouGo: ["Ski season: December-February", "Warm clothing essential"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Skiing Trip to Malam Jabba — 2 Days | Traverse Pakistan",
-    metaDescription: "2-day skiing trip to Malam Jabba from Rs 18,000.",
+    metaTitle: "Skiing Trip to Malam Jabba — 2-Day Weekend",
+    metaDescription: "2-day skiing & snowboarding trip to Malam Jabba resort. Rentals included, chairlift rides, Hindu Kush views. Weekend getaway. From Rs 18,000.",
   },
 
   // ─── SHARAN / KAGHAN ───
@@ -856,7 +856,7 @@ export const tours: Tour[] = [
     exclusions: ["Personal expenses", "Tips"],
     knowBeforeYouGo: ["2-day trip — perfect for weekends", "4x4 required for Sharan"],
     meetingPoint: defaultMeetingPoint,
-    metaTitle: "Sharan & Manshi Top — 2 Days | Traverse Pakistan",
-    metaDescription: "2-day weekend trip to Sharan & Manshi Top from Rs 15,500.",
+    metaTitle: "Sharan Forest & Manshi Top Weekend — 2 Days",
+    metaDescription: "2-day weekend getaway from Islamabad to Sharan Forest & Manshi Top. Pine forests, panoramic Himalaya views, alpine cabins. From Rs 15,500. 4.9★.",
   },
 ];

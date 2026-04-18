@@ -59,7 +59,7 @@ export const packages: Package[] = [
       deluxe: { islamabad: 79000, lahore: 85000, singleSupplement: 12000 },
       luxury: { islamabad: 129000, lahore: 135000, singleSupplement: 20000 },
     },
-    metaTitle: "Hunza Valley Escape Package — Custom Dates | Traverse Pakistan",
+    metaTitle: "Hunza Valley Escape Package — Custom Dates",
     metaDescription: "Book the Hunza Valley Escape on your own dates. Choose Deluxe (Eagle's Nest) or Luxury (Luxus Hunza Attabad Lake). 6 days, private transport, expert guide.",
   },
   {
@@ -118,7 +118,7 @@ export const packages: Package[] = [
       deluxe: { islamabad: 85000, lahore: 91000, singleSupplement: 14000 },
       luxury: { islamabad: 139000, lahore: 145000, singleSupplement: 22000 },
     },
-    metaTitle: "Skardu Heaven on Earth Package — Custom Dates | Traverse Pakistan",
+    metaTitle: "Skardu Heaven on Earth Package — Custom Dates",
     metaDescription: "Explore Skardu on your own schedule. Deluxe or Luxury tier, custom dates, expert guide. 6 days from Islamabad.",
   },
   {
@@ -177,7 +177,7 @@ export const packages: Package[] = [
       deluxe: { islamabad: 145000, lahore: 155000, singleSupplement: 22000 },
       luxury: { islamabad: 230000, lahore: 240000, singleSupplement: 38000 },
     },
-    metaTitle: "Northern Pakistan Grand Tour Package — Hunza & Skardu | Traverse Pakistan",
+    metaTitle: "Northern Pakistan Grand Tour Package — Hunza & Skardu",
     metaDescription: "The ultimate 9-day Hunza + Skardu grand tour. Choose Deluxe or Luxury, pick your own dates. Expert guide, private transport, iconic hotels.",
   },
   {
@@ -236,7 +236,7 @@ export const packages: Package[] = [
       deluxe: { islamabad: 55000, lahore: 61000, singleSupplement: 9000 },
       luxury: { islamabad: 89000, lahore: 95000, singleSupplement: 15000 },
     },
-    metaTitle: "Fairy Meadows & Nanga Parbat Package — Custom Dates | Traverse Pakistan",
+    metaTitle: "Fairy Meadows & Nanga Parbat Package — Custom Dates",
     metaDescription: "4-day Fairy Meadows escape. Sleep beneath Nanga Parbat stars in a wooden cottage (Deluxe) or glamping tent (Luxury). Custom dates, expert guide, private transport.",
   },
   {
@@ -296,7 +296,7 @@ export const packages: Package[] = [
       deluxe: { islamabad: 69000, lahore: 75000, singleSupplement: 11000 },
       luxury: { islamabad: 115000, lahore: 121000, singleSupplement: 18000 },
     },
-    metaTitle: "Chitral & Kalash Valley Package — Custom Dates | Traverse Pakistan",
+    metaTitle: "Chitral & Kalash Valley Package — Custom Dates",
     metaDescription: "5-day Chitral & Kalash Valley package. Explore Pakistan's most unique indigenous culture, Chitral Fort, and the Hindu Kush. Deluxe or Luxury tier, custom dates.",
   }
 ];

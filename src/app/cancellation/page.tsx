@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { buildMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Cancellation Policy | Traverse Pakistan",
+export const metadata: Metadata = buildMetadata({
+  title: "Cancellation & Refund Policy",
   description:
-    "Understand Traverse Pakistan's cancellation and refund policy for group tours, custom tours, transport, hotels, and airline tickets.",
-};
+    "Full cancellation and refund policy for group tours, custom tours, transport, hotels, and airline tickets booked with Traverse Pakistan. Free cancellation up to 48 hours.",
+  path: "/cancellation",
+});
 
 export default function CancellationPage() {
   return (

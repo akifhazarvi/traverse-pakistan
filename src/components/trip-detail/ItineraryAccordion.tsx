@@ -17,7 +17,7 @@ export function ItineraryAccordion({ days }: ItineraryAccordionProps) {
           defaultOpen={day.dayNumber === 1}
           title={
             <div className="flex items-center gap-3">
-              <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--primary)] text-white text-[13px] font-bold flex items-center justify-center">
+              <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--primary)] text-[var(--text-inverse)] text-[13px] font-bold flex items-center justify-center">
                 {day.dayNumber}
               </span>
               <span className="text-[15px] font-semibold text-[var(--text-primary)]">

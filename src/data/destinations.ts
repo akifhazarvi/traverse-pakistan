@@ -29,7 +29,7 @@ export const destinations: Destination[] = [
       { season: "autumn", icon: "🍂", months: "September – November", badge: "Best time", badgeColor: "green", description: "Golden foliage turns the valley into a painting. Clear skies." },
       { season: "winter", icon: "❄️", months: "December – March", badge: "Limited access", badgeColor: "red", description: "Heavy snowfall. KKH may close. Beautiful but limited services." },
     ],
-    metaTitle: "Hunza Valley Tours & Travel Guide | Traverse Pakistan",
+    metaTitle: "Hunza Valley Tours & Travel Guide",
     metaDescription: "Explore Hunza Valley — cherry blossoms, ancient forts, Karakoram Highway. Tours from Rs 42,000.",
   },
   {
@@ -58,7 +58,7 @@ export const destinations: Destination[] = [
       { season: "autumn", icon: "🍂", months: "September – November", badge: "Best time", badgeColor: "green", description: "Golden foliage. Clear skies, fewer crowds." },
       { season: "winter", icon: "❄️", months: "December – March", badge: "Limited access", badgeColor: "red", description: "Snow closes many roads. Flights may be cancelled." },
     ],
-    metaTitle: "Skardu Tours & Travel Guide | Traverse Pakistan",
+    metaTitle: "Skardu Tours & Travel Guide",
     metaDescription: "Explore Skardu — gateway to K2. Shangrila, Deosai, Shigar Fort. Tours from Rs 45,500.",
   },
   {
@@ -86,7 +86,7 @@ export const destinations: Destination[] = [
       { season: "autumn", icon: "🍂", months: "September – November", badge: "Good time", badgeColor: "yellow", description: "Beautiful autumn colors. Fewer tourists." },
       { season: "winter", icon: "❄️", months: "December – March", badge: "Choimus Festival", badgeColor: "blue", description: "Choimus festival in December. Snowy but magical." },
     ],
-    metaTitle: "Chitral & Kalash Valley Tours | Traverse Pakistan",
+    metaTitle: "Chitral & Kalash Valley Tours",
     metaDescription: "Explore Chitral & Kalash Valley. Ancient culture, festivals, Hindu Kush. Tours from Rs 35,000.",
   },
   {
@@ -114,7 +114,7 @@ export const destinations: Destination[] = [
       { season: "autumn", icon: "🍂", months: "September – October", badge: "Good time", badgeColor: "yellow", description: "Golden forests, clear skies. Fewer crowds." },
       { season: "winter", icon: "❄️", months: "November – March", badge: "Closed", badgeColor: "red", description: "Heavy snow. Trail inaccessible." },
     ],
-    metaTitle: "Fairy Meadows Tours | Traverse Pakistan",
+    metaTitle: "Fairy Meadows Tours",
     metaDescription: "Visit Fairy Meadows at the base of Nanga Parbat. Tours from Rs 42,000.",
   },
   {
@@ -142,7 +142,7 @@ export const destinations: Destination[] = [
       { season: "autumn", icon: "🍂", months: "September – October", badge: "Best time", badgeColor: "green", description: "Golden forests, crisp air, fewer visitors." },
       { season: "winter", icon: "❄️", months: "November – March", badge: "Limited access", badgeColor: "red", description: "Heavy snowfall. Roads may close." },
     ],
-    metaTitle: "Kumrat Valley Tours | Traverse Pakistan",
+    metaTitle: "Kumrat Valley Tours",
     metaDescription: "Explore Kumrat Valley — pine forests, crystal rivers. Tours from Rs 32,500.",
   },
   {
@@ -170,7 +170,7 @@ export const destinations: Destination[] = [
       { season: "autumn", icon: "🍂", months: "September – November", badge: "Best time", badgeColor: "green", description: "Golden poplars against turquoise lakes." },
       { season: "winter", icon: "❄️", months: "December – March", badge: "Limited access", badgeColor: "red", description: "Snow closes roads. Beautiful but difficult." },
     ],
-    metaTitle: "Ghizar & Phandar Tours | Traverse Pakistan",
+    metaTitle: "Ghizar & Phandar Tours",
     metaDescription: "Explore Ghizar — Phandar Lake, Shandur & Yasin Valley. Tours from Rs 32,500.",
   },
   {
@@ -198,7 +198,7 @@ export const destinations: Destination[] = [
       { season: "autumn", icon: "🍂", months: "September – October", badge: "Good time", badgeColor: "yellow", description: "Beautiful autumn colors. Fewer tourists." },
       { season: "winter", icon: "❄️", months: "November – March", badge: "Limited access", badgeColor: "red", description: "Snow closes upper valley. Lower valley accessible." },
     ],
-    metaTitle: "Neelam Valley Tours | Traverse Pakistan",
+    metaTitle: "Neelam Valley Tours",
     metaDescription: "Explore Neelam Valley — Arang Kel, Ratti Gali Lake & Sharda. Tours from Rs 42,000.",
   },
   {
@@ -226,7 +226,7 @@ export const destinations: Destination[] = [
       { season: "autumn", icon: "🍂", months: "October – November", badge: "Best time", badgeColor: "green", description: "Cooling down. Perfect beach weather." },
       { season: "winter", icon: "❄️", months: "December – February", badge: "Best time", badgeColor: "green", description: "Mild and pleasant (18-25°C). Peak season." },
     ],
-    metaTitle: "Makran Coast & Gwadar Tours | Traverse Pakistan",
+    metaTitle: "Makran Coast & Gwadar Tours",
     metaDescription: "Explore the Makran Coast — Kund Malir, Gwadar & Hingol. Tours from Rs 25,000.",
   },
 ];

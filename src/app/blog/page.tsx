@@ -3,12 +3,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { buildMetadata } from "@/lib/seo/metadata";
 import { getLatestBlogPosts } from "@/services/blog.service";
 
-export const metadata: Metadata = {
-  title: "Blog",
-  description: "Travel guides, tips, and inspiration for exploring Pakistan.",
-};
+export const metadata: Metadata = buildMetadata({
+  title: "Pakistan Travel Blog — Guides, Treks, Culture & Seasons",
+  description:
+    "First-hand travel guides from Pakistan: Hunza, Skardu, Kalash, Nanga Parbat, blossom and autumn seasons, treks, and local culture — by Traverse Pakistan.",
+  path: "/blog",
+  tags: ["Pakistan travel blog", "Hunza guide", "Pakistan travel tips"],
+});
 
 export default async function BlogPage() {
   const posts = await getLatestBlogPosts(20);
@@ -43,7 +47,7 @@ export default async function BlogPage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-              <span className="inline-block px-3 py-1 text-[11px] font-bold uppercase bg-[var(--primary)] text-white rounded-full mb-3">
+              <span className="inline-block px-3 py-1 text-[11px] font-bold uppercase bg-[var(--primary)] text-[var(--text-inverse)] rounded-full mb-3">
                 {featured.tag}
               </span>
               <h2 className="text-2xl sm:text-3xl font-bold text-[var(--on-dark)]">

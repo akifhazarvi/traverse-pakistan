@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { buildMetadata } from "@/lib/seo/metadata";
 import { getHotelBySlug } from "@/services/hotel.service";
 import { HotelCheckoutClient } from "@/components/hotels/HotelCheckoutClient";
 
@@ -19,8 +20,12 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const hotel = await getHotelBySlug(slug);
-  if (!hotel) return { title: "Checkout" };
-  return { title: `Checkout — ${hotel.name}` };
+  return buildMetadata({
+    title: hotel ? `Checkout — ${hotel.name}` : "Checkout",
+    description: "Secure checkout for your hotel booking with Traverse Pakistan.",
+    path: `/hotels/${slug}/checkout`,
+    noIndex: true,
+  });
 }
 
 export default async function HotelCheckoutPage({ params }: Props) {

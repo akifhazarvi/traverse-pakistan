@@ -58,6 +58,11 @@ export interface Tour {
   freeCancellation: boolean;
   reserveNowPayLater: boolean;
   images: TourImage[];
+  guide?: {
+    name: string;
+    yearsGuiding: number;
+    photo?: string;
+  };
   highlights: string[];
   inclusions: string[];
   exclusions: string[];

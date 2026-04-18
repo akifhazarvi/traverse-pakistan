@@ -65,18 +65,46 @@ export function HeroSection() {
             textShadow: "0 2px 16px rgba(0,0,0,0.3)",
           }}
         >
-          <span className="text-[#A5D6A7]">Pakistan</span> Like Never Before!
-                  </h1>
+          <span className="text-[var(--primary-muted)]">Pakistan Tours</span> by the Highest-Rated Tour Operator
+        </h1>
 
         <p
-          className="mt-3 text-[16px] sm:text-[17px] text-[var(--on-dark-secondary)] max-w-[480px] mx-auto leading-relaxed text-center"
+          className="mt-3 text-[16px] sm:text-[17px] text-[var(--on-dark-secondary)] max-w-[560px] mx-auto leading-relaxed text-center"
           style={{ textShadow: "0 1px 6px rgba(0,0,0,0.3)" }}
         >
-          From K2 Base Camp to the Makran Coast — expert guides, verified drivers, unforgettable memories.
+          Group tours, custom holidays, and verified hotels across Hunza, Skardu,
+          Chitral, and K2 Base Camp — trusted by 1,300+ travelers with 4.9-star reviews.
         </p>
 
+        {/* Social proof — instant trust */}
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[13px] text-[var(--on-dark)]"
+          style={{ textShadow: "0 1px 6px rgba(0,0,0,0.35)" }}
+        >
+          <span className="inline-flex items-center gap-1.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#FFD56B" stroke="none" aria-hidden="true">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+            <span><span className="font-bold tabular-nums">4.9</span> · 1,300+ travelers</span>
+          </span>
+          <span className="hidden sm:inline text-[var(--on-dark-tertiary)]">·</span>
+          <span className="inline-flex items-center gap-1.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M9 12l2 2 4-4" />
+              <path d="M21 12c0 5.25-4.5 9-9 9s-9-3.75-9-9 4.5-9 9-9 9 3.75 9 9z" />
+            </svg>
+            TripAdvisor Travelers&apos; Choice 2025
+          </span>
+          <span className="hidden sm:inline text-[var(--on-dark-tertiary)]">·</span>
+          <span className="inline-flex items-center gap-1.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 2 4 6v6c0 5 3.4 9.3 8 10 4.6-.7 8-5 8-10V6l-8-4z" />
+            </svg>
+            Verified guides
+          </span>
+        </div>
+
         {/* Search Widget */}
-        <div className="w-full max-w-[920px] mt-7 relative z-20">
+        <div id="hero-search" className="w-full max-w-[920px] mt-6 relative z-20">
           <SearchWidget />
         </div>
       </div>

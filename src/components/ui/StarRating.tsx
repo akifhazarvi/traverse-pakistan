@@ -39,8 +39,8 @@ export function StarRating({
                 : i === fullStars && hasHalf
                   ? "text-[var(--primary-muted)] opacity-60"
                   : light
-                    ? "text-white/20"
-                    : "text-gray-200"
+                    ? "text-[var(--on-dark-tertiary)]"
+                    : "text-[var(--border-default)]"
             )}
           >
             ★

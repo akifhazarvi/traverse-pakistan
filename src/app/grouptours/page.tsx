@@ -3,13 +3,16 @@ import { Suspense } from "react";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { GroupToursClient } from "@/components/tours/GroupToursClient";
+import { buildMetadata } from "@/lib/seo/metadata";
 import { getAllTours } from "@/services/tour.service";
 
-export const metadata: Metadata = {
-  title: "All Group Tours",
+export const metadata: Metadata = buildMetadata({
+  title: "Pakistan Group Tours — 22 Fixed-Departure Trips from Islamabad & Lahore",
   description:
-    "Browse all group tour packages across Pakistan. Group tours, trekking, cultural trips, luxury getaways, and more.",
-};
+    "Browse 22 group tours across Pakistan: Hunza, Skardu, K2 Base Camp, Chitral, Kalash, Deosai. Dual-city departures, expert guides, 4.9★ from 1,300+ travelers.",
+  path: "/grouptours",
+  tags: ["Pakistan group tours", "Hunza tour", "Skardu tour", "Karakoram tours"],
+});
 
 export default async function GroupToursPage() {
   const tours = await getAllTours();

@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { AccountGreeting } from "@/components/account/AccountGreeting";
 
 export const metadata: Metadata = {
   title: "My Account",
   description: "Manage your Traverse Pakistan account, trips, and wishlist.",
+  robots: { index: false, follow: false },
 };
 
 const menuItems = [
@@ -19,12 +21,7 @@ export default function AccountPage() {
     <div className="py-8 sm:py-12">
       <Container>
         <Breadcrumb items={[{ label: "Account" }]} />
-        <div className="mt-6 mb-10">
-          <h1 className="text-[32px] font-bold text-[var(--text-primary)]">My Account</h1>
-          <p className="text-[var(--text-tertiary)] mt-2">
-            Account features are coming in Phase 2. For now, explore the platform!
-          </p>
-        </div>
+        <AccountGreeting />
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-[800px]">
           {menuItems.map((item) => (
             <Link

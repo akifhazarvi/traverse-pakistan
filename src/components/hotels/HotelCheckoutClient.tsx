@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { formatPrice, getWhatsAppUrl } from "@/lib/utils";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { createQuoteRequest } from "@/services/quote.service";
 import type { Hotel } from "@/types/hotel";
 
 function fmt(dateStr: string) {
@@ -40,15 +42,15 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
-    const msg =
+  function buildWhatsAppMessage() {
+    return (
       `Hi! I'd like to confirm a hotel booking.\n\n` +
       `*Hotel:* ${hotel.name}, ${hotel.location}\n` +
       `*Room:* ${selectedRoom.name} × ${rooms}\n` +
@@ -63,9 +65,52 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
       `Phone: ${form.phone}\n` +
       (form.arrivalTime ? `Arrival Time: ${form.arrivalTime}\n` : "") +
       (form.specialRequests ? `Special Requests: ${form.specialRequests}\n` : "") +
-      `\nPlease confirm availability and send payment details.`;
+      `\nPlease confirm availability and send payment details.`
+    );
+  }
 
-    window.open(getWhatsAppUrl(msg), "_blank");
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+
+    if (isSupabaseConfigured) {
+      setSubmitting(true);
+      try {
+        const notes = [
+          form.arrivalTime ? `Arrival time: ${form.arrivalTime}` : "",
+          form.specialRequests,
+          `Room: ${selectedRoom.name}`,
+          `Estimated total: ${formatPrice(subtotal)}`,
+        ].filter(Boolean).join(" · ");
+
+        await createQuoteRequest({
+          requestType: "hotel",
+          slug: hotel.slug,
+          displayName: `${hotel.name}, ${hotel.location}`,
+          tier: selectedRoom.name,
+          preferredStartDate: checkin || undefined,
+          preferredEndDate: checkout || undefined,
+          adults,
+          children,
+          rooms,
+          contact: {
+            name: `${form.firstName} ${form.lastName}`.trim(),
+            email: form.email,
+            phone: form.phone,
+          },
+          notes: notes || undefined,
+        });
+        setSubmitted(true);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Could not send request");
+      } finally {
+        setSubmitting(false);
+      }
+      return;
+    }
+
+    // Fallback: WhatsApp
+    window.open(getWhatsAppUrl(buildWhatsAppMessage()), "_blank");
     setSubmitted(true);
   }
 
@@ -84,42 +129,42 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-[12px] font-semibold text-[var(--text-secondary)] mb-1.5 uppercase tracking-wide">
-                First name <span className="text-red-500">*</span>
+                First name <span className="text-[var(--error)]" aria-hidden="true">*</span>
               </label>
               <input
                 name="firstName" type="text" required value={form.firstName} onChange={handleChange}
                 placeholder="Ali"
-                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-colors"
+                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-colors"
               />
             </div>
             <div>
               <label className="block text-[12px] font-semibold text-[var(--text-secondary)] mb-1.5 uppercase tracking-wide">
-                Last name <span className="text-red-500">*</span>
+                Last name <span className="text-[var(--error)]" aria-hidden="true">*</span>
               </label>
               <input
                 name="lastName" type="text" required value={form.lastName} onChange={handleChange}
                 placeholder="Khan"
-                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-colors"
+                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-colors"
               />
             </div>
             <div>
               <label className="block text-[12px] font-semibold text-[var(--text-secondary)] mb-1.5 uppercase tracking-wide">
-                Email <span className="text-red-500">*</span>
+                Email <span className="text-[var(--error)]" aria-hidden="true">*</span>
               </label>
               <input
                 name="email" type="email" required value={form.email} onChange={handleChange}
                 placeholder="ali@example.com"
-                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-colors"
+                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-colors"
               />
             </div>
             <div>
               <label className="block text-[12px] font-semibold text-[var(--text-secondary)] mb-1.5 uppercase tracking-wide">
-                Phone <span className="text-red-500">*</span>
+                Phone <span className="text-[var(--error)]" aria-hidden="true">*</span>
               </label>
               <input
                 name="phone" type="tel" required value={form.phone} onChange={handleChange}
                 placeholder="+92 300 0000000"
-                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-colors"
+                className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-colors"
               />
             </div>
           </div>
@@ -134,7 +179,7 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
             </label>
             <select
               name="arrivalTime" value={form.arrivalTime} onChange={handleChange}
-              className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-colors cursor-pointer"
+              className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-colors cursor-pointer"
             >
               <option value="">Select time (optional)</option>
               <option>Before 12:00 PM</option>
@@ -157,7 +202,7 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
             name="specialRequests" value={form.specialRequests} onChange={handleChange}
             rows={4}
             placeholder="Any dietary requirements, accessibility needs, room preferences, or other requests…"
-            className="w-full px-4 py-3 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)] transition-colors resize-none"
+            className="w-full px-4 py-3 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-colors resize-none"
           />
           <p className="text-[11px] text-[var(--text-tertiary)] mt-1.5">
             Special requests cannot be guaranteed — we&apos;ll do our best to accommodate them.
@@ -165,34 +210,53 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
         </section>
 
         {/* Cancellation notice */}
-        <section className="p-4 bg-emerald-50 border border-emerald-100 rounded-[var(--radius-md)]">
+        <section className="p-4 bg-[var(--primary-light)] border border-[var(--primary)]/20 rounded-[var(--radius-md)]">
           <div className="flex items-start gap-3">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2" className="mt-0.5 shrink-0">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2" className="mt-0.5 shrink-0">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
             <div>
-              <p className="text-[13px] font-bold text-emerald-800 mb-1">Free cancellation</p>
-              <p className="text-[12px] text-emerald-700 leading-relaxed">
+              <p className="text-[13px] font-bold text-[var(--primary-deep)] mb-1">Free cancellation</p>
+              <p className="text-[12px] text-[var(--text-secondary)] leading-relaxed">
                 {hotel.policies.cancellation[0] ?? "Cancel anytime before check-in for a full refund."}
               </p>
             </div>
           </div>
         </section>
 
+        {/* Error banner */}
+        {error && (
+          <div className="p-3 bg-[var(--error)]/10 border border-[var(--error)]/30 rounded-[var(--radius-sm)] text-[13px] text-[var(--error)]">
+            {error}
+          </div>
+        )}
+
         {/* Submit */}
         {submitted ? (
-          <div className="p-5 bg-emerald-50 border border-emerald-200 rounded-[var(--radius-md)] text-center">
-            <p className="text-[16px] font-bold text-emerald-800 mb-1">Booking request sent!</p>
-            <p className="text-[13px] text-emerald-700">We&apos;ve opened WhatsApp with your details. Our team will confirm shortly.</p>
+          <div className="p-5 bg-[var(--primary-light)] border border-[var(--primary)]/30 rounded-[var(--radius-md)] text-center">
+            <p className="text-[16px] font-bold text-[var(--primary-deep)] mb-1">Request received</p>
+            <p className="text-[13px] text-[var(--text-secondary)]">
+              Our team will confirm availability and pricing within 2 hours.
+            </p>
           </div>
         ) : (
-          <button
-            type="submit"
-            disabled={!isValid}
-            className="w-full h-[52px] bg-[var(--primary)] text-white text-[15px] font-bold rounded-[var(--radius-sm)] hover:bg-[var(--primary-hover)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]"
-          >
-            Confirm via WhatsApp
-          </button>
+          <div className="space-y-2">
+            <button
+              type="submit"
+              disabled={!isValid || submitting}
+              className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-bold rounded-[var(--radius-sm)] hover:bg-[var(--primary-hover)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]"
+            >
+              {submitting ? "Sending…" : "Request booking"}
+            </button>
+            <a
+              href={getWhatsAppUrl(buildWhatsAppMessage())}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full h-10 flex items-center justify-center text-[13px] font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+            >
+              or ask on WhatsApp →
+            </a>
+          </div>
         )}
         <p className="text-center text-[12px] text-[var(--text-tertiary)] -mt-4">
           You won&apos;t be charged yet — we&apos;ll confirm availability first.
@@ -269,7 +333,7 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
                 </span>
                 <span className="text-[var(--text-primary)] font-medium tabular-nums">{formatPrice(subtotal)}</span>
               </div>
-              <div className="flex justify-between text-[13px] text-emerald-600">
+              <div className="flex justify-between text-[13px] text-[var(--success)]">
                 <span>Taxes & fees</span>
                 <span>Included</span>
               </div>

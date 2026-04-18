@@ -16,7 +16,7 @@ const badgeConfig: Record<
   },
   "epic-trek": {
     label: "EPIC TREK",
-    className: "bg-[var(--primary)] text-white",
+    className: "bg-[var(--primary)] text-[var(--text-inverse)]",
   },
   bestseller: {
     label: "BESTSELLER",

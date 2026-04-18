@@ -10,6 +10,7 @@ import { PackageBookingSidebar } from "@/components/packages/PackageBookingSideb
 import { PackageItineraryAccordion } from "@/components/packages/PackageItineraryAccordion";
 import { PackageCard } from "@/components/packages/PackageCard";
 import { formatPrice, getWhatsAppUrl } from "@/lib/utils";
+import { QuoteRequestDialog } from "@/components/quote/QuoteRequestDialog";
 import type { Package, PackageItinerary, PackageTier } from "@/types/package";
 import type { Hotel } from "@/types/hotel";
 
@@ -22,6 +23,7 @@ interface PackageDetailClientProps {
 
 export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages }: PackageDetailClientProps) {
   const [selectedTier, setSelectedTier] = useState<PackageTier>("deluxe");
+  const [mobileQuoteOpen, setMobileQuoteOpen] = useState(false);
 
   return (
     <div className="py-6 sm:py-8">
@@ -73,7 +75,7 @@ export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages
                     onClick={() => setSelectedTier(tier)}
                     className={`h-10 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer ${
                       selectedTier === tier
-                        ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                        ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
                         : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)]"
                     }`}
                   >
@@ -119,7 +121,7 @@ export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages
                         onClick={() => setSelectedTier(tier)}
                         className={`px-3 py-1 rounded-full text-[12px] font-semibold border transition-colors cursor-pointer ${
                           selectedTier === tier
-                            ? "bg-[var(--primary)] text-white border-[var(--primary)]"
+                            ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
                             : "border-[var(--border-default)] text-[var(--text-secondary)] hover:border-[var(--primary)]"
                         }`}
                       >
@@ -166,8 +168,8 @@ export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages
                 </div>
               </div>
               {pkg.knowBeforeYouGo.length > 0 && (
-                <div className="mt-8 p-5 bg-amber-50 border border-amber-200 rounded-xl">
-                  <h3 className="text-[14px] font-bold text-amber-800 mb-3 flex items-center gap-2">
+                <div className="mt-8 p-5 bg-[var(--accent-warm-light)] border border-[var(--accent-warm)]/30 rounded-xl">
+                  <h3 className="text-[14px] font-bold text-[var(--accent-warm)] mb-3 flex items-center gap-2">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
                     </svg>
@@ -175,8 +177,8 @@ export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages
                   </h3>
                   <ul className="space-y-1.5">
                     {pkg.knowBeforeYouGo.map((item, i) => (
-                      <li key={i} className="text-[14px] text-amber-700 flex items-start gap-2">
-                        <span className="shrink-0 mt-1">•</span>{item}
+                      <li key={i} className="text-[14px] text-[var(--text-secondary)] flex items-start gap-2">
+                        <span className="shrink-0 mt-1 text-[var(--accent-warm)]">•</span>{item}
                       </li>
                     ))}
                   </ul>
@@ -199,15 +201,24 @@ export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages
             </span>
             <span className="text-[13px] text-[var(--text-tertiary)] ml-1">per person</span>
           </div>
-          <a
-            href={getWhatsAppUrl(`Hi! I'm interested in the "${pkg.name}" ${selectedTier} package.`)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="h-11 px-6 bg-[var(--primary)] text-white text-[14px] font-semibold rounded-full flex items-center justify-center hover:bg-[var(--primary-hover)] transition-colors"
+          <button
+            type="button"
+            onClick={() => setMobileQuoteOpen(true)}
+            className="h-11 px-6 bg-[var(--primary)] text-[var(--text-inverse)] text-[14px] font-semibold rounded-full flex items-center justify-center hover:bg-[var(--primary-hover)] transition-colors cursor-pointer"
           >
-            Check Availability
-          </a>
+            Request Quote
+          </button>
         </div>
+
+        <QuoteRequestDialog
+          open={mobileQuoteOpen}
+          onClose={() => setMobileQuoteOpen(false)}
+          requestType="package"
+          slug={pkg.slug}
+          displayName={pkg.name}
+          tier={selectedTier === "deluxe" ? "Deluxe" : "Luxury"}
+          whatsappFallbackMessage={`Hi! I'm interested in the "${pkg.name}" ${selectedTier} package.`}
+        />
 
         {/* Related packages */}
         {relatedPackages.length > 0 && (

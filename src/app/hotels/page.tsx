@@ -3,12 +3,16 @@ import { Suspense } from "react";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { HotelsClient } from "@/components/hotels/HotelsClient";
+import { buildMetadata } from "@/lib/seo/metadata";
 import { getAllHotels } from "@/services/hotel.service";
 
-export const metadata: Metadata = {
-  title: "Hotels",
-  description: "Browse handpicked hotels, guesthouses & camps across Pakistan.",
-};
+export const metadata: Metadata = buildMetadata({
+  title: "Hotels in Pakistan — Handpicked Mountain Retreats, Resorts & Camps",
+  description:
+    "Book verified mountain hotels, lakeside resorts, and heritage guesthouses across Pakistan. Hunza, Skardu, Naltar, Chitral. Trusted by 1,300+ travelers.",
+  path: "/hotels",
+  tags: ["Pakistan hotels", "Hunza hotel", "Skardu hotel", "mountain resort Pakistan"],
+});
 
 export default async function HotelsPage() {
   const hotels = await getAllHotels();

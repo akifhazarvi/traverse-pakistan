@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { buildMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy | Traverse Pakistan",
+export const metadata: Metadata = buildMetadata({
+  title: "Privacy Policy",
   description:
-    "Learn how Traverse Pakistan collects, uses, and protects your personal information.",
-};
+    "How Traverse Pakistan collects, uses, stores, and protects your personal information. GDPR-aligned practices for our tour and booking services.",
+  path: "/privacy",
+});
 
 const sections = [
   {

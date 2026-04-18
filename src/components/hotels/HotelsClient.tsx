@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,20 +21,19 @@ const allDestinations = [
 
 export function HotelsClient({ hotels }: { hotels: Hotel[] }) {
   const searchParams = useSearchParams();
-  const [filtered, setFiltered] = useState<Hotel[]>(hotels);
-  const [activeFilters, setActiveFilters] = useState({ destination: "", checkin: "", checkout: "", guests: 0 });
 
-  useEffect(() => {
-    const destination = searchParams.get("destination") ?? "";
-    const checkin = searchParams.get("checkin") ?? "";
-    const checkout = searchParams.get("checkout") ?? "";
-    const guests = Number(searchParams.get("guests") ?? 0);
-    setActiveFilters({ destination, checkin, checkout, guests });
+  const activeFilters = useMemo(() => ({
+    destination: searchParams.get("destination") ?? "",
+    checkin: searchParams.get("checkin") ?? "",
+    checkout: searchParams.get("checkout") ?? "",
+    guests: Number(searchParams.get("guests") ?? 0),
+  }), [searchParams]);
 
-    let result = hotels;
-    if (destination) result = result.filter((h) => h.destinationSlug === destination);
-    setFiltered(result);
-  }, [searchParams, hotels]);
+  const filtered = useMemo(() => (
+    activeFilters.destination
+      ? hotels.filter((h) => h.destinationSlug === activeFilters.destination)
+      : hotels
+  ), [hotels, activeFilters.destination]);
 
   const nights = activeFilters.checkin && activeFilters.checkout
     ? Math.round((new Date(activeFilters.checkout).getTime() - new Date(activeFilters.checkin).getTime()) / 86400000)
@@ -68,7 +67,7 @@ export function HotelsClient({ hotels }: { hotels: Hotel[] }) {
           <div className="text-center py-20">
             <p className="text-[18px] font-semibold text-[var(--text-primary)]">No hotels found</p>
             <p className="text-[14px] text-[var(--text-tertiary)] mt-2">Try a different destination or clear your filters</p>
-            <Link href="/hotels" className="inline-block mt-4 px-6 py-2.5 bg-[var(--primary)] text-white text-[14px] font-semibold rounded-full hover:bg-[var(--primary-hover)] transition-colors">
+            <Link href="/hotels" className="inline-block mt-4 px-6 py-2.5 bg-[var(--primary)] text-[var(--text-inverse)] text-[14px] font-semibold rounded-full hover:bg-[var(--primary-hover)] transition-colors">
               Show all hotels
             </Link>
           </div>

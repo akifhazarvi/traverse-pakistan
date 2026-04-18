@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { buildMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Terms & Conditions | Traverse Pakistan",
+export const metadata: Metadata = buildMetadata({
+  title: "Terms & Conditions",
   description:
-    "Read the terms and conditions for group tours, cancellation policies, and refund policy for Traverse Pakistan.",
-};
+    "Booking terms, code of conduct, liability waivers, cancellation rules, and refund policies for Traverse Pakistan group and private tours.",
+  path: "/terms",
+});
 
 const codeOfConduct = [
   "Members cannot engage in acts showing moral or character failures.",

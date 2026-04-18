@@ -23,6 +23,7 @@ export interface BlogPost {
   tags: string[];
   categories: string[];
   publishedAt: string;
+  updatedAt?: string;
   readTime: string;
   author: string;
   destinationSlug?: string;
