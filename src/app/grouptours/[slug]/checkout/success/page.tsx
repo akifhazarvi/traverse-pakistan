@@ -35,7 +35,7 @@ export default async function BookingSuccessPage({ params }: Props) {
             { label: "Booking confirmed" },
           ]}
         />
-        <BookingSuccessClient tourName={tour.name} />
+        <BookingSuccessClient tour={tour} />
       </Container>
     </div>
   );

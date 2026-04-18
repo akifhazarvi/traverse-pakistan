@@ -7,6 +7,7 @@ import { StarRating } from "@/components/ui/StarRating";
 import { MosaicGallery } from "@/components/trip-detail/MosaicGallery";
 import { BookingSidebar } from "@/components/trip-detail/BookingSidebar";
 import { ItineraryAccordion } from "@/components/trip-detail/ItineraryAccordion";
+import { MobileReserveBar } from "@/components/booking/MobileReserveBar";
 import { TourCard } from "@/components/tours/TourCard";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildMetadata } from "@/lib/seo/metadata";
@@ -311,29 +312,12 @@ export default async function TripDetailPage({ params }: Props) {
 
           {/* Sidebar */}
           <aside className="hidden lg:block">
-            <BookingSidebar tour={tour} />
+            <BookingSidebar tour={tour} reviews={reviews.slice(0, 3)} />
           </aside>
         </div>
 
-        {/* Mobile sticky bar */}
-        <div className="fixed bottom-0 left-0 right-0 lg:hidden z-40 bg-[var(--bg-primary)] border-t border-[var(--border-default)] px-5 py-3 flex items-center justify-between">
-          <div>
-            <span className="text-lg font-bold text-[var(--text-primary)]">
-              {tour.price.toLocaleString("en-PK")} Rs
-            </span>
-            <span className="text-[13px] text-[var(--text-tertiary)] ml-1">per person</span>
-          </div>
-          <a
-            href={`https://wa.me/923216650670?text=${encodeURIComponent(
-              `Hi! I'm interested in the "${tour.name}" tour.`
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="h-11 px-6 bg-[var(--primary)] text-[var(--text-inverse)] text-[14px] font-semibold rounded-full flex items-center justify-center hover:bg-[var(--primary-hover)] transition-colors"
-          >
-            Check Availability
-          </a>
-        </div>
+        {/* Mobile reserve bar with full wizard sheet */}
+        <MobileReserveBar tour={tour} reviews={reviews.slice(0, 3)} />
 
         {/* Similar tours */}
         {similarTours.length > 0 && (
