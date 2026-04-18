@@ -3,12 +3,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { buildMetadata } from "@/lib/seo/metadata";
 import { travelStyles } from "@/data/travel-styles";
 
-export const metadata: Metadata = {
-  title: "Travel Styles",
-  description: "Choose your travel style — trekking, family, honeymoon, solo, cultural, or coastal adventures across Pakistan.",
-};
+export const metadata: Metadata = buildMetadata({
+  title: "Travel Styles — Trekking, Family, Honeymoon, Solo, Cultural Tours",
+  description:
+    "Browse Pakistan tours by travel style: trekking, family-friendly, honeymoon, solo, cultural, adventure, or coastal. Find the trip that matches your pace.",
+  path: "/travel-styles",
+  tags: ["Pakistan honeymoon tour", "trekking Pakistan", "family tour Pakistan", "solo travel Pakistan"],
+});
 
 export default function TravelStylesPage() {
   return (

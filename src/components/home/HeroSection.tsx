@@ -65,14 +65,15 @@ export function HeroSection() {
             textShadow: "0 2px 16px rgba(0,0,0,0.3)",
           }}
         >
-          <span className="text-[var(--primary-muted)]">Pakistan</span> Like Never Before!
+          <span className="text-[var(--primary-muted)]">Pakistan Tours</span> by the Highest-Rated Tour Operator
         </h1>
 
         <p
-          className="mt-3 text-[16px] sm:text-[17px] text-[var(--on-dark-secondary)] max-w-[480px] mx-auto leading-relaxed text-center"
+          className="mt-3 text-[16px] sm:text-[17px] text-[var(--on-dark-secondary)] max-w-[560px] mx-auto leading-relaxed text-center"
           style={{ textShadow: "0 1px 6px rgba(0,0,0,0.3)" }}
         >
-          From K2 Base Camp to the Makran Coast — expert guides, verified drivers, unforgettable memories.
+          Group tours, custom holidays, and verified hotels across Hunza, Skardu,
+          Chitral, and K2 Base Camp — trusted by 1,300+ travelers with 4.9-star reviews.
         </p>
 
         {/* Social proof — instant trust */}

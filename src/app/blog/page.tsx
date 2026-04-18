@@ -3,12 +3,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { buildMetadata } from "@/lib/seo/metadata";
 import { getLatestBlogPosts } from "@/services/blog.service";
 
-export const metadata: Metadata = {
-  title: "Blog",
-  description: "Travel guides, tips, and inspiration for exploring Pakistan.",
-};
+export const metadata: Metadata = buildMetadata({
+  title: "Pakistan Travel Blog — Guides, Treks, Culture & Seasons",
+  description:
+    "First-hand travel guides from Pakistan: Hunza, Skardu, Kalash, Nanga Parbat, blossom and autumn seasons, treks, and local culture — by Traverse Pakistan.",
+  path: "/blog",
+  tags: ["Pakistan travel blog", "Hunza guide", "Pakistan travel tips"],
+});
 
 export default async function BlogPage() {
   const posts = await getLatestBlogPosts(20);

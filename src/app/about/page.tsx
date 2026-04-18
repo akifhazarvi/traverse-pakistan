@@ -2,11 +2,15 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { buildMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "About Us",
-  description: "Learn about Traverse Pakistan — Pakistan's highest-rated tourism company with 4.9★ across 1,300+ reviews.",
-};
+export const metadata: Metadata = buildMetadata({
+  title: "About Traverse Pakistan — Pakistan's Highest-Rated Tour Operator",
+  description:
+    "Founded in Islamabad, Traverse Pakistan runs group and custom tours across Gilgit-Baltistan, Chitral, and beyond. 4.9★ from 1,300+ travelers. TripAdvisor Travelers' Choice 2025.",
+  path: "/about",
+  tags: ["about Traverse Pakistan", "Pakistan tour operator", "Islamabad tour company"],
+});
 
 const milestones = [
   { year: "2015", title: "Founded in Islamabad", description: "Started as a small team with a big dream — to showcase Pakistan's beauty to the world." },

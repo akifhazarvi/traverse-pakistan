@@ -79,10 +79,11 @@ export const blogPosts: BlogPost[] = [
       "Skardu"
     ],
     "publishedAt": "2024-02-21",
+    "updatedAt": "2025-08-10",
     "readTime": "2 min read",
     "author": "Traverse Pakistan",
-    "metaTitle": "How Traverse Pakistan is different than a trivial tour Company? | Traverse Pakistan Blog",
-    "metaDescription": "An initiative to highlight Pakistan as the world’s most authentic off the beaten path Destination, offering most wide range of landscapes and experiences.",
+    "metaTitle": "How Traverse Pakistan is different than a trivial tour Company?",
+    "metaDescription": "Discover why Traverse Pakistan stands out: authentic off-the-beaten-path experiences, 10M+ Instagram reach, multi-season tours across Hunza, Skardu, and Ghizer.",
     "destinationSlug": "hunza"
   },
   {
@@ -130,10 +131,11 @@ export const blogPosts: BlogPost[] = [
       "Skardu"
     ],
     "publishedAt": "2024-02-13",
+    "updatedAt": "2026-02-12",
     "readTime": "2 min read",
     "author": "Traverse Pakistan",
-    "metaTitle": "Trek to Haramosh Massif & Kutwal Lake | Traverse Pakistan Blog",
-    "metaDescription": "Trek to one of the most mysterious basecamps of Karakoram Mountains; The Haramosh Massif",
+    "metaTitle": "Trek to Haramosh Massif & Kutwal Lake",
+    "metaDescription": "Trek to the Haramosh Massif and Kutwal Lake — one of the Karakoram's most remote base camps. Route, difficulty, gear, best season, and how to book. A 2026 guide.",
     "destinationSlug": "hunza"
   },
   {
@@ -178,10 +180,11 @@ export const blogPosts: BlogPost[] = [
       "History"
     ],
     "publishedAt": "2023-12-03",
+    "updatedAt": "2025-11-20",
     "readTime": "2 min read",
     "author": "Traverse Pakistan",
-    "metaTitle": "A journey through Old Walled City of Lahore! | Traverse Pakistan Blog",
-    "metaDescription": "A project based learning school’s trip to Old City of Lahore, Traverse engages on all levels to highlight historical significance of Pakistan"
+    "metaTitle": "A journey through Old Walled City of Lahore!",
+    "metaDescription": "How Traverse Pakistan partnered with a project-based learning school to tour the Old Walled City of Lahore — heritage, cuisine, and Mughal-era architecture."
   },
   {
     "id": "blog-18674",
@@ -346,10 +349,11 @@ export const blogPosts: BlogPost[] = [
       "Skardu"
     ],
     "publishedAt": "2023-01-23",
+    "updatedAt": "2026-01-22",
     "readTime": "6 min read",
     "author": "Traverse Pakistan",
-    "metaTitle": "All about the Killer Mountain; Nanga Parbat | Traverse Pakistan Blog",
-    "metaDescription": "Best places to experience autumn colors in Pakistan",
+    "metaTitle": "All about the Killer Mountain; Nanga Parbat",
+    "metaDescription": "Nanga Parbat — the ninth-highest peak on Earth (8,126m). Full guide to the 'Killer Mountain': Fairy Meadows, Rupal Face, climbing history, and how to visit.",
     "destinationSlug": "hunza"
   },
   {
@@ -470,10 +474,11 @@ export const blogPosts: BlogPost[] = [
       "Skardu"
     ],
     "publishedAt": "2023-01-17",
+    "updatedAt": "2026-03-05",
     "readTime": "3 min read",
     "author": "Traverse Pakistan",
-    "metaTitle": "How to Make most out of your trip to Hunza? | Traverse Pakistan Blog",
-    "metaDescription": "How to Make most out of your trip to Hunza",
+    "metaTitle": "How to Make most out of your trip to Hunza?",
+    "metaDescription": "The 14 best things to do in Hunza Valley: Baltit & Altit Forts, Eagle's Nest sunrise, Attabad Lake, Khunjerab Pass, local cuisine, cherry blossoms & more.",
     "destinationSlug": "hunza"
   },
   {
@@ -586,10 +591,11 @@ export const blogPosts: BlogPost[] = [
       "Skardu"
     ],
     "publishedAt": "2023-01-15",
+    "updatedAt": "2025-12-15",
     "readTime": "2 min read",
     "author": "Traverse Pakistan",
-    "metaTitle": "Who are Kalasha People? Where do they Live? | Traverse Pakistan Blog",
-    "metaDescription": "A Brief History of Kalasha People",
+    "metaTitle": "Who are Kalasha People? Where do they Live?",
+    "metaDescription": "Who are the Kalasha people? A guide to Pakistan's last polytheistic tribe — their unique language, festivals (Chilam Joshi, Choimus), and three Chitral valleys.",
     "destinationSlug": "hunza"
   },
   {
@@ -704,10 +710,11 @@ export const blogPosts: BlogPost[] = [
       "Skardu"
     ],
     "publishedAt": "2023-01-10",
+    "updatedAt": "2026-02-28",
     "readTime": "3 min read",
     "author": "Traverse Pakistan",
-    "metaTitle": "Marvel at the Majestic Peaks of Hunza Valley! | Traverse Pakistan Blog",
-    "metaDescription": "From tallest mountain on planet to daunting Ultar Sar, Huzna is home to 5 7000 meter icy peaks!",
+    "metaTitle": "Marvel at the Majestic Peaks of Hunza Valley!",
+    "metaDescription": "Seven 7,000m+ peaks visible from Hunza Valley: Rakaposhi, Diran, Ultar Sar, Passu Cones, and more. Altitudes, viewpoints, and photography tips for travelers.",
     "destinationSlug": "hunza"
   },
   {
@@ -819,10 +826,11 @@ export const blogPosts: BlogPost[] = [
       "Skardu"
     ],
     "publishedAt": "2023-01-09",
+    "updatedAt": "2026-03-20",
     "readTime": "2 min read",
     "author": "Traverse Pakistan",
-    "metaTitle": "Best Places to experience Blossom up North | Traverse Pakistan Blog",
-    "metaDescription": "Best places to experience spring colors in Pakistan",
+    "metaTitle": "Best Places to experience Blossom up North",
+    "metaDescription": "The best places to experience cherry and apricot blossom season in northern Pakistan: Hunza, Skardu, Ghizer, and Ishkoman. Dates, tours, and itineraries.",
     "destinationSlug": "hunza"
   },
   {
@@ -933,10 +941,11 @@ export const blogPosts: BlogPost[] = [
       "Skardu"
     ],
     "publishedAt": "2023-01-08",
+    "updatedAt": "2025-12-01",
     "readTime": "3 min read",
     "author": "Traverse Pakistan",
-    "metaTitle": "Best Winter Destinations of Pakistan | Traverse Pakistan Blog",
-    "metaDescription": "Destination you must be hitting if you are planning to visit Pakistan in Winters",
+    "metaTitle": "Best Winter Destinations of Pakistan",
+    "metaDescription": "Top winter destinations in Pakistan: Hunza snowscapes, Malam Jabba skiing, Naltar, Kalash Choimus festival, and Murree. Best time, access, and what to pack.",
     "destinationSlug": "hunza"
   },
   {
@@ -1006,10 +1015,11 @@ export const blogPosts: BlogPost[] = [
       "Skardu"
     ],
     "publishedAt": "2022-08-29",
+    "updatedAt": "2025-10-15",
     "readTime": "2 min read",
     "author": "Traverse Pakistan",
-    "metaTitle": "Best Places to Experience Autumn Colors in Pakistan | Traverse Pakistan Blog",
-    "metaDescription": "Best places to experience autumn colors in Pakistan",
+    "metaTitle": "Best Places to Experience Autumn Colors in Pakistan",
+    "metaDescription": "The best places to experience autumn colors in Pakistan: Hunza, Skardu, Naltar, Ghizer, and Chitral. When to go, what to see, and recommended autumn tours.",
     "destinationSlug": "hunza"
   }
 ];

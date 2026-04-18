@@ -3,13 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { buildMetadata } from "@/lib/seo/metadata";
 import { formatPrice } from "@/lib/utils";
 import { getAllDestinations } from "@/services/destination.service";
 
-export const metadata: Metadata = {
-  title: "Destinations",
-  description: "Explore all destinations across Pakistan — from Hunza to Skardu, Chitral to Makran Coast.",
-};
+export const metadata: Metadata = buildMetadata({
+  title: "Pakistan Destinations — Hunza, Skardu, Chitral, Kalash & More",
+  description:
+    "Explore every major destination in Pakistan: Hunza, Skardu, Chitral, Kalash Valley, Fairy Meadows, Naltar, Deosai. Curated guides, tours, and hotels.",
+  path: "/destinations",
+  tags: ["Pakistan destinations", "Hunza", "Skardu", "Chitral", "Kalash"],
+});
 
 export default async function DestinationsPage() {
   const destinations = await getAllDestinations();

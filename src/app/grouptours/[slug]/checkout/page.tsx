@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { buildMetadata } from "@/lib/seo/metadata";
 import { getTourBySlug, getAllTours } from "@/services/tour.service";
 import { GroupTourCheckoutClient } from "@/components/tours/GroupTourCheckoutClient";
 
@@ -18,8 +19,12 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const tour = await getTourBySlug(slug);
-  if (!tour) return { title: "Checkout" };
-  return { title: `Checkout — ${tour.name}` };
+  return buildMetadata({
+    title: tour ? `Checkout — ${tour.name}` : "Checkout",
+    description: "Secure checkout for your Traverse Pakistan tour booking.",
+    path: `/grouptours/${slug}/checkout`,
+    noIndex: true,
+  });
 }
 
 export default async function GroupTourCheckoutPage({ params }: Props) {

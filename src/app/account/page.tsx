@@ -7,6 +7,7 @@ import { AccountGreeting } from "@/components/account/AccountGreeting";
 export const metadata: Metadata = {
   title: "My Account",
   description: "Manage your Traverse Pakistan account, trips, and wishlist.",
+  robots: { index: false, follow: false },
 };
 
 const menuItems = [
