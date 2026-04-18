@@ -56,6 +56,39 @@ export type ReviewRow = {
   created_at: string;
 };
 
+export type ProfileRow = {
+  id: string;
+  full_name: string | null;
+  is_admin: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type QuoteRequestType = "package" | "hotel" | "tour" | "custom";
+export type QuoteRequestStatus = "new" | "contacted" | "quoted" | "converted" | "closed";
+
+export type QuoteRequestRow = {
+  id: string;
+  user_id: string | null;
+  request_type: QuoteRequestType;
+  slug: string | null;
+  display_name: string;
+  tier: string | null;
+  preferred_start_date: string | null;
+  preferred_end_date: string | null;
+  adults: number;
+  children: number;
+  rooms: number;
+  departure_city: string | null;
+  contact_name: string;
+  contact_email: string;
+  contact_phone: string;
+  notes: string | null;
+  status: QuoteRequestStatus;
+  created_at: string;
+  updated_at: string;
+};
+
 export type CreateBookingArgs = {
   p_departure_id: string;
   p_seats: number;
@@ -108,6 +141,20 @@ export type Database = {
         Insert: Omit<ReviewRow, "id" | "created_at" | "approved"> &
           Partial<Pick<ReviewRow, "id" | "created_at" | "approved">>;
         Update: Partial<ReviewRow>;
+        Relationships: [];
+      };
+      quote_requests: {
+        Row: QuoteRequestRow;
+        Insert: Omit<QuoteRequestRow, "id" | "created_at" | "updated_at" | "status"> &
+          Partial<Pick<QuoteRequestRow, "id" | "created_at" | "updated_at" | "status">>;
+        Update: Partial<QuoteRequestRow>;
+        Relationships: [];
+      };
+      profiles: {
+        Row: ProfileRow;
+        Insert: Omit<ProfileRow, "created_at" | "updated_at" | "is_admin"> &
+          Partial<Pick<ProfileRow, "created_at" | "updated_at" | "is_admin">>;
+        Update: Partial<ProfileRow>;
         Relationships: [];
       };
     };

@@ -21,7 +21,7 @@ function SignInInner() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(search.get("error"));
 
   if (!isSupabaseConfigured) {
     return (
