@@ -3,7 +3,16 @@
 import { useState, useRef, useEffect } from "react";
 import { formatPrice, getWhatsAppUrl } from "@/lib/utils";
 import { StarRating } from "@/components/ui/StarRating";
+import { QuoteRequestDialog } from "@/components/quote/QuoteRequestDialog";
 import type { Package, PackageTier } from "@/types/package";
+
+function toIsoDate(d: Date | null) {
+  if (!d) return undefined;
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
 
 /* ─── Calendar helpers ─────────────────────────────────────────────────────── */
 
@@ -151,6 +160,9 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
   // Rooms & travelers
   const [rooms, setRooms] = useState(1);
   const [adults, setAdults] = useState(2);
+
+  // Quote request dialog
+  const [quoteOpen, setQuoteOpen] = useState(false);
 
   const calWrapRef = useRef<HTMLDivElement>(null);
 
@@ -397,14 +409,36 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
         </div>
 
         {/* CTA */}
+        <button
+          type="button"
+          onClick={() => setQuoteOpen(true)}
+          className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all cursor-pointer"
+        >
+          Request Quote
+        </button>
         <a
           href={getWhatsAppUrl(whatsappMessage)}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all"
+          className="mt-2 w-full h-10 flex items-center justify-center gap-2 text-[13px] font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
         >
-          Check Availability
+          or ask on WhatsApp →
         </a>
+
+        <QuoteRequestDialog
+          open={quoteOpen}
+          onClose={() => setQuoteOpen(false)}
+          requestType="package"
+          slug={pkg.slug}
+          displayName={pkg.name}
+          tier={selectedTier === "deluxe" ? "Deluxe" : "Luxury"}
+          defaultAdults={adults}
+          defaultRooms={rooms}
+          defaultStartDate={toIsoDate(checkIn)}
+          defaultEndDate={toIsoDate(checkOut)}
+          defaultDepartureCity={departureCity}
+          whatsappFallbackMessage={whatsappMessage}
+        />
 
         {/* Guarantees */}
         <div className="mt-5 space-y-2">

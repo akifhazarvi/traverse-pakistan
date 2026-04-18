@@ -35,7 +35,7 @@ export function UserMenu() {
     return (
       <Link
         href="/auth/sign-in"
-        className="hidden sm:inline-flex h-9 items-center gap-1.5 px-4 text-[13px] font-semibold text-[var(--text-primary)] border border-[var(--border-default)] rounded-[var(--radius-full)] hover:bg-[var(--bg-subtle)] transition-colors"
+        className="hidden sm:inline-flex h-9 items-center gap-1.5 px-4 text-[13px] font-semibold text-[var(--text-primary)] border border-[var(--border-default)] rounded-[var(--radius-full)] hover:bg-[var(--bg-subtle)] transition-colors whitespace-nowrap"
       >
         Sign in
       </Link>

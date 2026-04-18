@@ -10,6 +10,7 @@ import { PackageBookingSidebar } from "@/components/packages/PackageBookingSideb
 import { PackageItineraryAccordion } from "@/components/packages/PackageItineraryAccordion";
 import { PackageCard } from "@/components/packages/PackageCard";
 import { formatPrice, getWhatsAppUrl } from "@/lib/utils";
+import { QuoteRequestDialog } from "@/components/quote/QuoteRequestDialog";
 import type { Package, PackageItinerary, PackageTier } from "@/types/package";
 import type { Hotel } from "@/types/hotel";
 
@@ -22,6 +23,7 @@ interface PackageDetailClientProps {
 
 export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages }: PackageDetailClientProps) {
   const [selectedTier, setSelectedTier] = useState<PackageTier>("deluxe");
+  const [mobileQuoteOpen, setMobileQuoteOpen] = useState(false);
 
   return (
     <div className="py-6 sm:py-8">
@@ -199,15 +201,24 @@ export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages
             </span>
             <span className="text-[13px] text-[var(--text-tertiary)] ml-1">per person</span>
           </div>
-          <a
-            href={getWhatsAppUrl(`Hi! I'm interested in the "${pkg.name}" ${selectedTier} package.`)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="h-11 px-6 bg-[var(--primary)] text-[var(--text-inverse)] text-[14px] font-semibold rounded-full flex items-center justify-center hover:bg-[var(--primary-hover)] transition-colors"
+          <button
+            type="button"
+            onClick={() => setMobileQuoteOpen(true)}
+            className="h-11 px-6 bg-[var(--primary)] text-[var(--text-inverse)] text-[14px] font-semibold rounded-full flex items-center justify-center hover:bg-[var(--primary-hover)] transition-colors cursor-pointer"
           >
-            Check Availability
-          </a>
+            Request Quote
+          </button>
         </div>
+
+        <QuoteRequestDialog
+          open={mobileQuoteOpen}
+          onClose={() => setMobileQuoteOpen(false)}
+          requestType="package"
+          slug={pkg.slug}
+          displayName={pkg.name}
+          tier={selectedTier === "deluxe" ? "Deluxe" : "Luxury"}
+          whatsappFallbackMessage={`Hi! I'm interested in the "${pkg.name}" ${selectedTier} package.`}
+        />
 
         {/* Related packages */}
         {relatedPackages.length > 0 && (

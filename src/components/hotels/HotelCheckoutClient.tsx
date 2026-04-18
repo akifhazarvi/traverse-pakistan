@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { formatPrice, getWhatsAppUrl } from "@/lib/utils";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { createQuoteRequest } from "@/services/quote.service";
 import type { Hotel } from "@/types/hotel";
 
 function fmt(dateStr: string) {
@@ -40,15 +42,15 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
-    const msg =
+  function buildWhatsAppMessage() {
+    return (
       `Hi! I'd like to confirm a hotel booking.\n\n` +
       `*Hotel:* ${hotel.name}, ${hotel.location}\n` +
       `*Room:* ${selectedRoom.name} × ${rooms}\n` +
@@ -63,9 +65,52 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
       `Phone: ${form.phone}\n` +
       (form.arrivalTime ? `Arrival Time: ${form.arrivalTime}\n` : "") +
       (form.specialRequests ? `Special Requests: ${form.specialRequests}\n` : "") +
-      `\nPlease confirm availability and send payment details.`;
+      `\nPlease confirm availability and send payment details.`
+    );
+  }
 
-    window.open(getWhatsAppUrl(msg), "_blank");
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+
+    if (isSupabaseConfigured) {
+      setSubmitting(true);
+      try {
+        const notes = [
+          form.arrivalTime ? `Arrival time: ${form.arrivalTime}` : "",
+          form.specialRequests,
+          `Room: ${selectedRoom.name}`,
+          `Estimated total: ${formatPrice(subtotal)}`,
+        ].filter(Boolean).join(" · ");
+
+        await createQuoteRequest({
+          requestType: "hotel",
+          slug: hotel.slug,
+          displayName: `${hotel.name}, ${hotel.location}`,
+          tier: selectedRoom.name,
+          preferredStartDate: checkin || undefined,
+          preferredEndDate: checkout || undefined,
+          adults,
+          children,
+          rooms,
+          contact: {
+            name: `${form.firstName} ${form.lastName}`.trim(),
+            email: form.email,
+            phone: form.phone,
+          },
+          notes: notes || undefined,
+        });
+        setSubmitted(true);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Could not send request");
+      } finally {
+        setSubmitting(false);
+      }
+      return;
+    }
+
+    // Fallback: WhatsApp
+    window.open(getWhatsAppUrl(buildWhatsAppMessage()), "_blank");
     setSubmitted(true);
   }
 
@@ -179,20 +224,39 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
           </div>
         </section>
 
+        {/* Error banner */}
+        {error && (
+          <div className="p-3 bg-[var(--error)]/10 border border-[var(--error)]/30 rounded-[var(--radius-sm)] text-[13px] text-[var(--error)]">
+            {error}
+          </div>
+        )}
+
         {/* Submit */}
         {submitted ? (
           <div className="p-5 bg-[var(--primary-light)] border border-[var(--primary)]/30 rounded-[var(--radius-md)] text-center">
-            <p className="text-[16px] font-bold text-[var(--primary-deep)] mb-1">Booking request sent!</p>
-            <p className="text-[13px] text-[var(--text-secondary)]">We&apos;ve opened WhatsApp with your details. Our team will confirm shortly.</p>
+            <p className="text-[16px] font-bold text-[var(--primary-deep)] mb-1">Request received</p>
+            <p className="text-[13px] text-[var(--text-secondary)]">
+              Our team will confirm availability and pricing within 2 hours.
+            </p>
           </div>
         ) : (
-          <button
-            type="submit"
-            disabled={!isValid}
-            className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-bold rounded-[var(--radius-sm)] hover:bg-[var(--primary-hover)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]"
-          >
-            Confirm via WhatsApp
-          </button>
+          <div className="space-y-2">
+            <button
+              type="submit"
+              disabled={!isValid || submitting}
+              className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-bold rounded-[var(--radius-sm)] hover:bg-[var(--primary-hover)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]"
+            >
+              {submitting ? "Sending…" : "Request booking"}
+            </button>
+            <a
+              href={getWhatsAppUrl(buildWhatsAppMessage())}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full h-10 flex items-center justify-center text-[13px] font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+            >
+              or ask on WhatsApp →
+            </a>
+          </div>
         )}
         <p className="text-center text-[12px] text-[var(--text-tertiary)] -mt-4">
           You won&apos;t be charged yet — we&apos;ll confirm availability first.
