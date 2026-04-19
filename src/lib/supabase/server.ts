@@ -1,10 +1,20 @@
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { SUPABASE_ANON_KEY, SUPABASE_URL, isSupabaseConfigured } from "./env";
 import type { Database } from "./types";
 
 type ServerClient = SupabaseClient<Database>;
+
+// Cookie-free client for public data and generateStaticParams contexts
+export function getSupabaseAnon(): SupabaseClient<Database> {
+  if (!isSupabaseConfigured) {
+    throw new Error(
+      "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY."
+    );
+  }
+  return createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
 
 export async function getSupabaseServer(): Promise<ServerClient> {
   if (!isSupabaseConfigured) {

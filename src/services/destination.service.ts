@@ -1,29 +1,94 @@
-import { destinations } from "@/data/destinations";
-import { destinationFaqs } from "@/data/faqs";
+import { getSupabaseAnon } from "@/lib/supabase/server";
+import type { DestinationRow, RegionRow } from "@/lib/supabase/types";
 import type { Destination } from "@/types/destination";
 import type { FAQ } from "@/types/faq";
 
+type DestinationWithRegion = DestinationRow & {
+  regions: Pick<RegionRow, "slug" | "name"> | null;
+};
+
+function toDestination(row: DestinationWithRegion): Destination {
+  return {
+    id: row.id,
+    slug: row.slug,
+    name: row.name,
+    subtitle: row.subtitle ?? "",
+    description: row.description ?? "",
+    regionSlug: row.regions?.slug ?? "",
+    heroImage: row.hero_image ?? "",
+    elevation: row.elevation ?? undefined,
+    tourCount: 0,
+    startingPrice: row.starting_price ?? 0,
+    rating: row.rating ?? 0,
+    whyVisitCards: row.why_visit_cards ?? [],
+    seasons: row.seasons ?? [],
+    metaTitle: row.meta_title ?? row.name,
+    metaDescription: row.meta_description ?? row.description ?? "",
+  };
+}
+
+const DESTINATION_QUERY = "*, regions ( slug, name )";
+
 export async function getAllDestinations(): Promise<Destination[]> {
-  return destinations;
+  const supabase = getSupabaseAnon();
+  const { data, error } = await supabase
+    .from("destinations")
+    .select(DESTINATION_QUERY)
+    .order("name");
+
+  if (error) throw new Error(`getAllDestinations: ${error.message}`);
+  return (data as unknown as DestinationWithRegion[]).map(toDestination);
 }
 
 export async function getDestinationBySlug(
   slug: string
 ): Promise<Destination | null> {
-  return destinations.find((d) => d.slug === slug) ?? null;
+  const supabase = getSupabaseAnon();
+  const { data, error } = await supabase
+    .from("destinations")
+    .select(DESTINATION_QUERY)
+    .eq("slug", slug)
+    .single();
+
+  if (error?.code === "PGRST116") return null;
+  if (error) throw new Error(`getDestinationBySlug: ${error.message}`);
+  return toDestination(data as unknown as DestinationWithRegion);
 }
 
 export async function getDestinationsByRegion(
   regionSlug: string
 ): Promise<Destination[]> {
-  return destinations.filter((d) => d.regionSlug === regionSlug);
+  const supabase = getSupabaseAnon();
+  const { data, error } = await supabase
+    .from("destinations")
+    .select(DESTINATION_QUERY)
+    .order("name");
+
+  if (error) throw new Error(`getDestinationsByRegion: ${error.message}`);
+  return (data as unknown as DestinationWithRegion[])
+    .filter((d) => d.regions?.slug === regionSlug)
+    .map(toDestination);
 }
 
 export async function getFAQsByDestination(
   destinationSlug: string
 ): Promise<FAQ[]> {
-  const entry = destinationFaqs.find(
-    (f) => f.destinationSlug === destinationSlug
-  );
-  return entry?.faqs ?? [];
+  const supabase = getSupabaseAnon();
+
+  const { data: dest } = await supabase
+    .from("destinations")
+    .select("id")
+    .eq("slug", destinationSlug)
+    .single();
+
+  if (!dest) return [];
+
+  const { data, error } = await supabase
+    .from("destination_faqs")
+    .select("question, answer")
+    .eq("destination_id", dest.id)
+    .order("sort_order");
+
+  if (error) throw new Error(`getFAQsByDestination: ${error.message}`);
+  return (data ?? []).map((row) => ({ question: row.question, answer: row.answer }));
 }
