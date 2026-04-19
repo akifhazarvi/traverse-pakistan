@@ -89,6 +89,56 @@ export type QuoteRequestRow = {
   updated_at: string;
 };
 
+export type RegionRow = {
+  id: string;
+  wp_id: number | null;
+  slug: string;
+  name: string;
+  description: string | null;
+  image_url: string | null;
+  created_at: string;
+};
+
+export type DestinationRow = {
+  id: string;
+  wp_id: number | null;
+  slug: string;
+  name: string;
+  subtitle: string | null;
+  description: string | null;
+  region_id: string | null;
+  parent_id: string | null;
+  hero_image: string | null;
+  elevation: string | null;
+  featured: boolean;
+  lat: number | null;
+  lng: number | null;
+  starting_price: number | null;
+  rating: number | null;
+  why_visit_cards: Array<{ icon: string; title: string; description: string }> | null;
+  seasons: Array<{
+    season: "spring" | "summer" | "autumn" | "winter";
+    icon: string;
+    months: string;
+    badge: string;
+    badgeColor: "green" | "yellow" | "red" | "blue";
+    description: string;
+  }> | null;
+  meta_title: string | null;
+  meta_description: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type DestinationFaqRow = {
+  id: string;
+  destination_id: string;
+  question: string;
+  answer: string;
+  sort_order: number;
+  created_at: string;
+};
+
 export type CreateBookingArgs = {
   p_departure_id: string;
   p_seats: number;
@@ -155,6 +205,25 @@ export type Database = {
         Insert: Omit<ProfileRow, "created_at" | "updated_at" | "is_admin"> &
           Partial<Pick<ProfileRow, "created_at" | "updated_at" | "is_admin">>;
         Update: Partial<ProfileRow>;
+        Relationships: [];
+      };
+      regions: {
+        Row: RegionRow;
+        Insert: Omit<RegionRow, "id" | "created_at"> & Partial<Pick<RegionRow, "id" | "created_at">>;
+        Update: Partial<RegionRow>;
+        Relationships: [];
+      };
+      destinations: {
+        Row: DestinationRow;
+        Insert: Omit<DestinationRow, "id" | "created_at" | "updated_at" | "featured"> &
+          Partial<Pick<DestinationRow, "id" | "created_at" | "updated_at" | "featured">>;
+        Update: Partial<DestinationRow>;
+        Relationships: [];
+      };
+      destination_faqs: {
+        Row: DestinationFaqRow;
+        Insert: Omit<DestinationFaqRow, "id" | "created_at"> & Partial<Pick<DestinationFaqRow, "id" | "created_at">>;
+        Update: Partial<DestinationFaqRow>;
         Relationships: [];
       };
     };
