@@ -130,16 +130,18 @@ export default function RootLayout({
   return (
     <html lang="en" className={plusJakartaSans.variable} suppressHydrationWarning>
       <head>
+        {/* Runs before React hydration — prevents dark-mode flash */}
         <script
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('tp-theme');if(t){document.documentElement.setAttribute('data-theme',t)}else if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.setAttribute('data-theme','dark')}}catch(e){}})();`,
           }}
         />
         <link rel="preconnect" href="https://traversepakistan.com" />
         <link rel="dns-prefetch" href="https://traversepakistan.com" />
-        <JsonLd data={rootSchema} id="root-jsonld" />
       </head>
       <body className="min-h-screen flex flex-col antialiased">
+        <JsonLd data={rootSchema} id="root-jsonld" />
         <ThemeProvider>
           <AuthProvider>
             <AwardStrip />
