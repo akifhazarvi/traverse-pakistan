@@ -36,7 +36,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("tp-theme", next);
   };
 
-  // Prevent flash — render children immediately but with context
   return (
     <ThemeContext.Provider value={{ theme: mounted ? theme : "light", toggleTheme }}>
       {children}
