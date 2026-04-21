@@ -1,11 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { plusJakartaSans } from "@/styles/fonts";
-import { ThemeProvider } from "@/components/layout/ThemeProvider";
+import { Providers } from "@/components/providers/Providers";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFAB } from "@/components/layout/WhatsAppFAB";
 import { AwardStrip } from "@/components/layout/AwardStrip";
-import { AuthProvider } from "@/components/auth/AuthProvider";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   organizationSchema,
@@ -13,6 +12,7 @@ import {
   combineSchemas,
 } from "@/lib/seo/schema";
 import { SITE, IS_GITHUB_PAGES } from "@/lib/seo/site";
+import { SUPABASE_URL, isSupabaseConfigured } from "@/lib/supabase/env";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -139,18 +139,22 @@ export default function RootLayout({
         />
         <link rel="preconnect" href="https://traversepakistan.com" />
         <link rel="dns-prefetch" href="https://traversepakistan.com" />
+        {isSupabaseConfigured && (
+          <>
+            <link rel="preconnect" href={SUPABASE_URL} crossOrigin="anonymous" />
+            <link rel="dns-prefetch" href={SUPABASE_URL} />
+          </>
+        )}
       </head>
       <body className="min-h-screen flex flex-col antialiased">
         <JsonLd data={rootSchema} id="root-jsonld" />
-        <ThemeProvider>
-          <AuthProvider>
-            <AwardStrip />
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <WhatsAppFAB />
-          </AuthProvider>
-        </ThemeProvider>
+        <Providers>
+          <AwardStrip />
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <WhatsAppFAB />
+        </Providers>
       </body>
     </html>
   );
