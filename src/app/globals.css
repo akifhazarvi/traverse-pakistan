@@ -269,6 +269,73 @@ h1, h2, h3, h4, h5, h6 { letter-spacing: -0.025em; line-height: 1.15; }
   .reveal-rise { animation: none; opacity: 1; transform: none; }
 }
 
+/* ── Page enter (used by app/template.tsx — subtle fade + rise on route change) ── */
+@keyframes page-enter {
+  0%   { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: page-enter var(--duration-slow) var(--ease-default);
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-enter { animation: none; }
+}
+
+/* ── Skeleton shimmer (Skeleton primitive) ── */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--bg-subtle) 0%,
+    var(--border-default) 50%,
+    var(--bg-subtle) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.8s ease-in-out infinite;
+}
+.skeleton-solid { background: var(--bg-subtle); }
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer { animation: none; background: var(--bg-subtle); }
+}
+
+/* ── Route progress bar (top-of-page progress on navigation) ── */
+@keyframes route-progress-finish {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
+}
+.route-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 100;
+  pointer-events: none;
+  transform-origin: left;
+  background: var(--primary);
+  box-shadow: 0 0 8px var(--primary), 0 0 4px var(--primary);
+  transition:
+    transform var(--duration-slow) var(--ease-default),
+    opacity var(--duration-fast) linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .route-progress-bar { box-shadow: none; transition: opacity var(--duration-fast) linear; }
+}
+
+/* ── Button spinner (pending state) ── */
+@keyframes button-spin {
+  to { transform: rotate(360deg); }
+}
+.button-spinner {
+  animation: button-spin 700ms linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .button-spinner { animation-duration: 2s; }
+}
+
 /* ── Hero crossfade (5 slides × 6s each = 30s cycle; 1.5s crossfade overlap) ── */
 @keyframes heroCrossfade {
   0%, 15%   { opacity: 1; }

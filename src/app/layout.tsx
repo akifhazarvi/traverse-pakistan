@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import { plusJakartaSans } from "@/styles/fonts";
 import { Providers } from "@/components/providers/Providers";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFAB } from "@/components/layout/WhatsAppFAB";
 import { AwardStrip } from "@/components/layout/AwardStrip";
+import { RouteProgress } from "@/components/ui/RouteProgress";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   organizationSchema,
@@ -128,7 +130,12 @@ export default function RootLayout({
   const rootSchema = combineSchemas(organizationSchema(), websiteSchema());
 
   return (
-    <html lang="en" className={plusJakartaSans.variable} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={plusJakartaSans.variable}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head>
         {/* Runs before React hydration — prevents dark-mode flash */}
         <script
@@ -148,6 +155,9 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col antialiased">
         <JsonLd data={rootSchema} id="root-jsonld" />
+        <Suspense fallback={null}>
+          <RouteProgress />
+        </Suspense>
         <Providers>
           <AwardStrip />
           <Navbar />
