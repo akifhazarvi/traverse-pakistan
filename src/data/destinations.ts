@@ -8,7 +8,7 @@ export const destinations: Destination[] = [
     slug: "hunza",
     name: "Hunza Valley",
     regionSlug: "gilgit-baltistan",
-    heroImage: `${WP}/2022/09/drone1-10.jpg`,
+    heroImage: `${WP}/2022/08/TRV_8165.jpg`,
     subtitle: "The Crown Jewel of Northern Pakistan",
     description: "Hunza Valley is a breathtaking paradise nestled in the Karakoram mountains. Known for its stunning landscapes, ancient forts, warm hospitality, and the famous cherry blossom season.",
     opening: "In Hunza, mornings arrive slowly — first the river, then apricot smoke curling from stone houses, then the Rakaposhi light spilling gold across the valley.",

@@ -3,26 +3,33 @@ import { getSupabaseAnon } from "@/lib/supabase/server";
 import type { DestinationRow, RegionRow } from "@/lib/supabase/types";
 import type { Destination } from "@/types/destination";
 import type { FAQ } from "@/types/faq";
+import { destinations as localDestinations } from "@/data/destinations";
 
 type DestinationWithRegion = DestinationRow & {
   regions: Pick<RegionRow, "slug" | "name"> | null;
 };
 
 function toDestination(row: DestinationWithRegion): Destination {
+  const local = localDestinations.find((d) => d.slug === row.slug);
   return {
     id: row.id,
     slug: row.slug,
     name: row.name,
     subtitle: row.subtitle ?? "",
     description: row.description ?? "",
+    opening: local?.opening,
     regionSlug: row.regions?.slug ?? "",
     heroImage: row.hero_image ?? "",
     elevation: row.elevation ?? undefined,
     tourCount: 0,
     startingPrice: row.starting_price ?? 0,
     rating: row.rating ?? 0,
-    whyVisitCards: (row.why_visit_cards ?? []) as Destination["whyVisitCards"],
-    seasons: (row.seasons ?? []).map(({ icon: _icon, ...s }) => s) as Destination["seasons"],
+    whyVisitCards: ((row.why_visit_cards as Destination["whyVisitCards"] | null)?.length
+      ? row.why_visit_cards as Destination["whyVisitCards"]
+      : local?.whyVisitCards ?? []),
+    seasons: ((row.seasons as Destination["seasons"] | null)?.length
+      ? (row.seasons as Destination["seasons"]).map(({ icon: _icon, ...s }) => s) as Destination["seasons"]
+      : local?.seasons ?? []),
     metaTitle: row.meta_title ?? row.name,
     metaDescription: row.meta_description ?? row.description ?? "",
   };

@@ -11,7 +11,7 @@ import { TourCard } from "@/components/tours/TourCard";
 import { PackageCard } from "@/components/packages/PackageCard";
 import { AccordionItem } from "@/components/ui/Accordion";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { DestinationStory } from "@/components/destination/DestinationStory";
+import { ExpandableText } from "@/components/ui/ExpandableText";
 import { MomentCard } from "@/components/destination/MomentCard";
 import { SeasonCard } from "@/components/destination/SeasonCard";
 import { buildMetadata } from "@/lib/seo/metadata";
@@ -85,8 +85,8 @@ export default async function DestinationDetailPage({ params }: Props) {
   return (
     <>
       <JsonLd data={schema} id={`destination-${dest.slug}-jsonld`} />
-      {/* Hero */}
-      <section className="relative h-[400px] sm:h-[480px] flex items-end">
+      {/* Hero + description — image is shared background */}
+      <section className="relative flex items-end min-h-[480px] sm:min-h-[560px]">
         <Image
           src={dest.heroImage}
           alt={dest.name}
@@ -95,8 +95,8 @@ export default async function DestinationDetailPage({ params }: Props) {
           sizes="100vw"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-        <Container className="relative pb-10 sm:pb-14">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+        <Container className="relative pb-10 sm:pb-14 pt-24">
           <Breadcrumb
             items={[
               { label: "Destinations", href: "/destinations" },
@@ -117,17 +117,13 @@ export default async function DestinationDetailPage({ params }: Props) {
             </span>
             <span>From {formatPrice(dest.startingPrice)}</span>
           </div>
+          {dest.description && (
+            <div className="mt-5 pt-5 border-t border-white/20 max-w-2xl">
+              <ExpandableText text={dest.description} onDarkBg />
+            </div>
+          )}
         </Container>
       </section>
-
-      {/* Story — opening line + description */}
-      {dest.opening && (
-        <DestinationStory
-          name={dest.name}
-          opening={dest.opening}
-          description={dest.description}
-        />
-      )}
 
       {/* Packages */}
       {pkgs.length > 0 && (
