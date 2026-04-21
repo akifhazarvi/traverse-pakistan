@@ -26,7 +26,8 @@ export function BookingSidebar({ tour, reviews = [] }: BookingSidebarProps) {
   const [children, setChildren] = useState(0);
   const [singleRooms, setSingleRooms] = useState(0);
   const [departure, setDeparture] = useState<"islamabad" | "lahore">("islamabad");
-  const [liveDeparture, setLiveDeparture] = useState<Departure | null>(null);
+  const [cityDepartures, setCityDepartures] = useState<{ islamabad: Departure | null; lahore: Departure | null }>({ islamabad: null, lahore: null });
+  const [departuresLoaded, setDeparturesLoaded] = useState(false);
   const [resumeAvailable, setResumeAvailable] = useState(false);
 
   useEffect(() => {
@@ -37,11 +38,21 @@ export function BookingSidebar({ tour, reviews = [] }: BookingSidebarProps) {
   useEffect(() => {
     if (!isSupabaseConfigured) return;
     let cancelled = false;
-    getNextOpenDeparture(tour.slug)
-      .then((d) => { if (!cancelled) setLiveDeparture(d); })
-      .catch(() => { /* silent */ });
+    Promise.all([
+      getNextOpenDeparture(tour.slug, "islamabad"),
+      getNextOpenDeparture(tour.slug, "lahore"),
+    ])
+      .then(([isb, lhr]) => {
+        if (!cancelled) {
+          setCityDepartures({ islamabad: isb, lahore: lhr });
+          setDeparturesLoaded(true);
+        }
+      })
+      .catch(() => { if (!cancelled) setDeparturesLoaded(true); });
     return () => { cancelled = true; };
   }, [tour.slug]);
+
+  const liveDeparture = cityDepartures[departure] ?? null;
 
   const pricing = calculatePricing({
     tour,
@@ -92,7 +103,7 @@ export function BookingSidebar({ tour, reviews = [] }: BookingSidebarProps) {
 
         <hr className="my-5 border-[var(--border-default)]" />
 
-        {tour.pricing.lahore && (
+        {(departuresLoaded ? cityDepartures.lahore !== null : !!tour.pricing.lahore) && (
           <div className="mb-4">
             <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] block mb-2">
               Departure city
