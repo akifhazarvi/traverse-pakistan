@@ -1,35 +1,49 @@
 # Traverse Pakistan — AI Agent Instructions
 
 ## What This Is
-Tourism booking platform for traversepakistan.com. Next.js 15 App Router + TypeScript + Tailwind CSS v4. Phase 1 = frontend with local TS data. Phase 2 = Supabase backend.
+Tourism booking platform for traversepakistan.com. Next.js 15 App Router + TypeScript + Tailwind CSS v4. Phase 2 (Supabase backend) is partially complete — destinations and regions are live on Supabase; tours, hotels, blog, reviews still use local TS data.
 
 ## Stack
 - Next.js 15 (App Router, `src/` dir)
 - TypeScript strict
 - Tailwind CSS v4 (via `@theme inline` in globals.css)
 - Plus Jakarta Sans (single font, weights 400-800)
+- Supabase (PostgreSQL) — partial backend
 - Deployed on Vercel
 
 ## Architecture
 
 ### Data Flow
 ```
-src/data/*.ts (local TS) → src/services/*.service.ts (async) → components
+Supabase DB → src/services/*.service.ts (async) → components   ← destinations, regions
+src/data/*.ts → src/services/*.service.ts (async) → components  ← tours, hotels, blog, reviews
 ```
-All service functions are `async` — swap bodies to Supabase in Phase 2, zero component changes.
+All service functions are `async`. Supabase uses `getSupabaseAnon()` (cookie-free client) for SSG compatibility.
 
 ### Key Directories
 ```
 src/app/          → Pages (App Router)
 src/components/   → UI: layout/, home/, tours/, trip-detail/, destination/, blog/, reviews/, ui/
-src/data/         → 22 tours, 8 destinations, 5 regions, 9 hotels, 8 reviews, 6 blog posts
+src/data/         → 22 tours, 9 hotels, 8 reviews, 6 blog posts (local TS — not yet migrated)
 src/services/     → Data access layer (tour, destination, region, review, blog, hotel)
+src/lib/supabase/ → server.ts (getSupabaseAnon), client.ts, types.ts
 src/types/        → TypeScript interfaces
 src/lib/          → utils.ts (cn, formatPrice, slugify, getWhatsAppUrl), constants.ts
 src/styles/       → fonts.ts (Plus Jakarta Sans only)
 ```
 
-### Routes (84 pages)
+### Supabase Tables (live)
+- `destinations` — 201 rows. Columns: slug, name, subtitle, description, hero_image, region_id (FK), parent_id (self-FK for hierarchy), elevation, rating, starting_price, why_visit_cards, seasons, meta_title, meta_description
+- `regions` — 7 rows. Columns: slug, name, description, image_url
+- `destination_faqs` — linked via destination_id FK
+
+### Destination Hierarchy
+- `parent_id` is a self-referencing FK on `destinations` for parent-child geography (e.g. Hunza → Attabad Lake)
+- Top-level destinations have `parent_id = NULL`
+- 3-level nesting supported: region → valley → sub-spot
+- `region_id` handles region membership separately from `parent_id`
+
+### Routes (351 pages)
 ```
 /                          → Homepage (9 sections)
 /tours                     → Listing with filters
@@ -41,8 +55,12 @@ src/styles/       → fonts.ts (Plus Jakarta Sans only)
 /travel-styles/[slug]      → Filtered tours
 /blog, /blog/[slug]        → Blog
 /about, /contact           → Static
-/booking/[tourSlug]        → Booking shell (Phase 2)
+/booking/[tourSlug]        → Booking (Phase 2 shell)
 /account/*                 → Account shells (Phase 2)
+/admin/*                   → Admin (bookings, departures, quote requests, reviews)
+/grouptours/[slug]         → Group tour detail + checkout
+/hotels/[slug]             → Hotel detail + checkout
+/packages/[slug]           → Package detail
 ```
 
 ## Design System (see DESIGN_SYSTEM.md for full spec)
@@ -59,7 +77,7 @@ src/styles/       → fonts.ts (Plus Jakarta Sans only)
 ### Dark Mode
 - Theme toggle in navbar, persisted to localStorage
 - `[data-theme="dark"]` on `<html>` flips all CSS variables
-- Flash prevention script in `<head>`
+- Flash prevention inline `<script>` in `<head>` (Server Component — React 19 warns once, benign)
 - **On-dark sections** (tours, destinations, reviews, video, footer) use:
   ```
   --on-dark / --on-dark-secondary / --on-dark-tertiary
@@ -76,18 +94,23 @@ src/styles/       → fonts.ts (Plus Jakarta Sans only)
 7. **Motion: Airbnb curve** — `cubic-bezier(0.2, 0, 0, 1)`, 150/250/400ms
 
 ## Images
-- All from `traversepakistan.com/wp-content/uploads/`
-- `images.unoptimized: true` in next.config.ts (SSL cert issue)
-- 109 verified URLs, zero 404s
+- All hero images served from `traversepakistan.com/wp-content/uploads/`
+- `images.unoptimized: true` in next.config.ts (WordPress SSL cert issue)
 - Use `next/image` with `sizes` prop
+- Do NOT use Google Drive, Supabase Storage, or other hosts for hero images — keep everything on the WordPress CDN
 
 ## Tours Data Model
 Each tour has `pricing: { islamabad, lahore, singleSupplement }` (dual city pricing).
 
+## Branches
+- `main` — production
+- `backend-testing` — Supabase migration work
+- `tweaks` — frontend UI changes
+
 ## Commands
 ```bash
 npm run dev     # Dev server on :3000
-npm run build   # Production build (84 pages)
+npm run build   # Production build (351 pages)
 npm run lint    # ESLint
 ```
 
