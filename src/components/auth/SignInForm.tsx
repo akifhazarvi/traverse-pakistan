@@ -19,8 +19,6 @@ function SignInInner() {
   const redirectTo = search.get("redirect") || "/account/trips";
 
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [mode, setMode] = useState<"password" | "magic">("password");
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(search.get("error"));
@@ -46,24 +44,6 @@ function SignInInner() {
       setSent(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not send link");
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  async function handlePassword(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setSubmitting(true);
-    try {
-      const { error: err } = await getSupabaseBrowser().auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (err) throw err;
-      router.replace(redirectTo);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not sign in");
     } finally {
       setSubmitting(false);
     }
@@ -123,7 +103,7 @@ function SignInInner() {
         <div className="flex-1 h-px bg-[var(--border-default)]" />
       </div>
 
-      <form onSubmit={mode === "password" ? handlePassword : handleMagicLink} className="space-y-3">
+      <form onSubmit={handleMagicLink} className="space-y-3">
         <label className="block text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wide">
           Email
         </label>
@@ -136,30 +116,12 @@ function SignInInner() {
           className="w-full h-12 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-colors"
         />
 
-        {mode === "password" && (
-          <>
-            <label className="block text-[12px] font-semibold text-[var(--text-secondary)] uppercase tracking-wide">
-              Password
-            </label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Your password"
-              className="w-full h-12 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-colors"
-            />
-          </>
-        )}
-
         <button
           type="submit"
-          disabled={!email || (mode === "password" && !password) || submitting}
+          disabled={!email || submitting}
           className="w-full h-12 bg-[var(--primary)] text-[var(--text-inverse)] text-[14px] font-bold rounded-[var(--radius-sm)] hover:bg-[var(--primary-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
-          {submitting
-            ? mode === "password" ? "Signing in…" : "Sending…"
-            : mode === "password" ? "Sign in" : "Email me a sign-in link"}
+          {submitting ? "Sending…" : "Email me a sign-in link"}
         </button>
       </form>
 
@@ -167,20 +129,8 @@ function SignInInner() {
         <p className="text-[13px] text-[var(--error)] text-center">{error}</p>
       )}
 
-      <button
-        type="button"
-        onClick={() => { setMode(mode === "password" ? "magic" : "password"); setError(null); }}
-        className="block mx-auto text-[12px] font-semibold text-[var(--primary)] hover:underline"
-      >
-        {mode === "password"
-          ? "Use a magic link instead"
-          : "Use a password instead"}
-      </button>
-
       <p className="text-[11px] text-[var(--text-tertiary)] text-center">
-        {mode === "password"
-          ? "No account? Use a magic link — we'll create one automatically."
-          : "We'll email you a secure link — no account? We'll create one."}
+        We&apos;ll email you a secure link — no account? We&apos;ll create one.
       </p>
 
       <button type="button" onClick={() => router.back()} className="text-[12px] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] block mx-auto">
