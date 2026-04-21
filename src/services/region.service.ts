@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { getSupabaseAnon } from "@/lib/supabase/server";
 import type { RegionRow } from "@/lib/supabase/types";
 import type { Region } from "@/types/region";
@@ -18,7 +19,7 @@ function toRegion(row: RegionRow & { destinations: { slug: string }[] }): Region
 
 const REGION_QUERY = "*, destinations ( slug )";
 
-export async function getAllRegions(): Promise<Region[]> {
+export const getAllRegions = cache(async (): Promise<Region[]> => {
   const supabase = getSupabaseAnon();
   const { data, error } = await supabase
     .from("regions")
@@ -27,9 +28,9 @@ export async function getAllRegions(): Promise<Region[]> {
 
   if (error) throw new Error(`getAllRegions: ${error.message}`);
   return (data as unknown as (RegionRow & { destinations: { slug: string }[] })[]).map(toRegion);
-}
+});
 
-export async function getRegionBySlug(slug: string): Promise<Region | null> {
+export const getRegionBySlug = cache(async (slug: string): Promise<Region | null> => {
   const supabase = getSupabaseAnon();
   const { data, error } = await supabase
     .from("regions")
@@ -40,4 +41,4 @@ export async function getRegionBySlug(slug: string): Promise<Region | null> {
   if (error?.code === "PGRST116") return null;
   if (error) throw new Error(`getRegionBySlug: ${error.message}`);
   return toRegion(data as unknown as RegionRow & { destinations: { slug: string }[] });
-}
+});
