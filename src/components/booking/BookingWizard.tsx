@@ -97,7 +97,7 @@ export function BookingWizard({ tour, reviews, onClose, compact }: BookingWizard
     singleRooms: initSingleRooms,
   });
 
-  const [cityDepartures, setCityDepartures] = useState<{ islamabad: Departure | null; lahore: Departure | null }>({ islamabad: null, lahore: null });
+  const [cityDepartures, setCityDepartures] = useState<{ islamabad: Departure | null; lahore: Departure | null; karachi: Departure | null }>({ islamabad: null, lahore: null, karachi: null });
   const [departuresLoaded, setDeparturesLoaded] = useState(false);
   const [maxReachedStep, setMaxReachedStep] = useState<number>(draft.step);
   const [submitting, setSubmitting] = useState(false);
@@ -112,10 +112,11 @@ export function BookingWizard({ tour, reviews, onClose, compact }: BookingWizard
     Promise.all([
       getNextOpenDeparture(tour.slug, "islamabad"),
       getNextOpenDeparture(tour.slug, "lahore"),
+      getNextOpenDeparture(tour.slug, "karachi"),
     ])
-      .then(([isb, lhr]) => {
+      .then(([isb, lhr, khi]) => {
         if (!cancelled) {
-          setCityDepartures({ islamabad: isb, lahore: lhr });
+          setCityDepartures({ islamabad: isb, lahore: lhr, karachi: khi });
           setDeparturesLoaded(true);
         }
       })
@@ -123,7 +124,7 @@ export function BookingWizard({ tour, reviews, onClose, compact }: BookingWizard
     return () => { cancelled = true; };
   }, [tour.slug]);
 
-  const liveDeparture = cityDepartures[draft.departureCity as "islamabad" | "lahore"] ?? null;
+  const liveDeparture = cityDepartures[draft.departureCity as "islamabad" | "lahore" | "karachi"] ?? null;
 
   useEffect(() => {
     setDraft((d) => ({
@@ -496,28 +497,28 @@ function StepDates({
 }: {
   tour: Tour;
   liveDeparture: Departure | null;
-  cityDepartures: { islamabad: Departure | null; lahore: Departure | null };
+  cityDepartures: { islamabad: Departure | null; lahore: Departure | null; karachi: Departure | null };
   departuresLoaded: boolean;
   departureCity: DepartureCity;
   onCityChange: (city: DepartureCity) => void;
   departureDate: string | null;
   seatsLeft: number | null;
 }) {
-  const hasLahoreOption = departuresLoaded
-    ? cityDepartures.lahore !== null
-    : !!tour.pricing.lahore;
+  const availableCities = (["islamabad", "lahore", "karachi"] as const).filter((c) =>
+    departuresLoaded ? cityDepartures[c] !== null : c !== "karachi" && !!tour.pricing.lahore,
+  );
 
   return (
     <section className="space-y-6">
       <SectionHeader title="When are you travelling?" sub="Pick your departure city. Dates below are our next confirmed group departure." />
 
-      {hasLahoreOption && (
+      {availableCities.length >= 2 && (
         <div>
           <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] block mb-2">
             Departure city
           </label>
-          <div className="grid grid-cols-2 gap-3">
-            {(["islamabad", "lahore"] as const).map((city) => {
+          <div className={`grid gap-3 ${availableCities.length === 3 ? "grid-cols-3" : "grid-cols-2"}`}>
+            {availableCities.map((city) => {
               const active = departureCity === city;
               const dep = cityDepartures[city];
               const price = dep?.price ?? (city === "lahore" ? (tour.pricing.lahore ?? tour.pricing.islamabad) : tour.pricing.islamabad);
