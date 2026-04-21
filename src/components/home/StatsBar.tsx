@@ -1,10 +1,19 @@
 "use client";
 
 import { Container } from "@/components/ui/Container";
+import { Icon } from "@/components/ui/Icon";
 import { useEffect, useState, useRef } from "react";
 
-const stats = [
-  { value: 4.9, suffix: "★", label: "Average Rating", isDecimal: true },
+interface Stat {
+  value: number;
+  suffix: string;
+  label: string;
+  isDecimal: boolean;
+  starSuffix?: boolean;
+}
+
+const stats: Stat[] = [
+  { value: 4.9, suffix: "", label: "Average Rating", isDecimal: true, starSuffix: true },
   { value: 1300, suffix: "+", label: "Happy Travelers", isDecimal: false },
   { value: 22, suffix: "+", label: "Tour Packages", isDecimal: false },
   { value: 15, suffix: "+", label: "Regions Covered", isDecimal: false },
@@ -29,7 +38,7 @@ function AnimatedNumber({ value, suffix, isDecimal }: { value: number; suffix: s
           const animate = (now: number) => {
             const elapsed = now - start;
             const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
             setDisplay(eased * value);
             if (progress < 1) requestAnimationFrame(animate);
           };
@@ -62,8 +71,16 @@ export function StatsBar() {
               key={stat.label}
               className="flex flex-col items-center text-center min-w-[110px]"
             >
-              <span className="text-[clamp(26px,3vw,32px)] font-extrabold text-[var(--primary)] leading-none tracking-[-0.02em]">
+              <span className="inline-flex items-baseline gap-1.5 text-[clamp(26px,3vw,32px)] font-extrabold text-[var(--primary)] leading-none tracking-[-0.02em]">
                 <AnimatedNumber value={stat.value} suffix={stat.suffix} isDecimal={stat.isDecimal} />
+                {stat.starSuffix && (
+                  <Icon
+                    name="star"
+                    size="2xl"
+                    weight="fill"
+                    color="var(--primary-muted)"
+                  />
+                )}
               </span>
               <span className="text-[12px] font-medium text-[var(--text-tertiary)] mt-2 whitespace-nowrap tracking-[0.02em]">
                 {stat.label}

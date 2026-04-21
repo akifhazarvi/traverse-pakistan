@@ -6,6 +6,7 @@ import Image from "next/image";
 import { formatPrice, getWhatsAppUrl } from "@/lib/utils";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { createQuoteRequest } from "@/services/quote.service";
+import { Icon } from "@/components/ui/Icon";
 import type { Hotel } from "@/types/hotel";
 
 function fmt(dateStr: string) {
@@ -278,7 +279,7 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
               <h3 className="text-[16px] font-bold text-[var(--text-primary)]">{hotel.name}</h3>
               <p className="text-[12px] text-[var(--text-tertiary)] mt-0.5">{hotel.location}</p>
               <p className="text-[12px] text-[var(--text-secondary)] mt-1 flex items-center gap-1">
-                <span className="text-[var(--primary-muted)]">★</span>
+                <Icon name="star" size="xs" weight="fill" color="var(--primary-muted)" />
                 {hotel.rating} · {hotel.reviewCount} reviews
               </p>
             </div>

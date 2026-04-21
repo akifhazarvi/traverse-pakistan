@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
 import type { Hotel, HotelRoom } from "@/types/hotel";
 
 /* ─── Helpers ───────────────────────────────────────────────────────────────── */
@@ -287,7 +288,7 @@ export function HotelBookingSidebar({ hotel }: HotelBookingSidebarProps) {
             <span className="text-[14px] text-[var(--text-tertiary)]"> / night</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="text-[var(--primary-muted)] text-sm">★</span>
+            <Icon name="star" size="sm" weight="fill" color="var(--primary-muted)" />
             <span className="text-[13px] font-semibold text-[var(--text-primary)]">{hotel.rating}</span>
             <span className="text-[12px] text-[var(--text-tertiary)]">({hotel.reviewCount})</span>
           </div>

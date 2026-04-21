@@ -5,10 +5,15 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { EyebrowLabel } from "@/components/ui/EyebrowLabel";
+import { Icon } from "@/components/ui/Icon";
 import { TourCard } from "@/components/tours/TourCard";
 import { PackageCard } from "@/components/packages/PackageCard";
 import { AccordionItem } from "@/components/ui/Accordion";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { DestinationStory } from "@/components/destination/DestinationStory";
+import { MomentCard } from "@/components/destination/MomentCard";
+import { SeasonCard } from "@/components/destination/SeasonCard";
 import { buildMetadata } from "@/lib/seo/metadata";
 import {
   destinationSchema,
@@ -104,17 +109,29 @@ export default async function DestinationDetailPage({ params }: Props) {
             {dest.name}
           </h1>
           <p className="text-lg text-[var(--on-dark-secondary)] mt-2 max-w-xl">{dest.subtitle}</p>
-          <div className="flex items-center gap-6 mt-4 text-[14px] text-[var(--on-dark-secondary)]">
+          <div className="flex items-center gap-x-5 gap-y-2 flex-wrap mt-4 text-[14px] text-[var(--on-dark-secondary)]">
             <span>{dest.tourCount} tours available</span>
-            <span>{dest.rating}★ rating</span>
+            <span className="inline-flex items-center gap-1.5">
+              <Icon name="star" size="sm" weight="fill" color="var(--primary-muted)" />
+              <span>{dest.rating} rating</span>
+            </span>
             <span>From {formatPrice(dest.startingPrice)}</span>
           </div>
         </Container>
       </section>
 
+      {/* Story — opening line + description */}
+      {dest.opening && (
+        <DestinationStory
+          name={dest.name}
+          opening={dest.opening}
+          description={dest.description}
+        />
+      )}
+
       {/* Packages */}
       {pkgs.length > 0 && (
-        <section className="py-16 sm:py-20">
+        <section className="py-16 sm:py-20 bg-[var(--bg-subtle)]">
           <Container>
             <SectionHeader
               title={`Packages in ${dest.name}`}
@@ -133,7 +150,7 @@ export default async function DestinationDetailPage({ params }: Props) {
 
       {/* Tours */}
       {tours.length > 0 && (
-        <section className={`py-16 sm:py-20 ${pkgs.length > 0 ? "bg-[var(--bg-subtle)]" : ""}`}>
+        <section className="py-16 sm:py-20">
           <Container>
             <SectionHeader
               title={`Group Tours in ${dest.name}`}
@@ -152,7 +169,7 @@ export default async function DestinationDetailPage({ params }: Props) {
 
       {/* Hotels */}
       {hotels.length > 0 && (
-        <section className="py-16 sm:py-20">
+        <section className="py-16 sm:py-20 bg-[var(--bg-subtle)]">
           <Container>
             <SectionHeader
               title={`Where to Stay in ${dest.name}`}
@@ -165,7 +182,7 @@ export default async function DestinationDetailPage({ params }: Props) {
                 <Link
                   key={hotel.id}
                   href={`/hotels/${hotel.slug}`}
-                  className="group rounded-[var(--radius-md)] overflow-hidden bg-[var(--bg-primary)] transition-all duration-300 hover:-translate-y-1"
+                  className="group rounded-[var(--radius-md)] overflow-hidden bg-[var(--bg-primary)] transition-all duration-[var(--duration-normal)] ease-[var(--ease-default)] hover:-translate-y-1"
                   style={{ boxShadow: "var(--shadow-sm)" }}
                 >
                   <div className="relative aspect-[3/2] overflow-hidden">
@@ -187,8 +204,8 @@ export default async function DestinationDetailPage({ params }: Props) {
                       <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
                         {hotel.propertyType}
                       </span>
-                      <span className="flex items-center gap-1 text-[13px]">
-                        <span className="text-[var(--primary-muted)]">★</span>
+                      <span className="inline-flex items-center gap-1 text-[13px]">
+                        <Icon name="star" size="sm" weight="fill" color="var(--primary-muted)" />
                         <span className="font-semibold text-[var(--text-primary)]">{hotel.rating}</span>
                       </span>
                     </div>
@@ -210,45 +227,57 @@ export default async function DestinationDetailPage({ params }: Props) {
         </section>
       )}
 
-      {/* Why Visit */}
+      {/* Moments — the softer "why visit" */}
       {dest.whyVisitCards.length > 0 && (
-        <section className="bg-[var(--bg-subtle)] py-16 sm:py-20">
+        <section className="py-16 sm:py-20">
           <Container>
-            <SectionHeader title={`Why Visit ${dest.name}`} center />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1000px] mx-auto">
-              {dest.whyVisitCards.map((card) => (
-                <div key={card.title} className="bg-[var(--bg-elevated)] rounded-xl p-6 text-center shadow-sm">
-                  <span className="text-3xl">{card.icon}</span>
-                  <h3 className="text-[16px] font-bold text-[var(--text-primary)] mt-3 mb-2">{card.title}</h3>
-                  <p className="text-[14px] text-[var(--text-tertiary)] leading-relaxed">{card.description}</p>
-                </div>
-              ))}
+            <div className="max-w-[1000px] mx-auto">
+              <div className="flex flex-col gap-2 mb-10">
+                <EyebrowLabel>Why here</EyebrowLabel>
+                <h2
+                  className="font-bold tracking-[-0.025em] leading-[1.15] text-[var(--text-primary)]"
+                  style={{ fontSize: "var(--text-4xl)" }}
+                >
+                  Moments in {dest.name}
+                </h2>
+                <p
+                  className="mt-1 max-w-xl leading-relaxed text-[var(--text-secondary)]"
+                  style={{ fontSize: "var(--text-lg)" }}
+                >
+                  The small, specific reasons travellers keep coming back.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {dest.whyVisitCards.map((card) => (
+                  <MomentCard
+                    key={card.title}
+                    icon={card.icon}
+                    title={card.title}
+                    description={card.description}
+                  />
+                ))}
+              </div>
             </div>
           </Container>
         </section>
       )}
 
-      {/* Seasons */}
+      {/* Seasons — with seasonal tinting */}
       {dest.seasons.length > 0 && (
-        <section className="py-16 sm:py-20">
+        <section className="py-16 sm:py-20 bg-[var(--bg-subtle)]">
           <Container>
-            <SectionHeader title="Best Time to Visit" center />
+            <div className="flex flex-col items-center text-center gap-2 mb-10">
+              <EyebrowLabel>Four chapters</EyebrowLabel>
+              <h2
+                className="font-bold tracking-[-0.025em] leading-[1.15] text-[var(--text-primary)]"
+                style={{ fontSize: "var(--text-4xl)" }}
+              >
+                Best Time to Visit
+              </h2>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-[1000px] mx-auto">
               {dest.seasons.map((s) => (
-                <div key={s.season} className="border border-[var(--border-default)] rounded-xl p-5 text-center">
-                  <span className="text-3xl">{s.icon}</span>
-                  <h3 className="text-[15px] font-bold text-[var(--text-primary)] mt-2 capitalize">{s.season}</h3>
-                  <p className="text-[13px] text-[var(--text-tertiary)]">{s.months}</p>
-                  <span className={`inline-block mt-2 px-3 py-1 text-[11px] font-bold uppercase rounded-full ${
-                    s.badgeColor === "green" ? "bg-[var(--primary-light)] text-[var(--primary-deep)]"
-                    : s.badgeColor === "yellow" ? "bg-[var(--accent-warm-light)] text-[var(--accent-warm)]"
-                    : s.badgeColor === "blue" ? "bg-[var(--bg-subtle)] text-[var(--info)]"
-                    : "bg-[var(--bg-subtle)] text-[var(--error)]"
-                  }`}>
-                    {s.badge}
-                  </span>
-                  <p className="text-[13px] text-[var(--text-tertiary)] mt-2 leading-relaxed">{s.description}</p>
-                </div>
+                <SeasonCard key={s.season} info={s} />
               ))}
             </div>
           </Container>
@@ -257,10 +286,10 @@ export default async function DestinationDetailPage({ params }: Props) {
 
       {/* FAQs */}
       {faqs.length > 0 && (
-        <section className="bg-[var(--bg-subtle)] py-16 sm:py-20">
+        <section className="py-16 sm:py-20">
           <Container>
             <SectionHeader title="Frequently Asked Questions" center />
-            <div className="max-w-[800px] mx-auto bg-[var(--bg-elevated)] rounded-xl border border-[var(--border-default)] overflow-hidden">
+            <div className="max-w-[800px] mx-auto bg-[var(--bg-elevated)] rounded-[var(--radius-md)] border border-[var(--border-default)] overflow-hidden">
               {faqs.map((faq, i) => (
                 <AccordionItem key={i} title={faq.question} className="px-6">
                   {faq.answer}

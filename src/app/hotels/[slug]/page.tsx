@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { MosaicGallery } from "@/components/trip-detail/MosaicGallery";
 import { AccordionItem } from "@/components/ui/Accordion";
+import { Icon } from "@/components/ui/Icon";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildMetadata } from "@/lib/seo/metadata";
 import {
@@ -97,7 +98,17 @@ export default async function HotelDetailPage({ params }: Props) {
               {hotel.location}
             </p>
             <div className="flex items-center gap-3 mt-2">
-              <span className="text-[var(--primary-muted)]">★★★★★</span>
+              <span className="inline-flex gap-0.5" aria-label={`${hotel.rating} out of 5`}>
+                {Array.from({ length: 5 }, (_, i) => (
+                  <Icon
+                    key={i}
+                    name="star"
+                    size="md"
+                    weight={i < Math.round(hotel.rating) ? "fill" : "regular"}
+                    color={i < Math.round(hotel.rating) ? "var(--primary-muted)" : "var(--border-default)"}
+                  />
+                ))}
+              </span>
               <span className="text-[15px] font-semibold text-[var(--text-primary)]">{hotel.rating}</span>
               <span className="text-[14px] text-[var(--text-tertiary)]">{hotel.reviewCount} reviews</span>
               <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] bg-[var(--primary-light)] text-[var(--primary)] rounded-[var(--radius-full)]">
@@ -188,7 +199,7 @@ export default async function HotelDetailPage({ params }: Props) {
             {hotel.reviews.length > 0 && (
               <div className="py-8 border-b border-[var(--border-default)]" id="reviews">
                 <div className="flex items-center gap-3 mb-6">
-                  <span className="text-[var(--primary-muted)] text-xl">★</span>
+                  <Icon name="star" size="xl" weight="fill" color="var(--primary-muted)" />
                   <span className="text-2xl font-bold text-[var(--text-primary)]">{hotel.rating}</span>
                   <span className="text-[var(--text-tertiary)]">·</span>
                   <span className="text-[15px] text-[var(--text-secondary)]">{hotel.reviewCount} reviews</span>
@@ -269,7 +280,10 @@ export default async function HotelDetailPage({ params }: Props) {
                   <div className="p-4">
                     <div className="flex items-center justify-between">
                       <h3 className="text-[15px] font-bold text-[var(--text-primary)]">{h.name}</h3>
-                      <span className="text-[13px] font-semibold text-[var(--text-primary)]">★ {h.rating}</span>
+                      <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-[var(--text-primary)]">
+                        <Icon name="star" size="sm" weight="fill" color="var(--primary-muted)" />
+                        {h.rating}
+                      </span>
                     </div>
                     <p className="text-[12px] text-[var(--text-tertiary)] mt-0.5">{h.location}</p>
                     <p className="text-[15px] font-bold text-[var(--text-primary)] mt-2 tabular-nums">
@@ -287,7 +301,10 @@ export default async function HotelDetailPage({ params }: Props) {
           <div>
             <span className="text-lg font-bold text-[var(--text-primary)] tabular-nums">{formatPrice(hotel.pricePerNight)}</span>
             <span className="text-[13px] text-[var(--text-tertiary)]"> / night</span>
-            <p className="text-[12px] text-[var(--text-tertiary)]">★ {hotel.rating} · {hotel.reviewCount} reviews</p>
+            <p className="text-[12px] text-[var(--text-tertiary)] inline-flex items-center gap-1">
+              <Icon name="star" size="xs" weight="fill" color="var(--primary-muted)" />
+              {hotel.rating} · {hotel.reviewCount} reviews
+            </p>
           </div>
           <Link
             href={`/hotels/${hotel.slug}/checkout`}

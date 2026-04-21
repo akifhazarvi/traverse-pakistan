@@ -1,5 +1,3 @@
-"use client";
-
 import { getWhatsAppUrl } from "@/lib/utils";
 
 export function WhatsAppFAB() {

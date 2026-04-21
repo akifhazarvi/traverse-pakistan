@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { Icon } from "@/components/ui/Icon";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { formatPrice } from "@/lib/utils";
 import { getAllDestinations } from "@/services/destination.service";
@@ -51,8 +52,12 @@ export default async function DestinationsPage() {
                   {dest.regionSlug.replace("-", " ")}
                 </span>
                 <h2 className="text-2xl font-bold text-[var(--on-dark)] mt-1">{dest.name}</h2>
-                <p className="text-[14px] text-[var(--on-dark-secondary)] mt-1">
-                  From {formatPrice(dest.startingPrice)} &middot; {dest.tourCount} tours &middot; {dest.rating}★
+                <p className="text-[14px] text-[var(--on-dark-secondary)] mt-1 inline-flex items-center gap-1.5">
+                  <span>From {formatPrice(dest.startingPrice)} &middot; {dest.tourCount} tours</span>
+                  <span className="inline-flex items-center gap-1">
+                    <Icon name="star" size="sm" weight="fill" color="var(--primary-muted)" />
+                    {dest.rating}
+                  </span>
                 </p>
               </div>
             </Link>

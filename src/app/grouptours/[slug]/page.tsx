@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { Chip } from "@/components/ui/Chip";
+import { Icon } from "@/components/ui/Icon";
 import { StarRating } from "@/components/ui/StarRating";
 import { MosaicGallery } from "@/components/trip-detail/MosaicGallery";
 import { BookingSidebar } from "@/components/trip-detail/BookingSidebar";
@@ -111,16 +112,16 @@ export default async function TripDetailPage({ params }: Props) {
                 />
               </div>
               <div className="flex flex-wrap gap-2 mt-4">
-                <Chip icon={<span>📅</span>}>{tour.duration} days</Chip>
-                <Chip icon={<span>👥</span>}>Up to {tour.maxGroupSize} people</Chip>
-                <Chip icon={<span>🌐</span>}>{tour.languages.join(", ")}</Chip>
+                <Chip icon={<Icon name="calendar" size="sm" />}>{tour.duration} days</Chip>
+                <Chip icon={<Icon name="users" size="sm" />}>Up to {tour.maxGroupSize} people</Chip>
+                <Chip icon={<Icon name="globe" size="sm" />}>{tour.languages.join(", ")}</Chip>
                 {tour.freeCancellation && (
-                  <Chip variant="success" icon={<span>✓</span>}>
+                  <Chip variant="success" icon={<Icon name="check" size="sm" weight="bold" />}>
                     Free cancellation
                   </Chip>
                 )}
                 {tour.reserveNowPayLater && (
-                  <Chip variant="info" icon={<span>💳</span>}>
+                  <Chip variant="info" icon={<Icon name="credit-card" size="sm" />}>
                     Reserve now, pay later
                   </Chip>
                 )}
@@ -254,8 +255,8 @@ export default async function TripDetailPage({ params }: Props) {
                 </div>
                 <p className="text-[var(--text-tertiary)]">{tour.meetingPoint.arrivalInstruction}</p>
                 {tour.meetingPoint.pickupOffered && (
-                  <p className="text-[var(--primary)] font-medium">
-                    ✓ {tour.meetingPoint.pickupDescription}
+                  <p className="text-[var(--primary)] font-medium inline-flex items-center gap-1.5">
+                    <Icon name="check" size="sm" weight="bold" /> {tour.meetingPoint.pickupDescription}
                   </p>
                 )}
               </div>
@@ -285,18 +286,15 @@ export default async function TripDetailPage({ params }: Props) {
                             {review.travelerType}
                           </p>
                         </div>
-                        <div className="ml-auto flex gap-0.5">
+                        <div className="ml-auto flex gap-0.5" aria-label={`${review.rating} out of 5`}>
                           {Array.from({ length: 5 }, (_, i) => (
-                            <span
+                            <Icon
                               key={i}
-                              className={
-                                i < review.rating
-                                  ? "text-[var(--primary-muted)] text-sm"
-                                  : "text-[var(--border-default)] text-sm"
-                              }
-                            >
-                              ★
-                            </span>
+                              name="star"
+                              size="sm"
+                              weight={i < review.rating ? "fill" : "regular"}
+                              color={i < review.rating ? "var(--primary-muted)" : "var(--border-default)"}
+                            />
                           ))}
                         </div>
                       </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { HeroSection } from "@/components/home/HeroSection";
 import { StatsBar } from "@/components/home/StatsBar";
 import { PopularToursCarousel } from "@/components/home/PopularToursCarousel";
@@ -7,10 +8,15 @@ import { FeaturedPackagesCarousel } from "@/components/home/FeaturedPackagesCaro
 import { DestinationsScroll } from "@/components/home/DestinationsScroll";
 import { FeaturedHotels } from "@/components/home/FeaturedHotels";
 import { BlogGrid } from "@/components/home/BlogGrid";
-import { VideoStories } from "@/components/home/VideoStories";
 import { WhyUsSection } from "@/components/home/WhyUsSection";
 import { ReviewsCarousel } from "@/components/home/ReviewsCarousel";
 import { buildMetadata } from "@/lib/seo/metadata";
+
+// VideoStories is deep below the fold and ships a client modal — defer its JS chunk
+// so it doesn't compete with above-the-fold hydration. SSR stays on (SEO + no layout shift).
+const VideoStories = dynamic(() =>
+  import("@/components/home/VideoStories").then((m) => m.VideoStories),
+);
 
 export const metadata: Metadata = buildMetadata({
   title:

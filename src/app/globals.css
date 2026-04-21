@@ -69,6 +69,26 @@
   /* ── Hero fade (adapts to page bg) ── */
   --hero-fade: #FFFFFF;
 
+  /* ── Rating star gold (reserved for star iconography on photography; do NOT use elsewhere) ── */
+  --rating-gold: #FFD56B;
+
+  /* ── Seasonal tints (soft + vibrant, used on season cards + narrative accents) ── */
+  --season-spring-bg: #FBEBEF;
+  --season-spring-fg: #B84A6A;
+  --season-spring-ring: rgba(184, 74, 106, 0.18);
+
+  --season-summer-bg: #FFF1D6;
+  --season-summer-fg: #B57A1A;
+  --season-summer-ring: rgba(181, 122, 26, 0.18);
+
+  --season-autumn-bg: #FBE6D4;
+  --season-autumn-fg: #A9532C;
+  --season-autumn-ring: rgba(169, 83, 44, 0.18);
+
+  --season-winter-bg: #E7EEF2;
+  --season-winter-fg: #4A6B7B;
+  --season-winter-ring: rgba(74, 107, 123, 0.18);
+
   /* ── Radius ── */
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -144,6 +164,25 @@
   --shadow-xl: rgba(0, 0, 0, 0.25) 0 4px 12px, rgba(0, 0, 0, 0.45) 0 16px 40px;
 
   --hero-fade: #0D1B19;
+
+  --rating-gold: #F2C270;
+
+  /* Seasonal tints — dark mode (low-chroma, warm glow on deep bg) */
+  --season-spring-bg: rgba(243, 170, 192, 0.10);
+  --season-spring-fg: #F6A6BC;
+  --season-spring-ring: rgba(243, 170, 192, 0.22);
+
+  --season-summer-bg: rgba(242, 194, 112, 0.10);
+  --season-summer-fg: #F2C270;
+  --season-summer-ring: rgba(242, 194, 112, 0.22);
+
+  --season-autumn-bg: rgba(232, 154, 92, 0.10);
+  --season-autumn-fg: #E89A5C;
+  --season-autumn-ring: rgba(232, 154, 92, 0.22);
+
+  --season-winter-bg: rgba(170, 198, 212, 0.10);
+  --season-winter-fg: #AEC8D6;
+  --season-winter-ring: rgba(170, 198, 212, 0.22);
 }
 
 /* ── Tailwind v4 Theme ── */
@@ -216,4 +255,98 @@ h1, h2, h3, h4, h5, h6 { letter-spacing: -0.025em; line-height: 1.15; }
   0%   { transform: scale(1); }
   40%  { transform: scale(1.28); }
   100% { transform: scale(1); }
+}
+
+/* ── Reveal on enter (for <Reveal> component, respects reduced-motion) ── */
+@keyframes reveal-rise {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.reveal-rise {
+  animation: reveal-rise var(--duration-slow) var(--ease-default) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-rise { animation: none; opacity: 1; transform: none; }
+}
+
+/* ── Page enter (used by app/template.tsx — subtle fade + rise on route change) ── */
+@keyframes page-enter {
+  0%   { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: page-enter var(--duration-slow) var(--ease-default);
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-enter { animation: none; }
+}
+
+/* ── Skeleton shimmer (Skeleton primitive) ── */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--bg-subtle) 0%,
+    var(--border-default) 50%,
+    var(--bg-subtle) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.8s ease-in-out infinite;
+}
+.skeleton-solid { background: var(--bg-subtle); }
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer { animation: none; background: var(--bg-subtle); }
+}
+
+/* ── Route progress bar (top-of-page progress on navigation) ── */
+@keyframes route-progress-finish {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
+}
+.route-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 100;
+  pointer-events: none;
+  transform-origin: left;
+  background: var(--primary);
+  box-shadow: 0 0 8px var(--primary), 0 0 4px var(--primary);
+  transition:
+    transform var(--duration-slow) var(--ease-default),
+    opacity var(--duration-fast) linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .route-progress-bar { box-shadow: none; transition: opacity var(--duration-fast) linear; }
+}
+
+/* ── Button spinner (pending state) ── */
+@keyframes button-spin {
+  to { transform: rotate(360deg); }
+}
+.button-spinner {
+  animation: button-spin 700ms linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .button-spinner { animation-duration: 2s; }
+}
+
+/* ── Hero crossfade (5 slides × 6s each = 30s cycle; 1.5s crossfade overlap) ── */
+@keyframes heroCrossfade {
+  0%, 15%   { opacity: 1; }
+  20%, 95%  { opacity: 0; }
+  100%      { opacity: 1; }
+}
+.hero-slide {
+  animation: heroCrossfade 30s infinite;
+  will-change: opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide { animation: none; opacity: 0; }
+  .hero-slide:first-child { opacity: 1; }
 }
