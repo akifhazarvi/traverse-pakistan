@@ -40,12 +40,12 @@ export function getGroupDiscountPct(totalTravelers: number): number {
 export function calculatePricing(input: PricingInput): PricingBreakdown {
   const { tour, liveDeparture, departureCity, adults, childCount, singleRooms, paymentPlan } = input;
 
-  const live = liveDeparture?.pricing;
-  const basePrice = departureCity === "lahore"
-    ? (live?.lahore ?? tour.pricing.lahore ?? tour.pricing.islamabad)
-    : (live?.islamabad ?? tour.pricing.islamabad);
+  const basePrice = liveDeparture?.price
+    ?? (departureCity === "lahore"
+      ? (tour.pricing.lahore ?? tour.pricing.islamabad)
+      : tour.pricing.islamabad);
 
-  const singleSupplement = live?.singleSupplement ?? tour.pricing.singleSupplement ?? 0;
+  const singleSupplement = liveDeparture?.singleSupplement ?? tour.pricing.singleSupplement ?? 0;
 
   const adultsSubtotal = basePrice * adults;
   const childrenSubtotal = Math.round(basePrice * (1 - CHILD_DISCOUNT_PCT)) * childCount;

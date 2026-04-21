@@ -111,8 +111,7 @@ export function TripsList() {
               </span>
             </div>
             <p className="mt-2 text-[15px] font-semibold text-[var(--text-primary)]">
-              {b.seats} traveler{b.seats !== 1 ? "s" : ""} · Departure from{" "}
-              <span className="capitalize">{b.departureCity}</span>
+              {b.seats} traveler{b.seats !== 1 ? "s" : ""}
             </p>
             <p className="text-[12px] text-[var(--text-tertiary)] mt-1">
               Booked on {new Date(b.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}

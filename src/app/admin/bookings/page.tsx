@@ -16,7 +16,7 @@ const STATUS_FILTERS: { value: "all" | BookingStatus; label: string }[] = [
 ];
 
 type BookingWithDeparture = BookingRow & {
-  departures: { tour_slug: string; departure_date: string } | null;
+  departures: { tour_slug: string; departure_date: string; departure_city: string | null } | null;
 };
 
 function formatDate(iso: string): string {
@@ -43,7 +43,7 @@ async function getBookings(
   const supabase = await getSupabaseServer();
   let query = supabase
     .from("bookings")
-    .select("*, departures(tour_slug, departure_date)")
+    .select("*, departures(tour_slug, departure_date, departure_city)")
     .order("created_at", { ascending: false })
     .limit(200);
   if (filter !== "all") query = query.eq("status", filter);
@@ -198,7 +198,7 @@ export default async function BookingsPage({
                           className="text-xs capitalize"
                           style={{ color: "var(--text-tertiary)" }}
                         >
-                          from {row.departure_city}
+                          from {row.departures?.departure_city ?? "—"}
                         </div>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">

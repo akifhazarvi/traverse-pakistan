@@ -263,7 +263,6 @@ export function BookingWizard({ tour, reviews, onClose, compact }: BookingWizard
         const result = await createBooking({
           departureId: liveDeparture.id,
           seats: totalTravelers,
-          departureCity: draft.departureCity,
           singleRooms: draft.singleRooms,
           contact: {
             name: `${draft.contact.firstName} ${draft.contact.lastName}`.trim(),

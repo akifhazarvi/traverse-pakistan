@@ -1,17 +1,71 @@
 export type DepartureStatus = "open" | "closed" | "cancelled";
 export type BookingStatus = "pending" | "confirmed" | "cancelled" | "refunded";
 export type PaymentStatus = "initiated" | "succeeded" | "failed" | "refunded";
-export type DepartureCity = "islamabad" | "lahore";
+export type DepartureCity = "islamabad" | "lahore" | "karachi";
+
+export type TourRow = {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  category: string;
+  badge: string | null;
+  duration: number;
+  route: string;
+  departure_date: string | null;
+  destination_slug: string;
+  region_slug: string;
+  travel_style_slugs: string[];
+  rating: number;
+  review_count: number;
+  max_group_size: number;
+  languages: string[];
+  free_cancellation: boolean;
+  reserve_now_pay_later: boolean;
+  images: Array<{ url: string; alt: string }>;
+  guide: { name: string; yearsGuiding: number; photo?: string } | null;
+  highlights: string[];
+  inclusions: string[];
+  exclusions: string[];
+  know_before_you_go: string[];
+  meeting_point: {
+    address: string;
+    departureTime: string;
+    arrivalInstruction: string;
+    endPoint: string;
+    mapEmbedUrl: string;
+    pickupOffered: boolean;
+    pickupDescription: string;
+  };
+  featured: boolean;
+  meta_title: string;
+  meta_description: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type TourItineraryDayRow = {
+  id: string;
+  tour_slug: string;
+  day_number: number;
+  title: string;
+  description: string;
+  image: { url: string; alt: string } | null;
+  stops: Array<{ name: string; detail: string }>;
+  driving_time: string;
+  overnight: string;
+};
 
 export type DepartureRow = {
   id: string;
   tour_slug: string;
   departure_date: string;
+  end_date: string | null;
+  departure_city: DepartureCity | null;
   max_seats: number;
   seats_booked: number;
   status: DepartureStatus;
-  price_islamabad: number;
-  price_lahore: number | null;
+  price: number;
   single_supplement: number | null;
   created_at: string;
 };
@@ -22,7 +76,6 @@ export type BookingRow = {
   user_id: string | null;
   departure_id: string;
   seats: number;
-  departure_city: DepartureCity;
   single_rooms: number;
   total_amount: number;
   currency: string;
@@ -142,7 +195,6 @@ export type DestinationFaqRow = {
 export type CreateBookingArgs = {
   p_departure_id: string;
   p_seats: number;
-  p_departure_city: DepartureCity;
   p_single_rooms: number;
   p_contact_name: string;
   p_contact_email: string;
@@ -166,6 +218,19 @@ export type CreateBookingResult = {
 export type Database = {
   public: {
     Tables: {
+      tours: {
+        Row: TourRow;
+        Insert: Omit<TourRow, "id" | "created_at" | "updated_at" | "featured"> &
+          Partial<Pick<TourRow, "id" | "created_at" | "updated_at" | "featured">>;
+        Update: Partial<TourRow>;
+        Relationships: [];
+      };
+      tour_itinerary_days: {
+        Row: TourItineraryDayRow;
+        Insert: Omit<TourItineraryDayRow, "id"> & Partial<Pick<TourItineraryDayRow, "id">>;
+        Update: Partial<TourItineraryDayRow>;
+        Relationships: [];
+      };
       departures: {
         Row: DepartureRow;
         Insert: Omit<DepartureRow, "id" | "created_at" | "seats_booked" | "status"> &

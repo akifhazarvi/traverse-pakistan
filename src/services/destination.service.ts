@@ -28,7 +28,7 @@ function toDestination(row: DestinationWithRegion): Destination {
       ? row.why_visit_cards as Destination["whyVisitCards"]
       : local?.whyVisitCards ?? []),
     seasons: ((row.seasons as Destination["seasons"] | null)?.length
-      ? (row.seasons as Destination["seasons"]).map(({ icon: _icon, ...s }) => s) as Destination["seasons"]
+      ? row.seasons as Destination["seasons"]
       : local?.seasons ?? []),
     metaTitle: row.meta_title ?? row.name,
     metaDescription: row.meta_description ?? row.description ?? "",
