@@ -76,7 +76,7 @@ export function HeroSection() {
           style={{ textShadow: "0 1px 6px rgba(0,0,0,0.35)" }}
         >
           <span className="inline-flex items-center gap-1.5">
-            <Icon name="star" size="sm" weight="fill" color="#FFD56B" />
+            <Icon name="star" size="sm" weight="fill" color="var(--rating-gold)" />
             <span><span className="font-bold tabular-nums">4.9</span> · 1,300+ travelers</span>
           </span>
           <span className="hidden sm:inline text-[var(--on-dark-tertiary)]">·</span>

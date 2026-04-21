@@ -43,7 +43,7 @@ export function ReviewsCarousel() {
 
               {/* Author */}
               <div className="flex items-center gap-3 mt-5 pt-4 border-t border-white/8">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-deep)] flex items-center justify-center text-white text-[14px] font-bold shrink-0 ring-2 ring-[var(--on-dark-border)]">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-deep)] flex items-center justify-center text-[var(--on-dark)] text-[14px] font-bold shrink-0 ring-2 ring-[var(--on-dark-border)]">
                   {review.initial}
                 </div>
                 <div className="min-w-0">

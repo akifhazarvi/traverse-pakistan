@@ -1,99 +1,90 @@
 # Traverse Pakistan — AI Agent Instructions
 
-## What This Is
-Tourism booking platform for traversepakistan.com. Next.js 15 App Router + TypeScript + Tailwind CSS v4. Phase 1 = frontend with local TS data. Phase 2 = Supabase backend.
+Tourism booking platform for traversepakistan.com.
+**Stack:** Next.js 15 App Router · TypeScript strict · Tailwind v4 · Plus Jakarta Sans · Supabase (Phase 2) · Vercel.
 
-## Stack
-- Next.js 15 (App Router, `src/` dir)
-- TypeScript strict
-- Tailwind CSS v4 (via `@theme inline` in globals.css)
-- Plus Jakarta Sans (single font, weights 400-800)
-- Deployed on Vercel
+---
 
-## Architecture
+## Non-negotiable rules
 
-### Data Flow
-```
-src/data/*.ts (local TS) → src/services/*.service.ts (async) → components
-```
-All service functions are `async` — swap bodies to Supabase in Phase 2, zero component changes.
+1. **No emojis** anywhere — data files, chips, empty states, headings. Use `<Icon>`.
+2. **No hex colors** — always `var(--token)`. See [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md).
+3. **No inline `<svg>`** — icons go through [`<Icon>`](src/components/ui/Icon.tsx).
+4. **No `bg-white` / `text-white`** on theme surfaces — use `--bg-primary` / `--on-dark`. Exception: overlays `bg-black/NN` on photographs.
+5. **Only 4 radius values:** 8 / 12 / 16 / 9999px via `--radius-{sm,md,lg,full}`.
+6. **Motion tokens** — `--duration-fast/normal/slow`, `--ease-default` (Airbnb curve). No `duration-300`.
+7. **Services are async** — components import from `src/services/*.service.ts`, never from `src/data/*` directly.
 
-### Key Directories
-```
-src/app/          → Pages (App Router)
-src/components/   → UI: layout/, home/, tours/, trip-detail/, destination/, blog/, reviews/, ui/
-src/data/         → 22 tours, 8 destinations, 5 regions, 9 hotels, 8 reviews, 6 blog posts
-src/services/     → Data access layer (tour, destination, region, review, blog, hotel)
-src/types/        → TypeScript interfaces
-src/lib/          → utils.ts (cn, formatPrice, slugify, getWhatsAppUrl), constants.ts
-src/styles/       → fonts.ts (Plus Jakarta Sans only)
-```
+---
 
-### Routes (84 pages)
-```
-/                          → Homepage (9 sections)
-/tours                     → Listing with filters
-/tours/[slug]              → Trip detail (gallery, itinerary, booking sidebar)
-/destinations              → Grid
-/destinations/[slug]       → Detail (tours, why-visit, seasons, FAQs)
-/regions/[slug]            → Region with destinations + tours
-/travel-styles             → Grid
-/travel-styles/[slug]      → Filtered tours
-/blog, /blog/[slug]        → Blog
-/about, /contact           → Static
-/booking/[tourSlug]        → Booking shell (Phase 2)
-/account/*                 → Account shells (Phase 2)
-```
+## File map — where things live
 
-## Design System (see DESIGN_SYSTEM.md for full spec)
+### Routes & pages
+- [src/app/](src/app/) — App Router pages
+- Destination detail: [src/app/destinations/[slug]/page.tsx](src/app/destinations/[slug]/page.tsx)
+- Tour detail: [src/app/grouptours/[slug]/page.tsx](src/app/grouptours/[slug]/page.tsx)
+- Package detail: [src/app/packages/[slug]/](src/app/packages/[slug]/)
+- Hotel detail: [src/app/hotels/[slug]/page.tsx](src/app/hotels/[slug]/page.tsx)
 
-### Colors — use CSS variables, NEVER hardcode hex
-```
---primary / --primary-hover / --primary-light / --primary-muted / --primary-deep
---text-primary / --text-secondary / --text-tertiary / --text-inverse
---bg-primary / --bg-subtle / --bg-elevated / --bg-dark / --bg-darker
---border-default / --border-strong
---success / --warning / --error / --info / --whatsapp
-```
+### UI primitives → [src/components/ui/](src/components/ui/)
+`Icon`, `Button`, `Chip`, `Badge`, `StarRating`, `SectionHeader`, `EyebrowLabel`, `EmptyState`, `Reveal`, `Container`, `Carousel`, `Accordion`, `FilterTag`, `PriceDisplay`, `WishlistButton`.
 
-### Dark Mode
-- Theme toggle in navbar, persisted to localStorage
-- `[data-theme="dark"]` on `<html>` flips all CSS variables
-- Flash prevention script in `<head>`
-- **On-dark sections** (tours, destinations, reviews, video, footer) use:
-  ```
-  --on-dark / --on-dark-secondary / --on-dark-tertiary
-  --on-dark-glass / --on-dark-glass-hover / --on-dark-border
-  ```
+### Domain components
+- [src/components/destination/](src/components/destination/) — `DestinationStory`, `MomentCard`, `SeasonCard`
+- [src/components/home/](src/components/home/) — homepage sections (`HeroSection`, `WhyUsSection`, `StatsBar`, `DestinationsScroll`, `FeaturedHotels`, `VideoStories`, `ReviewsCarousel`)
+- [src/components/tours/](src/components/tours/) — `TourCard`, booking success
+- [src/components/packages/](src/components/packages/) — package card, detail, itinerary, booking sidebar
+- [src/components/hotels/](src/components/hotels/) — hotel listing, detail, sidebar, checkout
+- [src/components/trip-detail/](src/components/trip-detail/) — `MosaicGallery`, `BookingSidebar`, `ItineraryAccordion`
+- [src/components/booking/](src/components/booking/) — wizard, trust strip, urgency, FAQ, review quote, mobile reserve bar
+- [src/components/layout/](src/components/layout/) — `Navbar`, `Footer`, `Breadcrumb`, `ThemeToggle`, `WhatsAppFAB`, `AwardStrip`, `NavSearchBar`
+- [src/components/auth/](src/components/auth/) · [src/components/admin/](src/components/admin/) · [src/components/account/](src/components/account/) · [src/components/seo/](src/components/seo/) · [src/components/quote/](src/components/quote/)
 
-### Rules
-1. **No hardcoded colors** — always `var(--token)` or `text-[var(--token)]`
-2. **No `bg-white`** — use `bg-[var(--bg-primary)]` or `bg-[var(--bg-elevated)]`
-3. **No `text-white` on dark sections** — use `text-[var(--on-dark)]`
-4. **SVG strokes** — use `stroke="var(--primary)"`, never hex
-5. **Radius: only 4 values** — 8px, 12px, 16px, 9999px
-6. **Shadows: multi-layer** — use `var(--shadow-sm/md/lg/xl)`
-7. **Motion: Airbnb curve** — `cubic-bezier(0.2, 0, 0, 1)`, 150/250/400ms
+### Data / services / types
+- [src/data/](src/data/) — TS data (destinations, tours, regions, hotels, reviews, blog, travel-styles, faqs, packages, itinerary)
+- [src/services/](src/services/) — `*.service.ts`, async. Phase 2: swap body to Supabase, components stay
+- [src/types/](src/types/) — TS interfaces. `WhyVisitCard.icon` is typed as `IconName` (from `Icon.tsx`)
+- [src/lib/](src/lib/) — `utils.ts` (cn, formatPrice, slugify, getWhatsAppUrl), `constants.ts`, `supabase/`, `seo/`
+- [src/styles/fonts.ts](src/styles/fonts.ts) — Plus Jakarta Sans
 
-## Images
-- All from `traversepakistan.com/wp-content/uploads/`
-- `images.unoptimized: true` in next.config.ts (SSL cert issue)
-- 109 verified URLs, zero 404s
-- Use `next/image` with `sizes` prop
+---
 
-## Tours Data Model
-Each tour has `pricing: { islamabad, lahore, singleSupplement }` (dual city pricing).
+## Common tasks → file to open
+
+| Task | Open |
+|------|------|
+| Add a new icon | [Icon.tsx](src/components/ui/Icon.tsx) — import + add to `iconMap` |
+| Add a new destination | [src/data/destinations.ts](src/data/destinations.ts) — use `IconName` tokens, include `opening` |
+| Change brand color | [src/app/globals.css](src/app/globals.css) — update the token, both light + dark blocks |
+| Add a section header with eyebrow | Use `<SectionHeader eyebrow="..." title="..." />` |
+| Empty state | Use `<EmptyState icon="..." title="..." description="..." action={...} />` |
+| Add a seasonal tint | Already derived in [SeasonCard.tsx](src/components/destination/SeasonCard.tsx) from `season` name — don't add per-destination |
+| Scroll-reveal wrap | `<Reveal delayMs={60}>…</Reveal>` (respects `prefers-reduced-motion`) |
+
+---
+
+## Authoring checklist before committing UI
+
+- No emojis in diff (`rg '[\u{1F300}-\u{1F9FF}]'`)
+- No hex in diff (`rg '#[0-9A-Fa-f]{3,6}\b'`)
+- No new inline `<svg>` (`rg '<svg' src/`)
+- Toggled `data-theme="dark"` and verified
+- `npm run build` passes
+
+---
 
 ## Commands
+
 ```bash
-npm run dev     # Dev server on :3000
-npm run build   # Production build (84 pages)
-npm run lint    # ESLint
+npm run dev    # Dev server (Turbopack) on :3000
+npm run build  # Production build, static-generates ~80 pages
+npm run lint   # ESLint
 ```
 
-## Brand
-- Traverse Pakistan — Pakistan's highest-rated tourism company
-- 4.9★ across 1,300+ reviews, TripAdvisor Travelers' Choice 2025
-- Phone: +92-321-6650670
-- WhatsApp: 923216650670
-- Office: E-11/1, Islamabad
+---
+
+## Brand quick-ref
+
+- Pakistan's highest-rated tourism company — 4.9 ★ · 1,300+ reviews · TripAdvisor Travelers' Choice 2025
+- Phone `+92-321-6650670` · WhatsApp `923216650670` · Office E-11/1, Islamabad
+- Image host: `https://traversepakistan.com/wp-content/uploads/` (`images.unoptimized: true` in [next.config.ts](next.config.ts) due to upstream SSL)

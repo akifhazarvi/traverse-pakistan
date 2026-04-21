@@ -69,6 +69,9 @@
   /* ── Hero fade (adapts to page bg) ── */
   --hero-fade: #FFFFFF;
 
+  /* ── Rating star gold (reserved for star iconography on photography; do NOT use elsewhere) ── */
+  --rating-gold: #FFD56B;
+
   /* ── Seasonal tints (soft + vibrant, used on season cards + narrative accents) ── */
   --season-spring-bg: #FBEBEF;
   --season-spring-fg: #B84A6A;
@@ -161,6 +164,8 @@
   --shadow-xl: rgba(0, 0, 0, 0.25) 0 4px 12px, rgba(0, 0, 0, 0.45) 0 16px 40px;
 
   --hero-fade: #0D1B19;
+
+  --rating-gold: #F2C270;
 
   /* Seasonal tints — dark mode (low-chroma, warm glow on deep bg) */
   --season-spring-bg: rgba(243, 170, 192, 0.10);
