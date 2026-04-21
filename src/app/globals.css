@@ -263,3 +263,18 @@ h1, h2, h3, h4, h5, h6 { letter-spacing: -0.025em; line-height: 1.15; }
 @media (prefers-reduced-motion: reduce) {
   .reveal-rise { animation: none; opacity: 1; transform: none; }
 }
+
+/* ── Hero crossfade (5 slides × 6s each = 30s cycle; 1.5s crossfade overlap) ── */
+@keyframes heroCrossfade {
+  0%, 15%   { opacity: 1; }
+  20%, 95%  { opacity: 0; }
+  100%      { opacity: 1; }
+}
+.hero-slide {
+  animation: heroCrossfade 30s infinite;
+  will-change: opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide { animation: none; opacity: 0; }
+  .hero-slide:first-child { opacity: 1; }
+}
