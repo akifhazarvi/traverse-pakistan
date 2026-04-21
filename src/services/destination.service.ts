@@ -20,8 +20,8 @@ function toDestination(row: DestinationWithRegion): Destination {
     tourCount: 0,
     startingPrice: row.starting_price ?? 0,
     rating: row.rating ?? 0,
-    whyVisitCards: row.why_visit_cards ?? [],
-    seasons: row.seasons ?? [],
+    whyVisitCards: (row.why_visit_cards ?? []) as Destination["whyVisitCards"],
+    seasons: (row.seasons ?? []).map(({ icon: _icon, ...s }) => s) as Destination["seasons"],
     metaTitle: row.meta_title ?? row.name,
     metaDescription: row.meta_description ?? row.description ?? "",
   };

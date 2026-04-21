@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
 import type { Hotel } from "@/types/hotel";
 
 const allDestinations = [
@@ -97,8 +98,8 @@ export function HotelsClient({ hotels }: { hotels: Hotel[] }) {
                     <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
                       {hotel.propertyType} · {hotel.destinationSlug}
                     </span>
-                    <span className="flex items-center gap-1 text-[13px]">
-                      <span className="text-[var(--primary-muted)]">★</span>
+                    <span className="inline-flex items-center gap-1 text-[13px]">
+                      <Icon name="star" size="sm" weight="fill" color="var(--primary-muted)" />
                       <span className="font-semibold text-[var(--text-primary)]">{hotel.rating}</span>
                       <span className="text-[var(--text-tertiary)]">({hotel.reviewCount})</span>
                     </span>

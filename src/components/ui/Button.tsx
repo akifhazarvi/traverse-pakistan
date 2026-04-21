@@ -12,15 +12,15 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-[var(--primary)] text-[var(--text-inverse)] hover:bg-[var(--primary-hover)] active:scale-[0.98]",
+    "bg-[var(--primary)] text-[var(--text-inverse)] shadow-[var(--shadow-xs)] hover:bg-[var(--primary-hover)] hover:shadow-[var(--shadow-md)] hover:-translate-y-[1px] active:translate-y-0 active:scale-[0.98]",
   secondary:
-    "bg-[var(--bg-dark)] text-white hover:bg-[var(--primary-deep)] active:scale-[0.98]",
+    "bg-[var(--bg-dark)] text-white shadow-[var(--shadow-xs)] hover:bg-[var(--primary-deep)] hover:shadow-[var(--shadow-md)] hover:-translate-y-[1px] active:translate-y-0 active:scale-[0.98]",
   outline:
-    "border-2 border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary)] hover:text-[var(--text-inverse)]",
+    "border-2 border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary)] hover:text-[var(--text-inverse)] active:scale-[0.98]",
   ghost:
     "text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] active:bg-[var(--border-default)]",
   white:
-    "bg-[var(--bg-primary)] text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] border border-[var(--border-default)]",
+    "bg-[var(--bg-primary)] text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] border border-[var(--border-default)] hover:-translate-y-[1px] active:translate-y-0 active:scale-[0.98]",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -47,7 +47,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         className={cn(
           "inline-flex items-center justify-center rounded-[var(--radius-sm)] font-medium cursor-pointer select-none",
-          "transition-all duration-[var(--duration-fast)] ease-[cubic-bezier(0.2,0,0,1)]",
+          "transition-[background-color,color,border-color,box-shadow,transform] duration-[var(--duration-fast)] ease-[var(--ease-default)]",
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)]",
           "disabled:opacity-50 disabled:pointer-events-none",
           variantStyles[variant],

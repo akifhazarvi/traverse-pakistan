@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AccordionItem } from "@/components/ui/Accordion";
+import { Icon } from "@/components/ui/Icon";
 import type { PackageItineraryDay, PackageTier } from "@/types/package";
 import type { Hotel } from "@/types/hotel";
 import { formatPrice } from "@/lib/utils";
@@ -84,7 +85,7 @@ export function PackageItineraryAccordion({ days, selectedTier, hotelsMap }: Pac
                       </div>
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center gap-1">
-                          <span className="text-[var(--primary-muted)] text-[11px]">★</span>
+                          <Icon name="star" size="xs" weight="fill" color="var(--primary-muted)" />
                           <span className="text-[12px] font-semibold text-[var(--text-primary)]">{hotel.rating}</span>
                           <span className="text-[11px] text-[var(--text-tertiary)]">({hotel.reviewCount})</span>
                         </div>

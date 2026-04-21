@@ -1,0 +1,182 @@
+import {
+  Mountains,
+  Flower,
+  CastleTurret,
+  SunHorizon,
+  Handshake,
+  Boat,
+  Sun,
+  Leaf,
+  PawPrint,
+  MaskHappy,
+  Confetti,
+  Mosque,
+  Plant,
+  Tent,
+  Car,
+  Sparkle,
+  Wind,
+  TreeEvergreen,
+  Campfire,
+  Drop,
+  Diamond,
+  Horse,
+  Bank,
+  Waves,
+  House,
+  UmbrellaSimple,
+  Fire,
+  Anchor,
+  Fish,
+  Snowflake,
+  Lock,
+  Backpack,
+  Heart,
+  Gear,
+  ListChecks,
+  Calendar,
+  CalendarCheck,
+  Users,
+  GlobeHemisphereWest,
+  Check,
+  CreditCard,
+  ArrowRight,
+  ArrowLeft,
+  CaretDown,
+  CaretUp,
+  CaretLeft,
+  CaretRight,
+  MagnifyingGlass,
+  Compass,
+  Binoculars,
+  Path,
+  MapPin,
+  Star,
+  ShieldCheck,
+  X,
+  ChatCircle,
+  Phone,
+  Envelope,
+  WhatsappLogo,
+  Moon,
+  FacebookLogo,
+  InstagramLogo,
+  YoutubeLogo,
+} from "@phosphor-icons/react/dist/ssr";
+import type { IconProps as PhosphorIconProps, Icon as PhosphorIcon } from "@phosphor-icons/react";
+
+const iconMap = {
+  mountains: Mountains,
+  flower: Flower,
+  castle: CastleTurret,
+  boat: Boat,
+  "sun-horizon": SunHorizon,
+  handshake: Handshake,
+  sun: Sun,
+  leaf: Leaf,
+  "paw-print": PawPrint,
+  "mask-happy": MaskHappy,
+  confetti: Confetti,
+  mosque: Mosque,
+  plant: Plant,
+  tent: Tent,
+  car: Car,
+  sparkle: Sparkle,
+  wind: Wind,
+  "tree-evergreen": TreeEvergreen,
+  campfire: Campfire,
+  drop: Drop,
+  diamond: Diamond,
+  horse: Horse,
+  bank: Bank,
+  waves: Waves,
+  house: House,
+  "umbrella-simple": UmbrellaSimple,
+  fire: Fire,
+  anchor: Anchor,
+  fish: Fish,
+  snowflake: Snowflake,
+  lock: Lock,
+  backpack: Backpack,
+  heart: Heart,
+  gear: Gear,
+  "list-checks": ListChecks,
+  calendar: Calendar,
+  "calendar-check": CalendarCheck,
+  users: Users,
+  globe: GlobeHemisphereWest,
+  check: Check,
+  "credit-card": CreditCard,
+  "arrow-right": ArrowRight,
+  "arrow-left": ArrowLeft,
+  "caret-down": CaretDown,
+  "caret-up": CaretUp,
+  "caret-left": CaretLeft,
+  "caret-right": CaretRight,
+  search: MagnifyingGlass,
+  compass: Compass,
+  binoculars: Binoculars,
+  path: Path,
+  "map-pin": MapPin,
+  star: Star,
+  "shield-check": ShieldCheck,
+  x: X,
+  "chat-circle": ChatCircle,
+  phone: Phone,
+  envelope: Envelope,
+  whatsapp: WhatsappLogo,
+  moon: Moon,
+  facebook: FacebookLogo,
+  instagram: InstagramLogo,
+  youtube: YoutubeLogo,
+} satisfies Record<string, PhosphorIcon>;
+
+export type IconName = keyof typeof iconMap;
+
+const sizeMap = {
+  xs: 12,
+  sm: 14,
+  md: 16,
+  lg: 20,
+  xl: 24,
+  "2xl": 28,
+  "3xl": 32,
+} as const;
+
+export type IconSize = keyof typeof sizeMap;
+
+type IconWeight = NonNullable<PhosphorIconProps["weight"]>;
+
+export interface IconProps {
+  name: IconName;
+  size?: IconSize | number;
+  weight?: IconWeight;
+  color?: string;
+  className?: string;
+  "aria-label"?: string;
+  "aria-hidden"?: boolean;
+}
+
+export function Icon({
+  name,
+  size = "md",
+  weight = "regular",
+  color = "currentColor",
+  className,
+  "aria-label": ariaLabel,
+  "aria-hidden": ariaHidden = true,
+}: IconProps) {
+  const Component = iconMap[name];
+  const pixelSize = typeof size === "number" ? size : sizeMap[size];
+
+  return (
+    <Component
+      size={pixelSize}
+      weight={weight}
+      color={color}
+      className={className}
+      aria-label={ariaLabel}
+      aria-hidden={ariaHidden && !ariaLabel}
+    />
+  );
+}

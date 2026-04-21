@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Carousel } from "@/components/ui/Carousel";
+import { Icon } from "@/components/ui/Icon";
 import { formatPrice } from "@/lib/utils";
 import { getFeaturedHotels } from "@/services/hotel.service";
 
@@ -46,8 +47,8 @@ export async function FeaturedHotels() {
                   <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--text-tertiary)]">
                     {hotel.propertyType}
                   </span>
-                  <span className="flex items-center gap-1 text-[13px]">
-                    <span className="text-[var(--primary-muted)]">★</span>
+                  <span className="inline-flex items-center gap-1 text-[13px]">
+                    <Icon name="star" size="sm" weight="fill" color="var(--primary-muted)" />
                     <span className="font-semibold text-[var(--text-primary)]">{hotel.rating}</span>
                     <span className="text-[var(--text-tertiary)]">({hotel.reviewCount})</span>
                   </span>

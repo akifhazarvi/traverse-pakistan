@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn, formatPrice } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
+import { Icon } from "@/components/ui/Icon";
 import type { Package } from "@/types/package";
 
 interface PackageCardProps {
@@ -77,7 +78,7 @@ export function PackageCard({ pkg, variant = "carousel", className }: PackageCar
             Package
           </span>
           <div className="flex items-center gap-1">
-            <span className="text-[var(--primary-muted)] text-[13px]">★</span>
+            <Icon name="star" size="sm" weight="fill" color="var(--primary-muted)" />
             <span className="text-[13px] font-semibold text-[var(--text-primary)]">{pkg.rating}</span>
             <span className="text-[11px] text-[var(--text-tertiary)]">({pkg.reviewCount})</span>
           </div>

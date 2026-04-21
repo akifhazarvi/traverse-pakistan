@@ -7,6 +7,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { getMyBookings } from "@/services/booking.service";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
 import type { Booking } from "@/types/booking";
 
 type LoadState = "loading" | "empty" | "unconfigured" | "loaded" | "error" | "signed-out";
@@ -51,31 +52,31 @@ export function TripsList() {
 
   if (state === "signed-out") {
     return (
-      <div className="text-center py-16 max-w-md mx-auto">
-        <span className="text-5xl">🔐</span>
-        <h2 className="text-2xl font-bold text-[var(--text-primary)] mt-4">Sign in to view your trips</h2>
-        <p className="text-[var(--text-tertiary)] mt-2">
-          Sign in with email or Google to see bookings and manage trips.
-        </p>
-        <Link href="/auth/sign-in?redirect=/account/trips" className="inline-block mt-6">
-          <Button size="lg">Sign in</Button>
-        </Link>
-      </div>
+      <EmptyState
+        icon="lock"
+        title="Sign in to view your trips"
+        description="Sign in with email or Google to see bookings and manage trips."
+        action={
+          <Link href="/auth/sign-in?redirect=/account/trips">
+            <Button size="lg">Sign in</Button>
+          </Link>
+        }
+      />
     );
   }
 
   if (state === "unconfigured" || state === "empty") {
     return (
-      <div className="text-center py-16 max-w-md mx-auto">
-        <span className="text-5xl">🎒</span>
-        <h2 className="text-2xl font-bold text-[var(--text-primary)] mt-4">No trips yet</h2>
-        <p className="text-[var(--text-tertiary)] mt-2">
-          Once you book a tour, your trips will show up here.
-        </p>
-        <Link href="/grouptours" className="inline-block mt-6">
-          <Button size="lg">Browse Tours</Button>
-        </Link>
-      </div>
+      <EmptyState
+        icon="backpack"
+        title="No trips yet"
+        description="Once you book a tour, your trips will show up here."
+        action={
+          <Link href="/grouptours">
+            <Button size="lg">Browse Tours</Button>
+          </Link>
+        }
+      />
     );
   }
 

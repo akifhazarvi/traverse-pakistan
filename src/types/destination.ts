@@ -1,12 +1,13 @@
+import type { IconName } from "@/components/ui/Icon";
+
 export interface WhyVisitCard {
-  icon: string;
+  icon: IconName;
   title: string;
   description: string;
 }
 
 export interface SeasonInfo {
   season: "spring" | "summer" | "autumn" | "winter";
-  icon: string;
   months: string;
   badge: string;
   badgeColor: "green" | "yellow" | "red" | "blue";
@@ -21,6 +22,7 @@ export interface Destination {
   heroImage: string;
   subtitle: string;
   description: string;
+  opening?: string;
   elevation?: string;
   tourCount: number;
   startingPrice: number;

@@ -1,7 +1,6 @@
-"use client";
-
+import Image from "next/image";
 import { SearchWidget } from "./SearchWidget";
-import { useState, useEffect } from "react";
+import { Icon } from "@/components/ui/Icon";
 
 const heroImages = [
   {
@@ -27,30 +26,26 @@ const heroImages = [
 ];
 
 export function HeroSection() {
-  const [current, setCurrent] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % heroImages.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, []);
-
   return (
     <section className="relative">
-      {/* Rotating background images with crossfade */}
       <div className="absolute inset-0 overflow-hidden">
         {heroImages.map((img, i) => (
           <div
             key={img.url}
-            className="absolute inset-0 bg-cover bg-center transition-opacity duration-[1500ms] ease-in-out"
-            style={{
-              backgroundImage: `url(${img.url})`,
-              opacity: i === current ? 1 : 0,
-              transform: i === current ? "scale(1.05)" : "scale(1.1)",
-              transition: "opacity 1.5s ease-in-out, transform 8s ease-out",
-            }}
-          />
+            className="hero-slide absolute inset-0"
+            style={{ animationDelay: `${-i * 6}s` }}
+          >
+            <Image
+              src={img.url}
+              alt={img.alt}
+              fill
+              priority={i === 0}
+              fetchPriority={i === 0 ? "high" : "low"}
+              sizes="100vw"
+              quality={70}
+              className="object-cover"
+            />
+          </div>
         ))}
         {/* Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-[rgba(15,34,32,0.5)] via-[rgba(0,0,0,0.15)] to-[rgba(15,34,32,0.6)]" />
@@ -81,24 +76,17 @@ export function HeroSection() {
           style={{ textShadow: "0 1px 6px rgba(0,0,0,0.35)" }}
         >
           <span className="inline-flex items-center gap-1.5">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#FFD56B" stroke="none" aria-hidden="true">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-            </svg>
+            <Icon name="star" size="sm" weight="fill" color="#FFD56B" />
             <span><span className="font-bold tabular-nums">4.9</span> · 1,300+ travelers</span>
           </span>
           <span className="hidden sm:inline text-[var(--on-dark-tertiary)]">·</span>
           <span className="inline-flex items-center gap-1.5">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M9 12l2 2 4-4" />
-              <path d="M21 12c0 5.25-4.5 9-9 9s-9-3.75-9-9 4.5-9 9-9 9 3.75 9 9z" />
-            </svg>
+            <Icon name="shield-check" size="sm" weight="regular" />
             TripAdvisor Travelers&apos; Choice 2025
           </span>
           <span className="hidden sm:inline text-[var(--on-dark-tertiary)]">·</span>
           <span className="inline-flex items-center gap-1.5">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M12 2 4 6v6c0 5 3.4 9.3 8 10 4.6-.7 8-5 8-10V6l-8-4z" />
-            </svg>
+            <Icon name="shield-check" size="sm" weight="regular" />
             Verified guides
           </span>
         </div>
@@ -108,8 +96,6 @@ export function HeroSection() {
           <SearchWidget />
         </div>
       </div>
-
-
 
       {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[var(--hero-fade)] to-transparent z-[5]" />
