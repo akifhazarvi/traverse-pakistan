@@ -13,6 +13,7 @@ import type {
   BookingSummary,
   CreateBookingInput,
   Departure,
+  DepartureCity,
 } from "@/types/booking";
 
 function toDeparture(row: DepartureRow): Departure {
@@ -32,22 +33,25 @@ function toDeparture(row: DepartureRow): Departure {
 }
 
 export async function getNextOpenDeparture(
-  tourSlug: string
+  tourSlug: string,
+  city?: DepartureCity
 ): Promise<Departure | null> {
   if (!isSupabaseConfigured) return null;
   const supabase = getSupabaseBrowser();
   const today = new Date().toISOString().slice(0, 10);
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("departures")
     .select("*")
     .eq("tour_slug", tourSlug)
     .eq("status", "open")
     .gte("departure_date", today)
     .order("departure_date", { ascending: true })
-    .limit(1)
-    .maybeSingle();
+    .limit(1);
 
+  if (city) query = query.eq("departure_city", city);
+
+  const { data, error } = await query.maybeSingle();
   if (error) throw new Error(error.message);
   return data ? toDeparture(data) : null;
 }
