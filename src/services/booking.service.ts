@@ -45,13 +45,14 @@ export async function getNextOpenDeparture(
     .select("*")
     .eq("tour_slug", tourSlug)
     .eq("status", "open")
-    .gte("departure_date", today)
-    .order("departure_date", { ascending: true })
-    .limit(1);
+    .gte("departure_date", today);
 
   if (city) query = query.eq("departure_city", city);
 
-  const { data, error } = await query.maybeSingle();
+  const { data, error } = await query
+    .order("departure_date", { ascending: true })
+    .limit(1)
+    .maybeSingle();
   if (error) throw new Error(error.message);
   return data ? toDeparture(data) : null;
 }
