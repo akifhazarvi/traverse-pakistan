@@ -1,28 +1,27 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 export default function NotFound() {
   return (
-    <div className="py-24 sm:py-32">
+    <div className="py-20 sm:py-28">
       <Container>
-        <div className="text-center max-w-md mx-auto">
-          <span className="text-6xl">🏔️</span>
-          <h1 className="text-[32px] font-bold text-[var(--text-primary)] mt-6">
-            Page Not Found
-          </h1>
-          <p className="text-lg text-[var(--text-tertiary)] mt-3">
-            Looks like this trail doesn&apos;t exist. Let&apos;s get you back on track.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
-            <Link href="/">
-              <Button size="lg">Back to Home</Button>
-            </Link>
-            <Link href="/grouptours">
-              <Button variant="outline" size="lg">Browse Tours</Button>
-            </Link>
-          </div>
-        </div>
+        <EmptyState
+          icon="compass"
+          title="This trail doesn't exist"
+          description="The page you're looking for may have moved, or the link might be outdated. Let's get you back on the map."
+          action={
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link href="/">
+                <Button size="lg">Back to Home</Button>
+              </Link>
+              <Link href="/grouptours">
+                <Button variant="outline" size="lg">Browse Tours</Button>
+              </Link>
+            </div>
+          }
+        />
       </Container>
     </div>
   );

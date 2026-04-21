@@ -19,6 +19,16 @@ const AuthContext = createContext<AuthContextValue>({
   signOut: async () => {},
 });
 
+// Supabase stores the session in cookies prefixed with `sb-`. If the visitor
+// has no such cookie, they're guaranteed to be anonymous — we can skip the
+// network `getSession()` entirely instead of waiting on it.
+function hasSupabaseAuthCookie(): boolean {
+  if (typeof document === "undefined") return false;
+  return document.cookie
+    .split(";")
+    .some((c) => c.trim().startsWith("sb-"));
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
@@ -28,6 +38,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
       return;
     }
+
+    // Anonymous visitor fast path — no cookie, no session, no network call.
+    if (!hasSupabaseAuthCookie()) {
+      setLoading(false);
+      return;
+    }
+
     const supabase = getSupabaseBrowser();
 
     supabase.auth.getSession().then(({ data }) => {

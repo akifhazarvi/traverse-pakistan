@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn, formatPrice } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
+import { Icon } from "@/components/ui/Icon";
 import type { Package } from "@/types/package";
 
 interface PackageCardProps {
@@ -43,16 +44,16 @@ export function PackageCard({ pkg, variant = "carousel", className }: PackageCar
         )}
 
         <div className="absolute top-3.5 right-3.5 flex gap-1.5">
-          <span className="px-2 py-1 bg-black/40 backdrop-blur-md text-white text-[10px] font-bold rounded-full border border-white/20 uppercase tracking-wide">
+          <span className="px-2 py-1 bg-black/40 backdrop-blur-md text-[var(--on-dark)] text-[10px] font-bold rounded-full border border-[var(--on-dark-border)] uppercase tracking-wide">
             Deluxe
           </span>
-          <span className="px-2 py-1 bg-[var(--primary)]/80 backdrop-blur-md text-white text-[10px] font-bold rounded-full uppercase tracking-wide">
+          <span className="px-2 py-1 bg-[var(--primary)]/80 backdrop-blur-md text-[var(--on-dark)] text-[10px] font-bold rounded-full uppercase tracking-wide">
             Luxury
           </span>
         </div>
 
         <div className="absolute bottom-3.5 left-3.5">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-black/40 backdrop-blur-md text-white text-[11px] font-semibold rounded-full tracking-[0.04em] uppercase border border-[var(--on-dark-border)]">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-black/40 backdrop-blur-md text-[var(--on-dark)] text-[11px] font-semibold rounded-full tracking-[0.04em] uppercase border border-[var(--on-dark-border)]">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" />
             </svg>
@@ -61,7 +62,7 @@ export function PackageCard({ pkg, variant = "carousel", className }: PackageCar
         </div>
 
         <div className="absolute bottom-3.5 right-3.5">
-          <span className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-black/40 backdrop-blur-md text-[#A5D6A7] text-[10px] font-bold rounded-full border border-[#A5D6A7]/30 uppercase tracking-wide">
+          <span className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-black/40 backdrop-blur-md text-[var(--primary-muted)] text-[10px] font-bold rounded-full border border-[var(--primary-muted)]/30 uppercase tracking-wide">
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
             </svg>
@@ -77,7 +78,7 @@ export function PackageCard({ pkg, variant = "carousel", className }: PackageCar
             Package
           </span>
           <div className="flex items-center gap-1">
-            <span className="text-[var(--primary-muted)] text-[13px]">★</span>
+            <Icon name="star" size="sm" weight="fill" color="var(--primary-muted)" />
             <span className="text-[13px] font-semibold text-[var(--text-primary)]">{pkg.rating}</span>
             <span className="text-[11px] text-[var(--text-tertiary)]">({pkg.reviewCount})</span>
           </div>

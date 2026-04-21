@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { Chip } from "@/components/ui/Chip";
+import { Icon } from "@/components/ui/Icon";
 import { StarRating } from "@/components/ui/StarRating";
 import { MosaicGallery } from "@/components/trip-detail/MosaicGallery";
 import { PackageBookingSidebar } from "@/components/packages/PackageBookingSidebar";
@@ -51,15 +52,15 @@ export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages
                 <StarRating rating={pkg.rating} reviewCount={pkg.reviewCount} size="md" />
               </div>
               <div className="flex flex-wrap gap-2 mt-4">
-                <Chip icon={<span>📅</span>}>{pkg.duration} days</Chip>
-                <Chip icon={<span>👥</span>}>Up to {pkg.maxGroupSize} people</Chip>
-                <Chip icon={<span>🌐</span>}>{pkg.languages.join(", ")}</Chip>
-                <Chip icon={<span>🗓️</span>}>Custom dates</Chip>
+                <Chip icon={<Icon name="calendar" size="sm" />}>{pkg.duration} days</Chip>
+                <Chip icon={<Icon name="users" size="sm" />}>Up to {pkg.maxGroupSize} people</Chip>
+                <Chip icon={<Icon name="globe" size="sm" />}>{pkg.languages.join(", ")}</Chip>
+                <Chip icon={<Icon name="calendar-check" size="sm" />}>Custom dates</Chip>
                 {pkg.freeCancellation && (
-                  <Chip variant="success" icon={<span>✓</span>}>Free cancellation</Chip>
+                  <Chip variant="success" icon={<Icon name="check" size="sm" weight="bold" />}>Free cancellation</Chip>
                 )}
                 {pkg.reserveNowPayLater && (
-                  <Chip variant="info" icon={<span>💳</span>}>Reserve now, pay later</Chip>
+                  <Chip variant="info" icon={<Icon name="credit-card" size="sm" />}>Reserve now, pay later</Chip>
                 )}
               </div>
             </div>

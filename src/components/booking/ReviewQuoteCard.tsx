@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Icon } from "@/components/ui/Icon";
 import type { Review } from "@/types/review";
 
 interface ReviewQuoteCardProps {
@@ -39,11 +40,13 @@ export function ReviewQuoteCard({ reviews, compact }: ReviewQuoteCardProps) {
         </span>
         <div className="flex-1 min-w-0">
           <p className="text-[12px] font-semibold text-[var(--text-primary)] truncate">{review.name}</p>
-          <p className="text-[10px] text-[var(--text-tertiary)]">
-            <span className="text-[var(--primary-muted)]">
-              {"★".repeat(review.rating)}
-            </span>{" "}
-            · {review.travelerType}
+          <p className="text-[10px] text-[var(--text-tertiary)] inline-flex items-center gap-1">
+            <span className="inline-flex gap-0.5" aria-label={`${review.rating} out of 5`}>
+              {Array.from({ length: review.rating }, (_, i) => (
+                <Icon key={i} name="star" size="xs" weight="fill" color="var(--primary-muted)" />
+              ))}
+            </span>
+            <span>· {review.travelerType}</span>
           </p>
         </div>
         {reviews.length > 1 && (

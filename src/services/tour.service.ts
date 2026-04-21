@@ -1,62 +1,62 @@
+import { cache } from "react";
 import { tours } from "@/data/tours";
 import { itineraries } from "@/data/itineraries";
 import type { Tour, TourCategory } from "@/types/tour";
 import type { TourItinerary } from "@/types/itinerary";
 
-export async function getAllTours(): Promise<Tour[]> {
+export const getAllTours = cache(async (): Promise<Tour[]> => {
   return tours;
-}
+});
 
-export async function getTourBySlug(slug: string): Promise<Tour | null> {
+export const getTourBySlug = cache(async (slug: string): Promise<Tour | null> => {
   return tours.find((t) => t.slug === slug) ?? null;
-}
+});
 
-export async function getToursByDestination(
-  destinationSlug: string
-): Promise<Tour[]> {
-  return tours.filter((t) => t.destinationSlug === destinationSlug);
-}
+export const getToursByDestination = cache(
+  async (destinationSlug: string): Promise<Tour[]> => {
+    return tours.filter((t) => t.destinationSlug === destinationSlug);
+  }
+);
 
-export async function getToursByRegion(regionSlug: string): Promise<Tour[]> {
+export const getToursByRegion = cache(async (regionSlug: string): Promise<Tour[]> => {
   return tours.filter((t) => t.regionSlug === regionSlug);
-}
+});
 
-export async function getToursByCategory(
-  category: TourCategory
-): Promise<Tour[]> {
-  return tours.filter((t) => t.category === category);
-}
+export const getToursByCategory = cache(
+  async (category: TourCategory): Promise<Tour[]> => {
+    return tours.filter((t) => t.category === category);
+  }
+);
 
-export async function getToursByStyle(styleSlug: string): Promise<Tour[]> {
+export const getToursByStyle = cache(async (styleSlug: string): Promise<Tour[]> => {
   return tours.filter((t) => t.travelStyleSlugs.includes(styleSlug));
-}
+});
 
-export async function getFeaturedTours(limit?: number): Promise<Tour[]> {
+export const getFeaturedTours = cache(async (limit?: number): Promise<Tour[]> => {
   const featured = tours.filter((t) => t.badge !== null);
   return limit ? featured.slice(0, limit) : featured;
-}
+});
 
-export async function getSimilarTours(
-  tourSlug: string,
-  limit: number = 4
-): Promise<Tour[]> {
-  const tour = tours.find((t) => t.slug === tourSlug);
-  if (!tour) return [];
-  return tours
-    .filter(
-      (t) =>
-        t.slug !== tourSlug && t.destinationSlug === tour.destinationSlug
-    )
-    .slice(0, limit);
-}
+export const getSimilarTours = cache(
+  async (tourSlug: string, limit: number = 4): Promise<Tour[]> => {
+    const tour = tours.find((t) => t.slug === tourSlug);
+    if (!tour) return [];
+    return tours
+      .filter(
+        (t) =>
+          t.slug !== tourSlug && t.destinationSlug === tour.destinationSlug
+      )
+      .slice(0, limit);
+  }
+);
 
-export async function getItineraryByTourSlug(
-  tourSlug: string
-): Promise<TourItinerary | null> {
-  return itineraries.find((i) => i.tourSlug === tourSlug) ?? null;
-}
+export const getItineraryByTourSlug = cache(
+  async (tourSlug: string): Promise<TourItinerary | null> => {
+    return itineraries.find((i) => i.tourSlug === tourSlug) ?? null;
+  }
+);
 
-export async function searchTours(query: string): Promise<Tour[]> {
+export const searchTours = cache(async (query: string): Promise<Tour[]> => {
   const q = query.toLowerCase();
   return tours.filter(
     (t) =>
@@ -65,4 +65,4 @@ export async function searchTours(query: string): Promise<Tour[]> {
       t.destinationSlug.includes(q) ||
       t.route.toLowerCase().includes(q)
   );
-}
+});

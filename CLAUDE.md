@@ -1,122 +1,90 @@
 # Traverse Pakistan — AI Agent Instructions
 
-## What This Is
-Tourism booking platform for traversepakistan.com. Next.js 15 App Router + TypeScript + Tailwind CSS v4. Phase 2 (Supabase backend) is partially complete — destinations and regions are live on Supabase; tours, hotels, blog, reviews still use local TS data.
+Tourism booking platform for traversepakistan.com.
+**Stack:** Next.js 15 App Router · TypeScript strict · Tailwind v4 · Plus Jakarta Sans · Supabase (Phase 2) · Vercel.
 
-## Stack
-- Next.js 15 (App Router, `src/` dir)
-- TypeScript strict
-- Tailwind CSS v4 (via `@theme inline` in globals.css)
-- Plus Jakarta Sans (single font, weights 400-800)
-- Supabase (PostgreSQL) — partial backend
-- Deployed on Vercel
+---
 
-## Architecture
+## Non-negotiable rules
 
-### Data Flow
-```
-Supabase DB → src/services/*.service.ts (async) → components   ← destinations, regions
-src/data/*.ts → src/services/*.service.ts (async) → components  ← tours, hotels, blog, reviews
-```
-All service functions are `async`. Supabase uses `getSupabaseAnon()` (cookie-free client) for SSG compatibility.
+1. **No emojis** anywhere — data files, chips, empty states, headings. Use `<Icon>`.
+2. **No hex colors** — always `var(--token)`. See [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md).
+3. **No inline `<svg>`** — icons go through [`<Icon>`](src/components/ui/Icon.tsx).
+4. **No `bg-white` / `text-white`** on theme surfaces — use `--bg-primary` / `--on-dark`. Exception: overlays `bg-black/NN` on photographs.
+5. **Only 4 radius values:** 8 / 12 / 16 / 9999px via `--radius-{sm,md,lg,full}`.
+6. **Motion tokens** — `--duration-fast/normal/slow`, `--ease-default` (Airbnb curve). No `duration-300`.
+7. **Services are async** — components import from `src/services/*.service.ts`, never from `src/data/*` directly.
 
-### Key Directories
-```
-src/app/          → Pages (App Router)
-src/components/   → UI: layout/, home/, tours/, trip-detail/, destination/, blog/, reviews/, ui/
-src/data/         → 22 tours, 9 hotels, 8 reviews, 6 blog posts (local TS — not yet migrated)
-src/services/     → Data access layer (tour, destination, region, review, blog, hotel)
-src/lib/supabase/ → server.ts (getSupabaseAnon), client.ts, types.ts
-src/types/        → TypeScript interfaces
-src/lib/          → utils.ts (cn, formatPrice, slugify, getWhatsAppUrl), constants.ts
-src/styles/       → fonts.ts (Plus Jakarta Sans only)
-```
+---
 
-### Supabase Tables (live)
-- `destinations` — 201 rows. Columns: slug, name, subtitle, description, hero_image, region_id (FK), parent_id (self-FK for hierarchy), elevation, rating, starting_price, why_visit_cards, seasons, meta_title, meta_description
-- `regions` — 7 rows. Columns: slug, name, description, image_url
-- `destination_faqs` — linked via destination_id FK
+## File map — where things live
 
-### Destination Hierarchy
-- `parent_id` is a self-referencing FK on `destinations` for parent-child geography (e.g. Hunza → Attabad Lake)
-- Top-level destinations have `parent_id = NULL`
-- 3-level nesting supported: region → valley → sub-spot
-- `region_id` handles region membership separately from `parent_id`
+### Routes & pages
+- [src/app/](src/app/) — App Router pages
+- Destination detail: [src/app/destinations/[slug]/page.tsx](src/app/destinations/[slug]/page.tsx)
+- Tour detail: [src/app/grouptours/[slug]/page.tsx](src/app/grouptours/[slug]/page.tsx)
+- Package detail: [src/app/packages/[slug]/](src/app/packages/[slug]/)
+- Hotel detail: [src/app/hotels/[slug]/page.tsx](src/app/hotels/[slug]/page.tsx)
 
-### Routes (351 pages)
-```
-/                          → Homepage (9 sections)
-/tours                     → Listing with filters
-/tours/[slug]              → Trip detail (gallery, itinerary, booking sidebar)
-/destinations              → Grid
-/destinations/[slug]       → Detail (tours, why-visit, seasons, FAQs)
-/regions/[slug]            → Region with destinations + tours
-/travel-styles             → Grid
-/travel-styles/[slug]      → Filtered tours
-/blog, /blog/[slug]        → Blog
-/about, /contact           → Static
-/booking/[tourSlug]        → Booking (Phase 2 shell)
-/account/*                 → Account shells (Phase 2)
-/admin/*                   → Admin (bookings, departures, quote requests, reviews)
-/grouptours/[slug]         → Group tour detail + checkout
-/hotels/[slug]             → Hotel detail + checkout
-/packages/[slug]           → Package detail
-```
+### UI primitives → [src/components/ui/](src/components/ui/)
+`Icon`, `Button`, `Chip`, `Badge`, `StarRating`, `SectionHeader`, `EyebrowLabel`, `EmptyState`, `Reveal`, `Container`, `Carousel`, `Accordion`, `FilterTag`, `PriceDisplay`, `WishlistButton`.
 
-## Design System (see DESIGN_SYSTEM.md for full spec)
+### Domain components
+- [src/components/destination/](src/components/destination/) — `DestinationStory`, `MomentCard`, `SeasonCard`
+- [src/components/home/](src/components/home/) — homepage sections (`HeroSection`, `WhyUsSection`, `StatsBar`, `DestinationsScroll`, `FeaturedHotels`, `VideoStories`, `ReviewsCarousel`)
+- [src/components/tours/](src/components/tours/) — `TourCard`, booking success
+- [src/components/packages/](src/components/packages/) — package card, detail, itinerary, booking sidebar
+- [src/components/hotels/](src/components/hotels/) — hotel listing, detail, sidebar, checkout
+- [src/components/trip-detail/](src/components/trip-detail/) — `MosaicGallery`, `BookingSidebar`, `ItineraryAccordion`
+- [src/components/booking/](src/components/booking/) — wizard, trust strip, urgency, FAQ, review quote, mobile reserve bar
+- [src/components/layout/](src/components/layout/) — `Navbar`, `Footer`, `Breadcrumb`, `ThemeToggle`, `WhatsAppFAB`, `AwardStrip`, `NavSearchBar`
+- [src/components/auth/](src/components/auth/) · [src/components/admin/](src/components/admin/) · [src/components/account/](src/components/account/) · [src/components/seo/](src/components/seo/) · [src/components/quote/](src/components/quote/)
 
-### Colors — use CSS variables, NEVER hardcode hex
-```
---primary / --primary-hover / --primary-light / --primary-muted / --primary-deep
---text-primary / --text-secondary / --text-tertiary / --text-inverse
---bg-primary / --bg-subtle / --bg-elevated / --bg-dark / --bg-darker
---border-default / --border-strong
---success / --warning / --error / --info / --whatsapp
-```
+### Data / services / types
+- [src/data/](src/data/) — TS data (destinations, tours, regions, hotels, reviews, blog, travel-styles, faqs, packages, itinerary)
+- [src/services/](src/services/) — `*.service.ts`, async. Phase 2: swap body to Supabase, components stay
+- [src/types/](src/types/) — TS interfaces. `WhyVisitCard.icon` is typed as `IconName` (from `Icon.tsx`)
+- [src/lib/](src/lib/) — `utils.ts` (cn, formatPrice, slugify, getWhatsAppUrl), `constants.ts`, `supabase/`, `seo/`
+- [src/styles/fonts.ts](src/styles/fonts.ts) — Plus Jakarta Sans
 
-### Dark Mode
-- Theme toggle in navbar, persisted to localStorage
-- `[data-theme="dark"]` on `<html>` flips all CSS variables
-- Flash prevention inline `<script>` in `<head>` (Server Component — React 19 warns once, benign)
-- **On-dark sections** (tours, destinations, reviews, video, footer) use:
-  ```
-  --on-dark / --on-dark-secondary / --on-dark-tertiary
-  --on-dark-glass / --on-dark-glass-hover / --on-dark-border
-  ```
+---
 
-### Rules
-1. **No hardcoded colors** — always `var(--token)` or `text-[var(--token)]`
-2. **No `bg-white`** — use `bg-[var(--bg-primary)]` or `bg-[var(--bg-elevated)]`
-3. **No `text-white` on dark sections** — use `text-[var(--on-dark)]`
-4. **SVG strokes** — use `stroke="var(--primary)"`, never hex
-5. **Radius: only 4 values** — 8px, 12px, 16px, 9999px
-6. **Shadows: multi-layer** — use `var(--shadow-sm/md/lg/xl)`
-7. **Motion: Airbnb curve** — `cubic-bezier(0.2, 0, 0, 1)`, 150/250/400ms
+## Common tasks → file to open
 
-## Images
-- All hero images served from `traversepakistan.com/wp-content/uploads/`
-- `images.unoptimized: true` in next.config.ts (WordPress SSL cert issue)
-- Use `next/image` with `sizes` prop
-- Do NOT use Google Drive, Supabase Storage, or other hosts for hero images — keep everything on the WordPress CDN
+| Task | Open |
+|------|------|
+| Add a new icon | [Icon.tsx](src/components/ui/Icon.tsx) — import + add to `iconMap` |
+| Add a new destination | [src/data/destinations.ts](src/data/destinations.ts) — use `IconName` tokens, include `opening` |
+| Change brand color | [src/app/globals.css](src/app/globals.css) — update the token, both light + dark blocks |
+| Add a section header with eyebrow | Use `<SectionHeader eyebrow="..." title="..." />` |
+| Empty state | Use `<EmptyState icon="..." title="..." description="..." action={...} />` |
+| Add a seasonal tint | Already derived in [SeasonCard.tsx](src/components/destination/SeasonCard.tsx) from `season` name — don't add per-destination |
+| Scroll-reveal wrap | `<Reveal delayMs={60}>…</Reveal>` (respects `prefers-reduced-motion`) |
 
-## Tours Data Model
-Each tour has `pricing: { islamabad, lahore, singleSupplement }` (dual city pricing).
+---
 
-## Branches
-- `main` — production
-- `backend-testing` — Supabase migration work
-- `tweaks` — frontend UI changes
+## Authoring checklist before committing UI
+
+- No emojis in diff (`rg '[\u{1F300}-\u{1F9FF}]'`)
+- No hex in diff (`rg '#[0-9A-Fa-f]{3,6}\b'`)
+- No new inline `<svg>` (`rg '<svg' src/`)
+- Toggled `data-theme="dark"` and verified
+- `npm run build` passes
+
+---
 
 ## Commands
+
 ```bash
-npm run dev     # Dev server on :3000
-npm run build   # Production build (351 pages)
-npm run lint    # ESLint
+npm run dev    # Dev server (Turbopack) on :3000
+npm run build  # Production build, static-generates ~80 pages
+npm run lint   # ESLint
 ```
 
-## Brand
-- Traverse Pakistan — Pakistan's highest-rated tourism company
-- 4.9★ across 1,300+ reviews, TripAdvisor Travelers' Choice 2025
-- Phone: +92-321-6650670
-- WhatsApp: 923216650670
-- Office: E-11/1, Islamabad
+---
+
+## Brand quick-ref
+
+- Pakistan's highest-rated tourism company — 4.9 ★ · 1,300+ reviews · TripAdvisor Travelers' Choice 2025
+- Phone `+92-321-6650670` · WhatsApp `923216650670` · Office E-11/1, Islamabad
+- Image host: `https://traversepakistan.com/wp-content/uploads/` (`images.unoptimized: true` in [next.config.ts](next.config.ts) due to upstream SSL)

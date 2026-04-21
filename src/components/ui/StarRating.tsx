@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Icon, type IconSize } from "@/components/ui/Icon";
 
 interface StarRatingProps {
   rating: number;
@@ -9,10 +10,16 @@ interface StarRatingProps {
   className?: string;
 }
 
-const sizeStyles = {
-  sm: { star: "text-sm", text: "text-xs" },
-  md: { star: "text-base", text: "text-sm" },
-  lg: { star: "text-lg", text: "text-base" },
+const iconSize: Record<NonNullable<StarRatingProps["size"]>, IconSize> = {
+  sm: "sm",
+  md: "md",
+  lg: "lg",
+};
+
+const textSize: Record<NonNullable<StarRatingProps["size"]>, string> = {
+  sm: "text-xs",
+  md: "text-sm",
+  lg: "text-base",
 };
 
 export function StarRating({
@@ -23,35 +30,34 @@ export function StarRating({
   light,
   className,
 }: StarRatingProps) {
-  const styles = sizeStyles[size];
   const fullStars = Math.floor(rating);
   const hasHalf = rating - fullStars >= 0.5;
 
+  const filledColor = "var(--primary-muted)";
+  const emptyColor = light ? "var(--on-dark-tertiary)" : "var(--border-default)";
+
   return (
     <div className={cn("inline-flex items-center gap-1.5", className)}>
-      <div className={cn("flex gap-0.5", styles.star)}>
-        {Array.from({ length: 5 }, (_, i) => (
-          <span
-            key={i}
-            className={cn(
-              i < fullStars
-                ? "text-[var(--primary-muted)]"
-                : i === fullStars && hasHalf
-                  ? "text-[var(--primary-muted)] opacity-60"
-                  : light
-                    ? "text-[var(--on-dark-tertiary)]"
-                    : "text-[var(--border-default)]"
-            )}
-          >
-            ★
-          </span>
-        ))}
+      <div className="inline-flex gap-0.5" aria-label={`${rating} out of 5`}>
+        {Array.from({ length: 5 }, (_, i) => {
+          const isFull = i < fullStars;
+          const isHalf = !isFull && i === fullStars && hasHalf;
+          return (
+            <Icon
+              key={i}
+              name="star"
+              size={iconSize[size]}
+              weight={isFull ? "fill" : isHalf ? "duotone" : "regular"}
+              color={isFull || isHalf ? filledColor : emptyColor}
+            />
+          );
+        })}
       </div>
       {showValue && (
         <span
           className={cn(
-            styles.text,
-            "font-semibold",
+            textSize[size],
+            "font-semibold tabular-nums",
             light ? "text-[var(--on-dark)]" : "text-[var(--text-primary)]"
           )}
         >
@@ -61,7 +67,7 @@ export function StarRating({
       {reviewCount !== undefined && (
         <span
           className={cn(
-            styles.text,
+            textSize[size],
             light ? "text-[var(--on-dark-secondary)]" : "text-[var(--text-tertiary)]"
           )}
         >

@@ -1,6 +1,7 @@
 import { Container } from "@/components/ui/Container";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Carousel } from "@/components/ui/Carousel";
+import { Icon } from "@/components/ui/Icon";
 import { reviews } from "@/data/reviews";
 
 export function ReviewsCarousel() {
@@ -23,18 +24,15 @@ export function ReviewsCarousel() {
               className="group min-w-[330px] w-[330px] sm:min-w-[370px] sm:w-[370px] bg-[var(--on-dark-glass)] backdrop-blur-sm border border-[var(--on-dark-border)] rounded-[var(--radius-md)] p-6 flex flex-col hover:bg-[var(--on-dark-glass-hover)] hover:border-[var(--on-dark-border)] transition-all duration-300"
             >
               {/* Stars */}
-              <div className="flex gap-0.5 mb-4">
+              <div className="flex gap-0.5 mb-4" aria-label={`${review.rating} out of 5`}>
                 {Array.from({ length: 5 }, (_, i) => (
-                  <span
+                  <Icon
                     key={i}
-                    className={
-                      i < review.rating
-                        ? "text-[var(--primary-muted)] text-[15px]"
-                        : "text-[var(--on-dark-tertiary)] text-[15px]"
-                    }
-                  >
-                    ★
-                  </span>
+                    name="star"
+                    size="md"
+                    weight={i < review.rating ? "fill" : "regular"}
+                    color={i < review.rating ? "var(--primary-muted)" : "var(--on-dark-tertiary)"}
+                  />
                 ))}
               </div>
 
@@ -45,7 +43,7 @@ export function ReviewsCarousel() {
 
               {/* Author */}
               <div className="flex items-center gap-3 mt-5 pt-4 border-t border-white/8">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-deep)] flex items-center justify-center text-white text-[14px] font-bold shrink-0 ring-2 ring-[var(--on-dark-border)]">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-deep)] flex items-center justify-center text-[var(--on-dark)] text-[14px] font-bold shrink-0 ring-2 ring-[var(--on-dark-border)]">
                   {review.initial}
                 </div>
                 <div className="min-w-0">
