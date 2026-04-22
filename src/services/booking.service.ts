@@ -13,6 +13,7 @@ import type {
   BookingSummary,
   CreateBookingInput,
   Departure,
+  DepartureCity,
 } from "@/types/booking";
 
 function toDeparture(row: DepartureRow): Departure {
@@ -20,35 +21,38 @@ function toDeparture(row: DepartureRow): Departure {
     id: row.id,
     tourSlug: row.tour_slug,
     departureDate: row.departure_date,
+    endDate: row.end_date,
+    departureCity: row.departure_city,
     maxSeats: row.max_seats,
     seatsBooked: row.seats_booked,
     seatsAvailable: Math.max(0, row.max_seats - row.seats_booked),
     status: row.status,
-    pricing: {
-      islamabad: row.price_islamabad,
-      lahore: row.price_lahore,
-      singleSupplement: row.single_supplement,
-    },
+    price: row.price,
+    singleSupplement: row.single_supplement,
   };
 }
 
 export async function getNextOpenDeparture(
-  tourSlug: string
+  tourSlug: string,
+  city?: DepartureCity
 ): Promise<Departure | null> {
   if (!isSupabaseConfigured) return null;
   const supabase = getSupabaseBrowser();
   const today = new Date().toISOString().slice(0, 10);
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("departures")
     .select("*")
     .eq("tour_slug", tourSlug)
     .eq("status", "open")
-    .gte("departure_date", today)
+    .gte("departure_date", today);
+
+  if (city) query = query.eq("departure_city", city);
+
+  const { data, error } = await query
     .order("departure_date", { ascending: true })
     .limit(1)
     .maybeSingle();
-
   if (error) throw new Error(error.message);
   return data ? toDeparture(data) : null;
 }
@@ -59,7 +63,6 @@ function toBooking(row: BookingRow): Booking {
     bookingRef: row.booking_ref,
     departureId: row.departure_id,
     seats: row.seats,
-    departureCity: row.departure_city,
     singleRooms: row.single_rooms,
     totalAmount: row.total_amount,
     currency: row.currency,
@@ -85,7 +88,6 @@ export async function createBooking(
   const args: CreateBookingArgs = {
     p_departure_id: input.departureId,
     p_seats: input.seats,
-    p_departure_city: input.departureCity,
     p_single_rooms: input.singleRooms,
     p_contact_name: input.contact.name,
     p_contact_email: input.contact.email,

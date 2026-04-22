@@ -97,7 +97,8 @@ export function BookingWizard({ tour, reviews, onClose, compact }: BookingWizard
     singleRooms: initSingleRooms,
   });
 
-  const [liveDeparture, setLiveDeparture] = useState<Departure | null>(null);
+  const [cityDepartures, setCityDepartures] = useState<{ islamabad: Departure | null; lahore: Departure | null; karachi: Departure | null }>({ islamabad: null, lahore: null, karachi: null });
+  const [departuresLoaded, setDeparturesLoaded] = useState(false);
   const [maxReachedStep, setMaxReachedStep] = useState<number>(draft.step);
   const [submitting, setSubmitting] = useState(false);
   const [submittedRef, setSubmittedRef] = useState<string | null>(null);
@@ -108,11 +109,22 @@ export function BookingWizard({ tour, reviews, onClose, compact }: BookingWizard
   useEffect(() => {
     if (!isSupabaseConfigured) return;
     let cancelled = false;
-    getNextOpenDeparture(tour.slug)
-      .then((d) => { if (!cancelled) setLiveDeparture(d); })
-      .catch(() => { /* silent */ });
+    Promise.all([
+      getNextOpenDeparture(tour.slug, "islamabad"),
+      getNextOpenDeparture(tour.slug, "lahore"),
+      getNextOpenDeparture(tour.slug, "karachi"),
+    ])
+      .then(([isb, lhr, khi]) => {
+        if (!cancelled) {
+          setCityDepartures({ islamabad: isb, lahore: lhr, karachi: khi });
+          setDeparturesLoaded(true);
+        }
+      })
+      .catch(() => { if (!cancelled) setDeparturesLoaded(true); });
     return () => { cancelled = true; };
   }, [tour.slug]);
+
+  const liveDeparture = cityDepartures[draft.departureCity as "islamabad" | "lahore" | "karachi"] ?? null;
 
   useEffect(() => {
     setDraft((d) => ({
@@ -263,7 +275,6 @@ export function BookingWizard({ tour, reviews, onClose, compact }: BookingWizard
         const result = await createBooking({
           departureId: liveDeparture.id,
           seats: totalTravelers,
-          departureCity: draft.departureCity,
           singleRooms: draft.singleRooms,
           contact: {
             name: `${draft.contact.firstName} ${draft.contact.lastName}`.trim(),
@@ -332,6 +343,8 @@ export function BookingWizard({ tour, reviews, onClose, compact }: BookingWizard
           <StepDates
             tour={tour}
             liveDeparture={liveDeparture}
+            cityDepartures={cityDepartures}
+            departuresLoaded={departuresLoaded}
             departureCity={draft.departureCity}
             onCityChange={(city) => patch({ departureCity: city })}
             departureDate={departureDateDisplay}
@@ -475,6 +488,8 @@ export function BookingWizard({ tour, reviews, onClose, compact }: BookingWizard
 function StepDates({
   tour,
   liveDeparture,
+  cityDepartures,
+  departuresLoaded,
   departureCity,
   onCityChange,
   departureDate,
@@ -482,14 +497,50 @@ function StepDates({
 }: {
   tour: Tour;
   liveDeparture: Departure | null;
+  cityDepartures: { islamabad: Departure | null; lahore: Departure | null; karachi: Departure | null };
+  departuresLoaded: boolean;
   departureCity: DepartureCity;
   onCityChange: (city: DepartureCity) => void;
   departureDate: string | null;
   seatsLeft: number | null;
 }) {
+  const availableCities = (["islamabad", "lahore", "karachi"] as const).filter((c) =>
+    departuresLoaded ? cityDepartures[c] !== null : c !== "karachi" && !!tour.pricing.lahore,
+  );
+
   return (
     <section className="space-y-6">
       <SectionHeader title="When are you travelling?" sub="Pick your departure city. Dates below are our next confirmed group departure." />
+
+      {availableCities.length >= 2 && (
+        <div>
+          <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] block mb-2">
+            Departure city
+          </label>
+          <div className={`grid gap-3 ${availableCities.length === 3 ? "grid-cols-3" : "grid-cols-2"}`}>
+            {availableCities.map((city) => {
+              const active = departureCity === city;
+              const dep = cityDepartures[city];
+              const price = dep?.price ?? (city === "lahore" ? (tour.pricing.lahore ?? tour.pricing.islamabad) : tour.pricing.islamabad);
+              return (
+                <button
+                  key={city}
+                  type="button"
+                  onClick={() => onCityChange(city)}
+                  className={`text-left p-4 rounded-[var(--radius-sm)] border-2 transition-all cursor-pointer ${
+                    active
+                      ? "border-[var(--primary)] bg-[var(--primary-light)]"
+                      : "border-[var(--border-default)] bg-[var(--bg-primary)] hover:border-[var(--primary)]"
+                  }`}
+                >
+                  <p className="text-[15px] font-bold text-[var(--text-primary)] capitalize">{city}</p>
+                  <p className="text-[12px] text-[var(--text-secondary)] mt-0.5">{formatPrice(price)} per person</p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div>
         <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] block mb-2">
@@ -520,35 +571,6 @@ function StepDates({
           Need a different date? Chat with us — we run this route on request.
         </p>
       </div>
-
-      {tour.pricing.lahore && (
-        <div>
-          <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] block mb-2">
-            Departure city
-          </label>
-          <div className="grid grid-cols-2 gap-3">
-            {(["islamabad", "lahore"] as const).map((city) => {
-              const active = departureCity === city;
-              const price = city === "lahore" ? (tour.pricing.lahore ?? tour.pricing.islamabad) : tour.pricing.islamabad;
-              return (
-                <button
-                  key={city}
-                  type="button"
-                  onClick={() => onCityChange(city)}
-                  className={`text-left p-4 rounded-[var(--radius-sm)] border-2 transition-all cursor-pointer ${
-                    active
-                      ? "border-[var(--primary)] bg-[var(--primary-light)]"
-                      : "border-[var(--border-default)] bg-[var(--bg-primary)] hover:border-[var(--primary)]"
-                  }`}
-                >
-                  <p className="text-[15px] font-bold text-[var(--text-primary)] capitalize">{city}</p>
-                  <p className="text-[12px] text-[var(--text-secondary)] mt-0.5">{formatPrice(price)} per person</p>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
     </section>
   );
 }

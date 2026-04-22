@@ -25,8 +25,9 @@ export function BookingSidebar({ tour, reviews = [] }: BookingSidebarProps) {
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
   const [singleRooms, setSingleRooms] = useState(0);
-  const [departure, setDeparture] = useState<"islamabad" | "lahore">("islamabad");
-  const [liveDeparture, setLiveDeparture] = useState<Departure | null>(null);
+  const [departure, setDeparture] = useState<"islamabad" | "lahore" | "karachi">("islamabad");
+  const [cityDepartures, setCityDepartures] = useState<{ islamabad: Departure | null; lahore: Departure | null; karachi: Departure | null }>({ islamabad: null, lahore: null, karachi: null });
+  const [departuresLoaded, setDeparturesLoaded] = useState(false);
   const [resumeAvailable, setResumeAvailable] = useState(false);
 
   useEffect(() => {
@@ -37,11 +38,22 @@ export function BookingSidebar({ tour, reviews = [] }: BookingSidebarProps) {
   useEffect(() => {
     if (!isSupabaseConfigured) return;
     let cancelled = false;
-    getNextOpenDeparture(tour.slug)
-      .then((d) => { if (!cancelled) setLiveDeparture(d); })
-      .catch(() => { /* silent */ });
+    Promise.all([
+      getNextOpenDeparture(tour.slug, "islamabad"),
+      getNextOpenDeparture(tour.slug, "lahore"),
+      getNextOpenDeparture(tour.slug, "karachi"),
+    ])
+      .then(([isb, lhr, khi]) => {
+        if (!cancelled) {
+          setCityDepartures({ islamabad: isb, lahore: lhr, karachi: khi });
+          setDeparturesLoaded(true);
+        }
+      })
+      .catch(() => { if (!cancelled) setDeparturesLoaded(true); });
     return () => { cancelled = true; };
   }, [tour.slug]);
+
+  const liveDeparture = cityDepartures[departure] ?? null;
 
   const pricing = calculatePricing({
     tour,
@@ -92,29 +104,35 @@ export function BookingSidebar({ tour, reviews = [] }: BookingSidebarProps) {
 
         <hr className="my-5 border-[var(--border-default)]" />
 
-        {tour.pricing.lahore && (
-          <div className="mb-4">
-            <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] block mb-2">
-              Departure city
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              {(["islamabad", "lahore"] as const).map((city) => (
-                <button
-                  key={city}
-                  type="button"
-                  onClick={() => setDeparture(city)}
-                  className={`h-10 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer capitalize ${
-                    departure === city
-                      ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
-                      : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--primary)]"
-                  }`}
-                >
-                  {city}
-                </button>
-              ))}
+        {(() => {
+          const availableCities = (["islamabad", "lahore", "karachi"] as const).filter(
+            (c) => departuresLoaded ? cityDepartures[c] !== null : c !== "karachi" && !!tour.pricing.lahore,
+          );
+          if (availableCities.length < 2) return null;
+          return (
+            <div className="mb-4">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] block mb-2">
+                Departure city
+              </label>
+              <div className={`grid gap-2 ${availableCities.length === 3 ? "grid-cols-3" : "grid-cols-2"}`}>
+                {availableCities.map((city) => (
+                  <button
+                    key={city}
+                    type="button"
+                    onClick={() => setDeparture(city)}
+                    className={`h-10 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer capitalize ${
+                      departure === city
+                        ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
+                        : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--primary)]"
+                    }`}
+                  >
+                    {city}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         <div className="mb-4">
           <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] block mb-2">

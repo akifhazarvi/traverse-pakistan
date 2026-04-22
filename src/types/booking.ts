@@ -1,19 +1,18 @@
 export type BookingStatus = "pending" | "confirmed" | "cancelled" | "refunded";
-export type DepartureCity = "islamabad" | "lahore";
+export type DepartureCity = "islamabad" | "lahore" | "karachi";
 
 export interface Departure {
   id: string;
   tourSlug: string;
   departureDate: string;
+  endDate: string | null;
+  departureCity: DepartureCity | null;
   maxSeats: number;
   seatsBooked: number;
   seatsAvailable: number;
   status: "open" | "closed" | "cancelled";
-  pricing: {
-    islamabad: number;
-    lahore: number | null;
-    singleSupplement: number | null;
-  };
+  price: number;
+  singleSupplement: number | null;
 }
 
 export interface Participant {
@@ -27,7 +26,6 @@ export interface Participant {
 export interface CreateBookingInput {
   departureId: string;
   seats: number;
-  departureCity: DepartureCity;
   singleRooms: number;
   contact: {
     name: string;
@@ -49,7 +47,6 @@ export interface Booking {
   bookingRef: string;
   departureId: string;
   seats: number;
-  departureCity: DepartureCity;
   singleRooms: number;
   totalAmount: number;
   currency: string;
