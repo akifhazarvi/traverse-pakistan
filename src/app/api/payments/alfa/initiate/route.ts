@@ -19,12 +19,13 @@ export async function POST(req: NextRequest) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://traversepakistan.com";
     const returnUrl = `${siteUrl}/payments/alfa/return`;
 
+    // Param order must match PHP reference exactly — hash is order-dependent
     const hsParams: Record<string, string> = {
       HS_ChannelId: alfaConfig.channelId,
-      HS_IsRedirectionRequest: "1",
-      HS_ReturnURL: returnUrl,
+      HS_IsRedirectionRequest: "0",
       HS_MerchantId: alfaConfig.merchantId,
       HS_StoreId: alfaConfig.storeId,
+      HS_ReturnURL: returnUrl,
       HS_MerchantHash: alfaConfig.merchantHash,
       HS_MerchantUsername: alfaConfig.merchantUsername,
       HS_MerchantPassword: alfaConfig.merchantPassword,
@@ -33,25 +34,30 @@ export async function POST(req: NextRequest) {
 
     const requestHash = generateAlfaHash(hsParams, alfaConfig.key1, alfaConfig.key2);
 
+    // APG expects form-urlencoded, not JSON
+    const hsFormBody = new URLSearchParams({ ...hsParams, HS_RequestHash: requestHash });
     const hsResponse = await fetch(alfaConfig.hsUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...hsParams, HS_RequestHash: requestHash }),
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: hsFormBody.toString(),
     });
 
     const hsData = await hsResponse.json();
 
-    if (hsData.success !== "true" || !hsData.AuthToken) {
+    if (!hsData.AuthToken) {
       return NextResponse.json(
         { error: hsData.ErrorMessage ?? "Handshake failed" },
         { status: 502 }
       );
     }
 
-    const ssoParams: Record<string, string> = {
+    // PHP includes RequestHash="" (null) in the hash string before computing — order matters
+    const ssoHashParams: Record<string, string> = {
       AuthToken: hsData.AuthToken,
+      RequestHash: "",
       ChannelId: alfaConfig.channelId,
       Currency: "PKR",
+      IsBIN: "0",
       ReturnURL: returnUrl,
       MerchantId: alfaConfig.merchantId,
       StoreId: alfaConfig.storeId,
@@ -63,11 +69,11 @@ export async function POST(req: NextRequest) {
       TransactionAmount: String(amount),
     };
 
-    const ssoHash = generateAlfaHash(ssoParams, alfaConfig.key1, alfaConfig.key2);
+    const ssoHash = generateAlfaHash(ssoHashParams, alfaConfig.key1, alfaConfig.key2);
 
     return NextResponse.json({
       ssoUrl: alfaConfig.ssoUrl,
-      ssoParams: { ...ssoParams, RequestHash: ssoHash },
+      ssoParams: { ...ssoHashParams, RequestHash: ssoHash },
       bookingRef: summary.bookingRef,
     });
   } catch (err) {
