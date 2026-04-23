@@ -199,13 +199,8 @@ export function BookingWizard({ tour, reviews, onClose, compact }: BookingWizard
     }
     if (step === 3) {
       if (!draft.contact.firstName.trim()) return "Lead traveller first name required";
-      if (!draft.contact.lastName.trim()) return "Lead traveller last name required";
-      if (!validEmail(draft.contact.email)) return "Enter a valid email";
       if (!validPhone(draft.contact.phone)) return "Enter a valid phone number";
-      for (const [i, t] of draft.travelers.entries()) {
-        if (!t.fullName.trim()) return `Traveller ${i + 1}: full name required`;
-        if (!t.dateOfBirth) return `Traveller ${i + 1}: date of birth required`;
-      }
+      if (draft.contact.email && !validEmail(draft.contact.email)) return "Enter a valid email";
       return null;
     }
     return null;
@@ -257,6 +252,64 @@ export function BookingWizard({ tour, reviews, onClose, compact }: BookingWizard
       `Please confirm availability.`,
     ].filter(Boolean);
     return lines.join("\n");
+  }
+
+  async function handleCardPayment() {
+    setError(null);
+    const err = validateStep(3);
+    if (err) {
+      setAttemptedNext(true);
+      setError(err);
+      goToStep(3);
+      return;
+    }
+    if (!liveDeparture) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/payments/alfa/initiate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          booking: {
+            departureId: liveDeparture.id,
+            seats: totalTravelers,
+            singleRooms: draft.singleRooms,
+            contact: {
+              name: `${draft.contact.firstName} ${draft.contact.lastName}`.trim(),
+              email: draft.contact.email,
+              phone: draft.contact.phone,
+            },
+            participants: draft.travelers.map((t) => ({
+              fullName: t.fullName,
+              dateOfBirth: t.dateOfBirth,
+              cnicOrPassport: t.cnicOrPassport,
+              dietary: t.dietary,
+              emergencyContact: t.emergencyContact,
+            })),
+            notes: draft.specialRequests || undefined,
+          },
+          amount: pricing.dueNow,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Payment initiation failed");
+      clearDraft();
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = data.ssoUrl;
+      for (const [key, value] of Object.entries(data.ssoParams as Record<string, string>)) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = value;
+        form.appendChild(input);
+      }
+      document.body.appendChild(form);
+      form.submit();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Payment initiation failed. Please try again.");
+      setSubmitting(false);
+    }
   }
 
   async function handleSubmit() {
@@ -426,14 +479,14 @@ export function BookingWizard({ tour, reviews, onClose, compact }: BookingWizard
           {draft.step === 4 && (
             <button
               type="button"
-              onClick={handleSubmit}
+              onClick={isSupabaseConfigured && liveDeparture && hasCapacity ? handleCardPayment : handleSubmit}
               disabled={submitting}
               className="flex-1 h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-bold rounded-[var(--radius-sm)] hover:bg-[var(--primary-hover)] transition-colors active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:cursor-wait flex items-center justify-center gap-2"
             >
               {submitting
-                ? "Reserving…"
+                ? "Processing…"
                 : isSupabaseConfigured && liveDeparture && hasCapacity
-                  ? <>Reserve now · <span className="tabular-nums">{formatPrice(pricing.dueNow)}</span></>
+                  ? <>Pay with Card · <span className="tabular-nums">{formatPrice(pricing.dueNow)}</span></>
                   : "Confirm via WhatsApp"}
             </button>
           )}
@@ -442,7 +495,7 @@ export function BookingWizard({ tour, reviews, onClose, compact }: BookingWizard
         {draft.step === 4 && (
           <p className="text-center text-[11px] text-[var(--text-tertiary)] -mt-4">
             {isSupabaseConfigured && liveDeparture && hasCapacity
-              ? "Reserves your seat. Secure payment link sent within 2 hours."
+              ? "You'll be redirected to a secure Bank Alfalah payment page."
               : "You won't be charged yet — our team will confirm availability first."}
           </p>
         )}
@@ -715,14 +768,12 @@ function StepDetails({
           />
           <LabeledInput
             label="Last name"
-            required
             value={contact.lastName}
             onChange={(v) => onContactChange({ lastName: v })}
             placeholder="Khan"
           />
           <LabeledInput
             label="Email"
-            required
             type="email"
             value={contact.email}
             onChange={(v) => onContactChange({ email: v })}

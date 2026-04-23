@@ -5,12 +5,15 @@ import { getWhatsAppUrl } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { NavSearchBar } from "./NavSearchBar";
 import { UserMenu } from "@/components/auth/UserMenu";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+  const showSearch = pathname !== "/";
 
   return (
     <header
@@ -34,7 +37,7 @@ export function Navbar() {
 
         {/* Search bar — col 2 of grid, auto width, naturally centered */}
         <div className="flex justify-center py-3 min-h-[76px] w-[714px]">
-          <NavSearchBar />
+          {showSearch && <NavSearchBar />}
         </div>
 
         {/* Right CTAs — fixed height so they never move when search expands */}
