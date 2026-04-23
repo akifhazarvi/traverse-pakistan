@@ -42,11 +42,21 @@ export async function POST(req: NextRequest) {
       body: hsFormBody.toString(),
     });
 
-    const hsData = await hsResponse.json();
+    const hsText = await hsResponse.text();
+    let hsData: Record<string, string>;
+    try {
+      hsData = JSON.parse(hsText);
+    } catch {
+      console.error("[alfa/initiate] HS non-JSON response:", hsText.slice(0, 500));
+      return NextResponse.json(
+        { error: `Handshake returned unexpected response (HTTP ${hsResponse.status}): ${hsText.slice(0, 200)}` },
+        { status: 502 }
+      );
+    }
 
     if (!hsData.AuthToken) {
       return NextResponse.json(
-        { error: hsData.ErrorMessage ?? "Handshake failed" },
+        { error: hsData.ErrorMessage ?? "Handshake failed — no AuthToken returned" },
         { status: 502 }
       );
     }
@@ -78,6 +88,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Internal error";
+    console.error("[alfa/initiate]", err);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

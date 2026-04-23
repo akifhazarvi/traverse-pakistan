@@ -33,12 +33,11 @@ export function TravelerCard({ traveler, index, onChange, error }: TravelerCardP
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Field
           label="Full name (as on ID)"
-          required
+          optional
           error={error?.fullName}
         >
           <input
             type="text"
-            required
             value={traveler.fullName}
             onChange={(e) => onChange(index, { fullName: e.target.value })}
             placeholder="Ali Khan"
@@ -46,10 +45,9 @@ export function TravelerCard({ traveler, index, onChange, error }: TravelerCardP
           />
         </Field>
 
-        <Field label="Date of birth" required error={error?.dateOfBirth}>
+        <Field label="Date of birth" optional error={error?.dateOfBirth}>
           <input
             type="date"
-            required
             value={traveler.dateOfBirth ?? ""}
             onChange={(e) => onChange(index, { dateOfBirth: e.target.value })}
             max={new Date().toISOString().slice(0, 10)}

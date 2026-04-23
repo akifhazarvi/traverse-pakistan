@@ -199,13 +199,8 @@ export function BookingWizard({ tour, reviews, onClose, compact }: BookingWizard
     }
     if (step === 3) {
       if (!draft.contact.firstName.trim()) return "Lead traveller first name required";
-      if (!draft.contact.lastName.trim()) return "Lead traveller last name required";
-      if (!validEmail(draft.contact.email)) return "Enter a valid email";
       if (!validPhone(draft.contact.phone)) return "Enter a valid phone number";
-      for (const [i, t] of draft.travelers.entries()) {
-        if (!t.fullName.trim()) return `Traveller ${i + 1}: full name required`;
-        if (!t.dateOfBirth) return `Traveller ${i + 1}: date of birth required`;
-      }
+      if (draft.contact.email && !validEmail(draft.contact.email)) return "Enter a valid email";
       return null;
     }
     return null;
@@ -773,14 +768,12 @@ function StepDetails({
           />
           <LabeledInput
             label="Last name"
-            required
             value={contact.lastName}
             onChange={(v) => onContactChange({ lastName: v })}
             placeholder="Khan"
           />
           <LabeledInput
             label="Email"
-            required
             type="email"
             value={contact.email}
             onChange={(v) => onContactChange({ email: v })}
