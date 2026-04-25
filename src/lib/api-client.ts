@@ -4,23 +4,33 @@
 // Signal covers both connection AND response body read
 // This prevents the common pitfall of timing out connection but hanging on response.json()
 
-// Example 1: Simple GET
-// const response = await fetchWithTimeout('/api/tours');
-// const tours = await response.json();
+// Timeout strategy:
+// - Search (GET /packages, /hotels, /tours): 5s (Airbnb standard)
+// - Booking (POST /packages, /hotels, /tours): 8s (user committed)
+// - Payment (POST /payment): 10s (bank communication)
 
-// Example 2: POST with idempotency key (prevents double-charge on retry)
+// Example: GET search → 5 second timeout
+// const response = await fetchWithTimeout('/api/hotels?city=Skardu', {}, 'GET');
+
+// Example: POST booking → 8 second timeout
+// const response = await fetchWithTimeout('/api/hotels', {
+//   method: 'POST',
+//   body: JSON.stringify(booking),
+// }, 'POST');
+
+// Example: POST with idempotency key (prevents double-charge on retry)
 // const response = await fetchWithTimeout('/api/payments/initiate', {
 //   method: 'POST',
 //   body: JSON.stringify(booking),
 //   idempotencyKey: crypto.randomUUID(),
 //   timeout: 10000,
-// });
+// }, 'POST');
 
-// Example 3: Using createRequest helper
+// Example: Using createRequest helper
 // const options = createRequest('/api/bookings', 'POST', bookingData);
-// const response = await fetchWithTimeout('/api/bookings', options);
+// const response = await fetchWithTimeout('/api/bookings', options, 'POST');
 
-// Example 4: Error handling
+// Example: Error handling
 // try {
 //   const response = await fetchWithTimeout(url);
 // } catch (error) {
@@ -58,18 +68,44 @@ export function isTimeoutError(error: unknown): boolean {
   );
 }
 
-export function getDefaultTimeout(endpoint: string): number {
-  if (endpoint.includes("/payment")) return 10000;
-  if (endpoint.includes("/booking")) return 8000;
-  if (endpoint.includes("/search")) return 15000;
+export function getDefaultTimeout(
+  endpoint: string,
+  method: "GET" | "POST" | "PUT" | "DELETE" = "GET"
+): number {
+  // Payment operations: Give bank time
+  if (endpoint.includes("/payment")) return 10000; // 10s
+
+  // Search/Browse (GET only): Airbnb standard - users expect quick results
+  if (
+    (endpoint.includes("/packages") ||
+      endpoint.includes("/hotels") ||
+      endpoint.includes("/tours")) &&
+    method === "GET"
+  ) {
+    return 5000; // 5s for search/filter/browse
+  }
+
+  // Booking operations (POST only): User committed
+  if (
+    (endpoint.includes("/packages") ||
+      endpoint.includes("/hotels") ||
+      endpoint.includes("/tours")) &&
+    method === "POST"
+  ) {
+    return 8000; // 8s for booking creation
+  }
+
+  // Default fallback
   return 10000;
 }
 
 export async function fetchWithTimeout<T = unknown>(
   url: string,
-  options?: FetchOptions
+  options?: FetchOptions,
+  method: "GET" | "POST" | "PUT" | "DELETE" = "GET"
 ): Promise<Response> {
-  const { timeout = 10000, idempotencyKey, ...rest } = options ?? {};
+  const { timeout = getDefaultTimeout(url, method), idempotencyKey, ...rest } =
+    options ?? {};
 
   // Automatically handles cleanup — covers connection AND response body read
   const signal = AbortSignal.timeout(timeout);
@@ -110,7 +146,7 @@ export function createRequest(
     method,
     headers,
     ...(data !== undefined && { body: JSON.stringify(data) }),
-    timeout: options?.timeout ?? getDefaultTimeout(url),
+    timeout: options?.timeout ?? getDefaultTimeout(url, method),
     ...(idempotencyKey && { idempotencyKey }),
   };
 }
