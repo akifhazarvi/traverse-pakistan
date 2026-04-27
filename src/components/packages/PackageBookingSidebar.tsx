@@ -133,13 +133,17 @@ function CalendarGrid({ checkIn, checkOut, onSelect, year, month, onPrev, onNext
 
 /* ─── Main Sidebar ─────────────────────────────────────────────────────────── */
 
+type DepartureCityOption = "islamabad" | "lahore" | "karachi";
+
 interface PackageBookingSidebarProps {
   pkg: Package;
   selectedTier: PackageTier;
   onTierChange: (tier: PackageTier) => void;
+  departureCity: DepartureCityOption;
+  onDepartureCityChange: (city: DepartureCityOption) => void;
 }
 
-export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: PackageBookingSidebarProps) {
+export function PackageBookingSidebar({ pkg, selectedTier, onTierChange, departureCity, onDepartureCityChange }: PackageBookingSidebarProps) {
   const pricing = pkg.tiers[selectedTier];
 
   // Calendar
@@ -153,9 +157,6 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
   const checkOut = checkIn
     ? new Date(checkIn.getFullYear(), checkIn.getMonth(), checkIn.getDate() + pkg.duration - 1)
     : null;
-
-  // Departure city
-  const [departureCity, setDepartureCity] = useState<"islamabad" | "lahore">("islamabad");
 
   // Rooms & travelers
   const [rooms, setRooms] = useState(1);
@@ -200,7 +201,10 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
   const defaultRooms = Math.ceil(adults / 3);
   const extraRooms = Math.max(0, rooms - defaultRooms);
   const singleSupp = pricing.singleSupplement ?? 0;
-  const pricePerPerson = departureCity === "lahore" && pricing.lahore ? pricing.lahore : pricing.islamabad;
+  const pricePerPerson =
+    (departureCity === "lahore" && pricing.lahore) ? pricing.lahore :
+    (departureCity === "karachi" && pricing.karachi) ? pricing.karachi :
+    pricing.islamabad;
   const baseTotal = pricePerPerson * adults;
   const roomSurcharge = extraRooms * singleSupp;
   const totalPrice = baseTotal + roomSurcharge;
@@ -240,21 +244,23 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange }: Packa
         </div>
 
         {/* Departure City */}
-        {pricing.lahore && (
+        {(pricing.lahore || pricing.karachi) && (
           <div className="mb-5">
             <label className="text-[12px] font-bold uppercase tracking-[0.08em] text-[var(--text-secondary)] block mb-2">Starting Location</label>
-            <div className="grid grid-cols-2 gap-2">
-              {(["islamabad", "lahore"] as const).map((city) => (
-                <button key={city} type="button" onClick={() => setDepartureCity(city)}
-                  className={`h-11 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer ${
-                    departureCity === city
-                      ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
-                      : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--primary)]"
-                  }`}
-                >
-                  {city === "islamabad" ? "Islamabad" : "Lahore"}
-                </button>
-              ))}
+            <div className={`grid gap-2 ${pricing.karachi ? "grid-cols-3" : "grid-cols-2"}`}>
+              {(["islamabad", "lahore", "karachi"] as DepartureCityOption[])
+                .filter((city) => city === "islamabad" || pricing[city] !== null)
+                .map((city) => (
+                  <button key={city} type="button" onClick={() => onDepartureCityChange(city)}
+                    className={`h-11 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer capitalize ${
+                      departureCity === city
+                        ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
+                        : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)] hover:border-[var(--primary)]"
+                    }`}
+                  >
+                    {city.charAt(0).toUpperCase() + city.slice(1)}
+                  </button>
+                ))}
             </div>
           </div>
         )}

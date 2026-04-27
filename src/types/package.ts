@@ -1,11 +1,12 @@
 import type { TourImage, BadgeType } from "./tour";
-import type { ItineraryStop } from "./itinerary";
+import type { ItineraryStop, DepartureCity } from "./itinerary";
 
 export type PackageTier = "deluxe" | "luxury";
 
 export interface PackageTierPricing {
   islamabad: number;
   lahore: number | null;
+  karachi: number | null;
   singleSupplement: number | null;
 }
 
@@ -22,6 +23,7 @@ export interface PackageItineraryDay {
   stops: ItineraryStop[];
   drivingTime: string;
   overnight: string;
+  cityOnly?: DepartureCity;
 }
 
 export interface PackageItinerary {
