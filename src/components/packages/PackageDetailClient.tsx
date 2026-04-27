@@ -24,6 +24,7 @@ interface PackageDetailClientProps {
 
 export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages }: PackageDetailClientProps) {
   const [selectedTier, setSelectedTier] = useState<PackageTier>("deluxe");
+  const [departureCity, setDepartureCity] = useState<"islamabad" | "lahore" | "karachi">("islamabad");
   const [mobileQuoteOpen, setMobileQuoteOpen] = useState(false);
 
   return (
@@ -135,6 +136,7 @@ export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages
                   days={itinerary.days}
                   selectedTier={selectedTier}
                   hotelsMap={hotelsMap}
+                  departureCity={departureCity}
                 />
               </section>
             )}
@@ -190,7 +192,7 @@ export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages
 
           {/* Sidebar */}
           <aside className="hidden lg:block">
-            <PackageBookingSidebar pkg={pkg} selectedTier={selectedTier} onTierChange={setSelectedTier} />
+            <PackageBookingSidebar pkg={pkg} selectedTier={selectedTier} onTierChange={setSelectedTier} departureCity={departureCity} onDepartureCityChange={(c) => setDepartureCity(c)} />
           </aside>
         </div>
 

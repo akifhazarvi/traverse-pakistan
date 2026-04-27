@@ -12,6 +12,7 @@ interface PackageItineraryAccordionProps {
   days: PackageItineraryDay[];
   selectedTier: PackageTier;
   hotelsMap: Record<string, Hotel>;
+  departureCity: "islamabad" | "lahore" | "karachi";
 }
 
 const TIER_LABELS: Record<PackageTier, string> = {
@@ -24,17 +25,19 @@ const TIER_COLORS: Record<PackageTier, string> = {
   luxury: "bg-[var(--accent-warm-light)] text-[var(--accent-warm)] border-[var(--accent-warm)]/30",
 };
 
-export function PackageItineraryAccordion({ days, selectedTier, hotelsMap }: PackageItineraryAccordionProps) {
+export function PackageItineraryAccordion({ days, selectedTier, hotelsMap, departureCity }: PackageItineraryAccordionProps) {
+  const visibleDays = days.filter((d) => !d.cityOnly || d.cityOnly === departureCity);
   return (
     <div className="border border-[var(--border-default)] rounded-xl overflow-hidden">
-      {days.map((day) => {
+      {visibleDays.map((day) => {
         const hotelSlug = day.hotels[selectedTier];
         const hotel = hotelsMap[hotelSlug];
+        const stops = day.stops.filter((s) => !s.cityOnly || s.cityOnly === departureCity);
 
         return (
           <AccordionItem
             key={day.dayNumber}
-            defaultOpen={day.dayNumber === 1}
+            defaultOpen={day.dayNumber === (departureCity === "karachi" ? 0 : 1)}
             title={
               <div className="flex items-center gap-3">
                 <span className="shrink-0 w-8 h-8 rounded-full bg-[var(--primary)] text-[var(--text-inverse)] text-[13px] font-bold flex items-center justify-center">
@@ -111,9 +114,9 @@ export function PackageItineraryAccordion({ days, selectedTier, hotelsMap }: Pac
               </p>
 
               {/* Stops timeline */}
-              {day.stops.length > 0 && (
+              {stops.length > 0 && (
                 <div className="relative pl-6 border-l-2 border-[var(--primary)]/20 space-y-4 mb-4">
-                  {day.stops.map((stop, i) => (
+                  {stops.map((stop, i) => (
                     <div key={i} className="relative">
                       <div className="absolute -left-[27px] top-0.5 w-3 h-3 rounded-full bg-[var(--primary)] border-2 border-white" />
                       <p className="text-[14px] font-semibold text-[var(--text-primary)]">{stop.name}</p>
