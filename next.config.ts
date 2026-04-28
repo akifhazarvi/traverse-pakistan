@@ -22,6 +22,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "media.traversepakistan.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "traversepakistan.com",
         pathname: "/wp-content/uploads/**",
       },

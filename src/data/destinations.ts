@@ -1,6 +1,7 @@
 import type { Destination } from "@/types/destination";
 
 const WP = "https://traversepakistan.com/wp-content/uploads";
+const MEDIA = "https://media.traversepakistan.com";
 
 export const destinations: Destination[] = [
   {
@@ -8,7 +9,7 @@ export const destinations: Destination[] = [
     slug: "hunza",
     name: "Hunza Valley",
     regionSlug: "gilgit-baltistan",
-    heroImage: `${WP}/2022/08/TRV_8165.jpg`,
+    heroImage: `${MEDIA}/destinations/hunza/cover.jpg`,
     subtitle: "The Crown Jewel of Northern Pakistan",
     description: "Hunza Valley is a breathtaking paradise nestled in the Karakoram mountains. Known for its stunning landscapes, ancient forts, warm hospitality, and the famous cherry blossom season.",
     opening: "In Hunza, mornings arrive slowly — first the river, then apricot smoke curling from stone houses, then the Rakaposhi light spilling gold across the valley.",
@@ -38,7 +39,7 @@ export const destinations: Destination[] = [
     slug: "skardu",
     name: "Skardu",
     regionSlug: "gilgit-baltistan",
-    heroImage: `${WP}/2023/01/DSC_1070Low-e1674917236588.jpg`,
+    heroImage: `${MEDIA}/destinations/skardu/cover.jpg`,
     subtitle: "Gateway to the World's Highest Peaks",
     description: "Skardu is the gateway to K2 and the world's highest mountain range. Home to Shangrila Resort, Deosai Plains, Katpana Desert, and ancient Shigar Fort.",
     opening: "Skardu is where scale stops making sense. Peaks rise past eight thousand metres; a cold desert sits beside a glacial lake; ancient forts hold the same light they caught five hundred years ago.",
@@ -68,7 +69,7 @@ export const destinations: Destination[] = [
     slug: "chitral",
     name: "Chitral & Kalash Valley",
     regionSlug: "kpk",
-    heroImage: `${WP}/2022/11/choimus-Festival-e1668936494927.jpg`,
+    heroImage: `${MEDIA}/destinations/chitral/cover.jpg`,
     subtitle: "Where Ancient Cultures Meet the Hindu Kush",
     description: "Chitral is home to the ancient Kalash people — one of the most unique indigenous cultures in the world. Vibrant festivals, rare wildlife, and stunning Hindu Kush scenery.",
     opening: "The Kalash have lived here long before borders existed. Their songs still fill these valleys every spring — a culture the mountains have kept safe, and the world has almost forgotten.",
@@ -97,7 +98,7 @@ export const destinations: Destination[] = [
     slug: "fairy-meadows",
     name: "Fairy Meadows",
     regionSlug: "gilgit-baltistan",
-    heroImage: `${WP}/2022/10/14257614_699104946914419_2351000652750282388_o.jpg`,
+    heroImage: `${MEDIA}/destinations/fairy-meadows/cover.jpg`,
     subtitle: "The World's Most Beautiful Campsite",
     description: "Fairy Meadows is a lush green alpine meadow at the base of Nanga Parbat (8,126m). Often called the most beautiful campsite on Earth.",
     opening: "A jeep road that shouldn't exist, a short trek through pine, and suddenly the meadow opens — and there stands Nanga Parbat, the Killer Mountain, watching you back.",
@@ -126,7 +127,7 @@ export const destinations: Destination[] = [
     slug: "kumrat",
     name: "Kumrat Valley",
     regionSlug: "kpk",
-    heroImage: `${WP}/2022/09/1626279918109-01.jpg`,
+    heroImage: `${MEDIA}/destinations/kumrat/cover.jpg`,
     subtitle: "Pakistan's Last Untouched Paradise",
     description: "Kumrat Valley in Upper Dir is one of Pakistan's most pristine gems. Dense pine forests, crystal rivers, and alpine meadows rivaling the Swiss Alps.",
     opening: "Kumrat is a valley still keeping its own time. Pines hold the silence, rivers rehearse it, and the stars at night feel closer than anywhere else in Pakistan.",
@@ -155,7 +156,7 @@ export const destinations: Destination[] = [
     slug: "ghizar",
     name: "Ghizar & Phandar",
     regionSlug: "gilgit-baltistan",
-    heroImage: `${WP}/2022/09/71598891_1493803314111241_5155702510467416064_o.jpg`,
+    heroImage: `${MEDIA}/destinations/ghizar/cover.jpg`,
     subtitle: "The Hidden Gem of Gilgit Baltistan",
     description: "Ghizar district is home to the turquoise Phandar Lake, the legendary Shandur Polo Ground, and the mystical Yasin Valley — one of Pakistan's most underrated destinations.",
     opening: "Beyond Gilgit the road narrows, the crowds disappear, and the lakes turn a turquoise that feels almost unreal. This is the quieter country — a Hunza without the postcards.",
@@ -184,7 +185,7 @@ export const destinations: Destination[] = [
     slug: "neelam-valley",
     name: "Neelam Valley",
     regionSlug: "azad-kashmir",
-    heroImage: `${WP}/2023/01/UltimateNeelamnodatenorate.jpg`,
+    heroImage: `${MEDIA}/destinations/neelam-valley/cover.jpg`,
     subtitle: "The Jewel of Azad Kashmir",
     description: "Neelam Valley is a 200km-long bow-shaped valley alongside the Neelam River in Azad Kashmir. Lush green hills, roaring waterfalls, and the famous Arang Kel make it unforgettable.",
     opening: "The Neelam river carves a 200-kilometre line through Kashmir's deepest green. Somewhere along it, a village called Arang Kel waits on a hillside, and the light learns to stand still.",
@@ -213,7 +214,7 @@ export const destinations: Destination[] = [
     slug: "makran-coast",
     name: "Makran Coast & Gwadar",
     regionSlug: "balochistan",
-    heroImage: `${WP}/2022/10/28661114_1013134252178152_1136306908953575424_o.jpg`,
+    heroImage: `${MEDIA}/destinations/makran-coast/cover.jpg`,
     subtitle: "Pakistan's Wild Coastal Frontier",
     description: "The Makran Coast stretches 750km along the Arabian Sea — pristine beaches, dramatic cliffs, mud volcanoes, and the strategic port city of Gwadar.",
     opening: "Seven hundred and fifty kilometres of coastline most travellers never see. The desert meets the Arabian Sea, mud volcanoes bubble on quiet plains, and the beaches stay empty under a wide, salt-bright sky.",
