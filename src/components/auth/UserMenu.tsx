@@ -33,12 +33,20 @@ export function UserMenu() {
 
   if (!user) {
     return (
-      <Link
-        href="/auth/sign-in"
-        className="hidden sm:inline-flex h-9 items-center gap-1.5 px-4 text-[13px] font-semibold text-[var(--text-primary)] border border-[var(--border-default)] rounded-[var(--radius-full)] hover:bg-[var(--bg-subtle)] transition-colors whitespace-nowrap"
-      >
-        Sign in
-      </Link>
+      <div className="hidden sm:flex items-center gap-2">
+        <Link
+          href="/auth/sign-in"
+          className="h-9 inline-flex items-center px-4 text-[13px] font-semibold text-[var(--text-primary)] border border-[var(--border-default)] rounded-[var(--radius-full)] hover:bg-[var(--bg-subtle)] transition-colors whitespace-nowrap"
+        >
+          Sign in
+        </Link>
+        <Link
+          href="/auth/sign-up"
+          className="h-9 inline-flex items-center px-4 text-[13px] font-semibold text-[var(--text-inverse)] bg-[var(--primary)] rounded-[var(--radius-full)] hover:bg-[var(--primary-hover)] transition-colors whitespace-nowrap"
+        >
+          Sign up
+        </Link>
+      </div>
     );
   }
 
