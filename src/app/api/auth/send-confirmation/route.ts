@@ -4,7 +4,8 @@ import { getResend, buildConfirmationEmail } from "@/lib/resend";
 
 export async function POST(req: Request) {
   try {
-    const { email, name } = await req.json() as { email?: string; name?: string };
+    const body = await req.json().catch(() => ({})) as { email?: string; name?: string };
+    const { email, name } = body;
     if (!email || typeof email !== "string") {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }

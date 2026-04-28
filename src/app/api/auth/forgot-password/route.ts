@@ -4,7 +4,8 @@ import { getResend, buildForgotPasswordEmail } from "@/lib/resend";
 
 export async function POST(req: Request) {
   try {
-    const { email } = await req.json() as { email?: string };
+    const body = await req.json().catch(() => ({})) as { email?: string };
+    const { email } = body;
     if (!email || typeof email !== "string") {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
