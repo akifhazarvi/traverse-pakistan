@@ -316,6 +316,34 @@ export type Database = {
         Update: Partial<{ payment_status: string; updated_at: string }>;
         Relationships: [];
       };
+      hotel_bookings: {
+        Row: {
+          id: string;
+          booking_ref: string;
+          user_id: string | null;
+          hotel_slug: string;
+          room_name: string;
+          checkin_date: string | null;
+          checkout_date: string | null;
+          adults: number;
+          children: number;
+          rooms: number;
+          nights: number;
+          total_amount: number;
+          currency: string;
+          payment_status: string;
+          contact_name: string;
+          contact_email: string;
+          contact_phone: string;
+          arrival_time: string | null;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Record<string, unknown>;
+        Update: Partial<{ payment_status: string; updated_at: string }>;
+        Relationships: [];
+      };
     };
     Views: Record<never, never>;
     Functions: {
@@ -335,6 +363,25 @@ export type Database = {
           p_contact_name: string;
           p_contact_email: string;
           p_contact_phone: string;
+          p_notes: string | null;
+        };
+        Returns: { booking_id: string; booking_ref: string; total_amount: number }[];
+      };
+      create_hotel_booking: {
+        Args: {
+          p_hotel_slug: string;
+          p_room_name: string;
+          p_checkin_date: string | null;
+          p_checkout_date: string | null;
+          p_adults: number;
+          p_children: number;
+          p_rooms: number;
+          p_nights: number;
+          p_total_amount: number;
+          p_contact_name: string;
+          p_contact_email: string;
+          p_contact_phone: string;
+          p_arrival_time: string | null;
           p_notes: string | null;
         };
         Returns: { booking_id: string; booking_ref: string; total_amount: number }[];

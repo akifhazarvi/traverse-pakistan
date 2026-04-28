@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { formatPrice, getWhatsAppUrl } from "@/lib/utils";
-import { isSupabaseConfigured } from "@/lib/supabase/env";
-import { createQuoteRequest } from "@/services/quote.service";
+import { formatPrice } from "@/lib/utils";
+import { createHotelBooking } from "@/services/booking.service";
 import { Icon } from "@/components/ui/Icon";
 import type { Hotel } from "@/types/hotel";
 
@@ -20,6 +19,7 @@ function diffDays(a: string, b: string) {
 
 export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const checkin  = searchParams.get("checkin") ?? "";
   const checkout = searchParams.get("checkout") ?? "";
@@ -30,8 +30,8 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
   const children = Number(searchParams.get("children") ?? 0);
 
   const selectedRoom = hotel.rooms.find((r) => r.name === roomName) ?? hotel.rooms[0];
-  const nights = checkin && checkout ? diffDays(checkin, checkout) : 0;
-  const subtotal = selectedRoom.price * rooms * (nights || 1);
+  const nights = checkin && checkout ? diffDays(checkin, checkout) : 1;
+  const subtotal = selectedRoom.price * rooms * nights;
 
   const [form, setForm] = useState({
     firstName: "",
@@ -42,7 +42,6 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
     arrivalTime: "",
   });
 
-  const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,69 +49,37 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   }
 
-  function buildWhatsAppMessage() {
-    return (
-      `Hi! I'd like to confirm a hotel booking.\n\n` +
-      `*Hotel:* ${hotel.name}, ${hotel.location}\n` +
-      `*Room:* ${selectedRoom.name} × ${rooms}\n` +
-      (checkin && checkout
-        ? `*Dates:* ${fmt(checkin)} → ${fmt(checkout)} (${nights} night${nights !== 1 ? "s" : ""})\n`
-        : "") +
-      `*Guests:* ${adults} adult${adults !== 1 ? "s" : ""}${children > 0 ? `, ${children} child${children !== 1 ? "ren" : ""}` : ""}\n` +
-      `*Estimated Total:* ${formatPrice(subtotal)}\n\n` +
-      `*Guest Details:*\n` +
-      `Name: ${form.firstName} ${form.lastName}\n` +
-      `Email: ${form.email}\n` +
-      `Phone: ${form.phone}\n` +
-      (form.arrivalTime ? `Arrival Time: ${form.arrivalTime}\n` : "") +
-      (form.specialRequests ? `Special Requests: ${form.specialRequests}\n` : "") +
-      `\nPlease confirm availability and send payment details.`
-    );
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setSubmitting(true);
 
-    if (isSupabaseConfigured) {
-      setSubmitting(true);
-      try {
-        const notes = [
-          form.arrivalTime ? `Arrival time: ${form.arrivalTime}` : "",
-          form.specialRequests,
-          `Room: ${selectedRoom.name}`,
-          `Estimated total: ${formatPrice(subtotal)}`,
-        ].filter(Boolean).join(" · ");
-
-        await createQuoteRequest({
-          requestType: "hotel",
-          slug: hotel.slug,
-          displayName: `${hotel.name}, ${hotel.location}`,
-          tier: selectedRoom.name,
-          preferredStartDate: checkin || undefined,
-          preferredEndDate: checkout || undefined,
-          adults,
-          children,
-          rooms,
-          contact: {
-            name: `${form.firstName} ${form.lastName}`.trim(),
-            email: form.email,
-            phone: form.phone,
-          },
-          notes: notes || undefined,
-        });
-        setSubmitted(true);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Could not send request");
-      } finally {
-        setSubmitting(false);
-      }
-      return;
+    try {
+      const result = await createHotelBooking({
+        hotelSlug: hotel.slug,
+        roomName: selectedRoom.name,
+        checkinDate: checkin || null,
+        checkoutDate: checkout || null,
+        adults,
+        children,
+        rooms,
+        nights,
+        totalAmount: subtotal,
+        contact: {
+          name: `${form.firstName} ${form.lastName}`.trim(),
+          email: form.email,
+          phone: form.phone,
+        },
+        arrivalTime: form.arrivalTime || undefined,
+        notes: form.specialRequests || undefined,
+      });
+      router.push(
+        `/hotels/${hotel.slug}/checkout/success?ref=${result.bookingRef}&amount=${result.totalAmount}`
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Booking failed. Please try again.");
+      setSubmitting(false);
     }
-
-    // Fallback: WhatsApp
-    window.open(getWhatsAppUrl(buildWhatsAppMessage()), "_blank");
-    setSubmitted(true);
   }
 
   const isValid = form.firstName && form.lastName && form.email && form.phone;
@@ -122,7 +89,6 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
 
       {/* ── Left: Guest form ── */}
       <form onSubmit={handleSubmit} className="space-y-8">
-
 
         {/* Guest details */}
         <section>
@@ -213,9 +179,7 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
         {/* Cancellation notice */}
         <section className="p-4 bg-[var(--primary-light)] border border-[var(--primary)]/20 rounded-[var(--radius-md)]">
           <div className="flex items-start gap-3">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2" className="mt-0.5 shrink-0">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
+            <Icon name="lock" size="sm" color="var(--success)" className="mt-0.5 shrink-0" />
             <div>
               <p className="text-[13px] font-bold text-[var(--primary-deep)] mb-1">Free cancellation</p>
               <p className="text-[12px] text-[var(--text-secondary)] leading-relaxed">
@@ -233,34 +197,17 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
         )}
 
         {/* Submit */}
-        {submitted ? (
-          <div className="p-5 bg-[var(--primary-light)] border border-[var(--primary)]/30 rounded-[var(--radius-md)] text-center">
-            <p className="text-[16px] font-bold text-[var(--primary-deep)] mb-1">Request received</p>
-            <p className="text-[13px] text-[var(--text-secondary)]">
-              Our team will confirm availability and pricing within 2 hours.
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            <button
-              type="submit"
-              disabled={!isValid || submitting}
-              className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-bold rounded-[var(--radius-sm)] hover:bg-[var(--primary-hover)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]"
-            >
-              {submitting ? "Sending…" : "Request booking"}
-            </button>
-            <a
-              href={getWhatsAppUrl(buildWhatsAppMessage())}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full h-10 flex items-center justify-center text-[13px] font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-            >
-              or ask on WhatsApp →
-            </a>
-          </div>
-        )}
+        <div className="space-y-2">
+          <button
+            type="submit"
+            disabled={!isValid || submitting}
+            className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-bold rounded-[var(--radius-sm)] hover:bg-[var(--primary-hover)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]"
+          >
+            {submitting ? "Confirming booking…" : "Confirm booking"}
+          </button>
+        </div>
         <p className="text-center text-[12px] text-[var(--text-tertiary)] -mt-4">
-          You won&apos;t be charged yet — we&apos;ll confirm availability first.
+          You won&apos;t be charged yet — pay securely on the next step.
         </p>
       </form>
 
@@ -330,7 +277,7 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
             <div className="space-y-2">
               <div className="flex justify-between text-[13px]">
                 <span className="text-[var(--text-secondary)]">
-                  {formatPrice(selectedRoom.price)} × {rooms} room{rooms > 1 ? "s" : ""} × {nights || 1} night{(nights || 1) !== 1 ? "s" : ""}
+                  {formatPrice(selectedRoom.price)} × {rooms} room{rooms > 1 ? "s" : ""} × {nights} night{nights !== 1 ? "s" : ""}
                 </span>
                 <span className="text-[var(--text-primary)] font-medium tabular-nums">{formatPrice(subtotal)}</span>
               </div>
@@ -339,10 +286,9 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
                 <span>Included</span>
               </div>
               <div className="flex justify-between text-[15px] font-bold pt-2 border-t border-[var(--border-default)]">
-                <span className="text-[var(--text-primary)]">Estimated total</span>
+                <span className="text-[var(--text-primary)]">Total</span>
                 <span className="text-[var(--text-primary)] tabular-nums">{formatPrice(subtotal)}</span>
               </div>
-              <p className="text-[10px] text-[var(--text-tertiary)]">Final price confirmed by our team on WhatsApp</p>
             </div>
 
           </div>
