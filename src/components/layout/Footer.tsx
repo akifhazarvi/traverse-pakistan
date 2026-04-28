@@ -17,7 +17,7 @@ const destinationLinks = [
   { label: "Chitral & Kalash", href: "/destinations/chitral" },
   { label: "Fairy Meadows", href: "/destinations/fairy-meadows" },
   { label: "Kumrat Valley", href: "/destinations/kumrat" },
-  { label: "Makran Coast", href: "/destinations/makran-coast" },
+  { label: "Makran Coast", href: "/destinations/makran" },
 ];
 
 const companyLinks = [

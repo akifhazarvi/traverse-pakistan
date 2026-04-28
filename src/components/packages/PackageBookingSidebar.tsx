@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { formatPrice, getWhatsAppUrl } from "@/lib/utils";
 import { StarRating } from "@/components/ui/StarRating";
-import { QuoteRequestDialog } from "@/components/quote/QuoteRequestDialog";
 import type { Package, PackageTier } from "@/types/package";
 
 function toIsoDate(d: Date | null) {
@@ -162,8 +162,6 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange, departu
   const [rooms, setRooms] = useState(1);
   const [adults, setAdults] = useState(2);
 
-  // Quote request dialog
-  const [quoteOpen, setQuoteOpen] = useState(false);
 
   const calWrapRef = useRef<HTMLDivElement>(null);
 
@@ -415,13 +413,12 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange, departu
         </div>
 
         {/* CTA */}
-        <button
-          type="button"
-          onClick={() => setQuoteOpen(true)}
-          className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all cursor-pointer"
+        <Link
+          href={`/packages/${pkg.slug}/checkout`}
+          className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all"
         >
-          Request Quote
-        </button>
+          Book Now
+        </Link>
         <a
           href={getWhatsAppUrl(whatsappMessage)}
           target="_blank"
@@ -430,21 +427,6 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange, departu
         >
           or ask on WhatsApp →
         </a>
-
-        <QuoteRequestDialog
-          open={quoteOpen}
-          onClose={() => setQuoteOpen(false)}
-          requestType="package"
-          slug={pkg.slug}
-          displayName={pkg.name}
-          tier={selectedTier === "deluxe" ? "Deluxe" : "Luxury"}
-          defaultAdults={adults}
-          defaultRooms={rooms}
-          defaultStartDate={toIsoDate(checkIn)}
-          defaultEndDate={toIsoDate(checkOut)}
-          defaultDepartureCity={departureCity}
-          whatsappFallbackMessage={whatsappMessage}
-        />
 
         {/* Guarantees */}
         <div className="mt-5 space-y-2">

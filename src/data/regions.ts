@@ -51,7 +51,7 @@ export const regions: Region[] = [
     name: "Balochistan & Makran Coast",
     heroImage: "https://traversepakistan.com/wp-content/uploads/2022/10/DJI_0114.jpg",
     description: "Pakistan's wild frontier — from the dramatic Makran Coast with its pristine beaches to the lunar landscapes of Hingol National Park. Balochistan offers the most off-the-beaten-path adventures in the country.",
-    destinationSlugs: ["makran-coast"],
+    destinationSlugs: ["makran"],
     tourCount: 2,
     metaTitle: "Balochistan & Makran Coast Tours",
     metaDescription: "Explore Balochistan — Makran Coast, Kund Malir & Hingol National Park. Pakistan's wild frontier.",
