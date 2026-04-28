@@ -27,6 +27,14 @@ export async function POST(req: NextRequest) {
             updated_at: new Date().toISOString(),
           })
           .eq("booking_ref", orderId);
+      } else if (orderId.startsWith("HTL-")) {
+        await supabase
+          .from("hotel_bookings")
+          .update({
+            payment_status: isPaid ? "paid" : "failed",
+            updated_at: new Date().toISOString(),
+          })
+          .eq("booking_ref", orderId);
       } else {
         await supabase
           .from("bookings")
@@ -66,6 +74,14 @@ export async function GET(req: NextRequest) {
       if (bookingRef.startsWith("PKG-")) {
         await supabase
           .from("package_bookings")
+          .update({
+            payment_status: isPaid ? "paid" : "failed",
+            updated_at: new Date().toISOString(),
+          })
+          .eq("booking_ref", bookingRef);
+      } else if (bookingRef.startsWith("HTL-")) {
+        await supabase
+          .from("hotel_bookings")
           .update({
             payment_status: isPaid ? "paid" : "failed",
             updated_at: new Date().toISOString(),
