@@ -503,12 +503,22 @@ export function HotelBookingSidebar({ hotel }: HotelBookingSidebarProps) {
         </div>
 
         {/* CTA */}
-        <Link
-          href={`/hotels/${hotel.slug}/checkout?room=${encodeURIComponent(selectedRoom.name)}&checkin=${checkIn ? checkIn.toISOString().split("T")[0] : ""}&checkout=${checkOut ? checkOut.toISOString().split("T")[0] : ""}&adults=${adults}&children=${children}&rooms=${numRooms}&guests=${adults + children}`}
-          className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all"
-        >
-          {checkIn && checkOut ? "Book Now" : "Check Availability"}
-        </Link>
+        {checkIn && checkOut ? (
+          <Link
+            href={`/hotels/${hotel.slug}/checkout?room=${encodeURIComponent(selectedRoom.name)}&checkin=${checkIn.toISOString().split("T")[0]}&checkout=${checkOut.toISOString().split("T")[0]}&adults=${adults}&children=${children}&rooms=${numRooms}&guests=${adults + children}`}
+            className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all"
+          >
+            Book Now
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={() => openFor("checkin")}
+            className="w-full h-[52px] bg-[var(--primary)] text-[var(--text-inverse)] text-[15px] font-semibold rounded-[var(--radius-sm)] flex items-center justify-center gap-2 hover:bg-[var(--primary-hover)] active:scale-[0.98] transition-all cursor-pointer"
+          >
+            {checkIn ? "Select check-out date" : "Select dates to book"}
+          </button>
+        )}
         <p className="text-center text-[12px] text-[var(--text-tertiary)] mt-2">You won&apos;t be charged yet</p>
 
         {/* Guarantees */}

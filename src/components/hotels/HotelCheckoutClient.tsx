@@ -82,7 +82,7 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
     }
   }
 
-  const isValid = form.firstName && form.lastName && form.email && form.phone;
+  const isValid = form.firstName && form.phone;
 
   return (
     <div className="lg:grid lg:grid-cols-[1fr_380px] lg:gap-10">
@@ -106,20 +106,20 @@ export function HotelCheckoutClient({ hotel }: { hotel: Hotel }) {
             </div>
             <div>
               <label className="block text-[12px] font-semibold text-[var(--text-secondary)] mb-1.5 uppercase tracking-wide">
-                Last name <span className="text-[var(--error)]" aria-hidden="true">*</span>
+                Last name
               </label>
               <input
-                name="lastName" type="text" required value={form.lastName} onChange={handleChange}
+                name="lastName" type="text" value={form.lastName} onChange={handleChange}
                 placeholder="Khan"
                 className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-colors"
               />
             </div>
             <div>
               <label className="block text-[12px] font-semibold text-[var(--text-secondary)] mb-1.5 uppercase tracking-wide">
-                Email <span className="text-[var(--error)]" aria-hidden="true">*</span>
+                Email
               </label>
               <input
-                name="email" type="email" required value={form.email} onChange={handleChange}
+                name="email" type="email" value={form.email} onChange={handleChange}
                 placeholder="ali@example.com"
                 className="w-full h-11 px-4 border border-[var(--border-default)] rounded-[var(--radius-sm)] bg-[var(--bg-primary)] text-[var(--text-primary)] text-[14px] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] transition-colors"
               />
