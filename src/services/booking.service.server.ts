@@ -2,6 +2,13 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import type { CreateBookingArgs, CreateBookingResult } from "@/lib/supabase/types";
 import type { BookingSummary, CreateBookingInput } from "@/types/booking";
 
+export interface PackageBookingRecord {
+  bookingRef: string;
+  totalAmount: number;
+  paymentStatus: string;
+  packageSlug: string;
+}
+
 export async function createBooking(input: CreateBookingInput): Promise<BookingSummary> {
   const supabase = await getSupabaseServer();
 
@@ -32,5 +39,21 @@ export async function createBooking(input: CreateBookingInput): Promise<BookingS
     bookingId: result.booking_id,
     bookingRef: result.booking_ref,
     totalAmount: result.total_amount,
+  };
+}
+
+export async function getPackageBookingByRef(ref: string): Promise<PackageBookingRecord | null> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase
+    .from("package_bookings")
+    .select("booking_ref, total_amount, payment_status, package_slug")
+    .eq("booking_ref", ref)
+    .maybeSingle();
+  if (error || !data) return null;
+  return {
+    bookingRef: data.booking_ref as string,
+    totalAmount: data.total_amount as number,
+    paymentStatus: (data.payment_status as string) ?? "pending",
+    packageSlug: data.package_slug as string,
   };
 }

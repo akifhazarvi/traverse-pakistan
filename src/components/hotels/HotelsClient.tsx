@@ -17,7 +17,7 @@ const allDestinations = [
   { name: "Kumrat Valley", slug: "kumrat" },
   { name: "Swat & Malam Jabba", slug: "swat" },
   { name: "Neelam Valley", slug: "neelam-valley" },
-  { name: "Makran Coast & Gwadar", slug: "makran-coast" },
+  { name: "Makran Coast & Gwadar", slug: "makran" },
 ];
 
 export function HotelsClient({ hotels }: { hotels: Hotel[] }) {

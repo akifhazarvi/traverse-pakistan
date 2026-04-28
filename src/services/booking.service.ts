@@ -138,3 +138,55 @@ export async function getBookingByRef(ref: string): Promise<Booking | null> {
   if (error) throw new Error(error.message);
   return data ? toBooking(data) : null;
 }
+
+export interface CreatePackageBookingInput {
+  packageSlug: string;
+  tier: "deluxe" | "luxury";
+  departureCity: string;
+  startDate: string | null;
+  adults: number;
+  rooms: number;
+  totalAmount: number;
+  contact: { name: string; email: string; phone: string };
+  notes?: string;
+}
+
+export interface PackageBookingSummary {
+  bookingId: string;
+  bookingRef: string;
+  totalAmount: number;
+}
+
+export async function createPackageBooking(
+  input: CreatePackageBookingInput
+): Promise<PackageBookingSummary> {
+  if (!isSupabaseConfigured) {
+    throw new Error("Online booking is not available.");
+  }
+  const supabase = getSupabaseBrowser();
+
+  const { data, error } = await supabase.rpc("create_package_booking", {
+    p_package_slug: input.packageSlug,
+    p_tier: input.tier,
+    p_departure_city: input.departureCity,
+    p_start_date: input.startDate ?? null,
+    p_adults: input.adults,
+    p_rooms: input.rooms,
+    p_total_amount: input.totalAmount,
+    p_contact_name: input.contact.name,
+    p_contact_email: input.contact.email,
+    p_contact_phone: input.contact.phone,
+    p_notes: input.notes ?? null,
+  });
+
+  if (error) throw new Error(error.message);
+
+  const result = Array.isArray(data) ? (data[0] as { booking_id: string; booking_ref: string; total_amount: number }) : null;
+  if (!result) throw new Error("Package booking creation returned no data");
+
+  return {
+    bookingId: result.booking_id,
+    bookingRef: result.booking_ref,
+    totalAmount: result.total_amount,
+  };
+}

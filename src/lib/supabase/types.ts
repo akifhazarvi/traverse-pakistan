@@ -291,12 +291,53 @@ export type Database = {
         Update: Partial<DestinationFaqRow>;
         Relationships: [];
       };
+      package_bookings: {
+        Row: {
+          id: string;
+          booking_ref: string;
+          user_id: string | null;
+          package_slug: string;
+          tier: "deluxe" | "luxury";
+          departure_city: string;
+          start_date: string | null;
+          adults: number;
+          rooms: number;
+          total_amount: number;
+          currency: string;
+          payment_status: string;
+          contact_name: string;
+          contact_email: string;
+          contact_phone: string;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Record<string, unknown>;
+        Update: Partial<{ payment_status: string; updated_at: string }>;
+        Relationships: [];
+      };
     };
     Views: Record<never, never>;
     Functions: {
       create_booking: {
         Args: CreateBookingArgs;
         Returns: CreateBookingResult[];
+      };
+      create_package_booking: {
+        Args: {
+          p_package_slug: string;
+          p_tier: "deluxe" | "luxury";
+          p_departure_city: string;
+          p_start_date: string | null;
+          p_adults: number;
+          p_rooms: number;
+          p_total_amount: number;
+          p_contact_name: string;
+          p_contact_email: string;
+          p_contact_phone: string;
+          p_notes: string | null;
+        };
+        Returns: { booking_id: string; booking_ref: string; total_amount: number }[];
       };
     };
   };

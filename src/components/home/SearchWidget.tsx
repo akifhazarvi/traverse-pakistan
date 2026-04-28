@@ -21,7 +21,7 @@ const allDestinations = [
   { name: "Kumrat Valley", slug: "kumrat", region: "KPK" },
   { name: "Swat & Malam Jabba", slug: "swat", region: "KPK" },
   { name: "Neelam Valley", slug: "neelam-valley", region: "Azad Kashmir" },
-  { name: "Makran Coast & Gwadar", slug: "makran-coast", region: "Balochistan" },
+  { name: "Makran Coast & Gwadar", slug: "makran", region: "Balochistan" },
   { name: "Interior Sindh", slug: "interior-sindh", region: "Sindh" },
   { name: "Multan & Bahawalpur", slug: "multan", region: "Punjab" },
   { name: "Kaghan & Sharan", slug: "kaghan", region: "KPK" },

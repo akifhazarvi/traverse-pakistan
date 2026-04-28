@@ -86,7 +86,7 @@ export default async function DestinationDetailPage({ params }: Props) {
     <>
       <JsonLd data={schema} id={`destination-${dest.slug}-jsonld`} />
       {/* Hero + description — image is shared background */}
-      <section className="relative flex items-end min-h-[480px] sm:min-h-[560px]">
+      <section className="relative flex items-end min-h-[560px] sm:min-h-[640px]">
         <Image
           src={dest.heroImage}
           alt={dest.name}
@@ -94,6 +94,7 @@ export default async function DestinationDetailPage({ params }: Props) {
           className="object-cover"
           sizes="100vw"
           priority
+          quality={80}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
         <Container className="relative pb-10 sm:pb-14 pt-24">
