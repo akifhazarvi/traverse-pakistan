@@ -1,27 +1,27 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
-import { SignInForm } from "@/components/auth/SignInForm";
+import { ResetPasswordForm } from "@/components/auth/ResetPasswordForm";
 
 export const metadata: Metadata = {
-  title: "Sign in",
-  description: "Sign in to Traverse Pakistan to manage your bookings.",
+  title: "Set new password",
+  description: "Choose a new password for your Traverse Pakistan account.",
   robots: { index: false, follow: false },
 };
 
-export default function SignInPage() {
+export default function ResetPasswordPage() {
   return (
     <div className="py-12 sm:py-20">
       <Container>
         <div className="max-w-[420px] mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-[28px] sm:text-[32px] font-bold text-[var(--text-primary)] tracking-tight">
-              Welcome back
+              Set new password
             </h1>
             <p className="text-[14px] text-[var(--text-secondary)] mt-2">
-              Sign in or create a new account.
+              Choose a strong password for your account.
             </p>
           </div>
-          <SignInForm defaultMode="sign-in" />
+          <ResetPasswordForm />
         </div>
       </Container>
     </div>

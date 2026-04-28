@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "./AuthProvider";
+import { Icon } from "@/components/ui/Icon";
 
 function initials(name?: string | null, email?: string | null) {
   const src = (name || email || "").trim();
@@ -35,9 +36,10 @@ export function UserMenu() {
     return (
       <Link
         href="/auth/sign-in"
-        className="hidden sm:inline-flex h-9 items-center gap-1.5 px-4 text-[13px] font-semibold text-[var(--text-primary)] border border-[var(--border-default)] rounded-[var(--radius-full)] hover:bg-[var(--bg-subtle)] transition-colors whitespace-nowrap"
+        className="w-9 h-9 rounded-full border border-[var(--border-default)] flex items-center justify-center text-[var(--text-primary)] hover:border-[var(--primary)] hover:bg-[var(--bg-subtle)] transition-colors"
+        aria-label="Sign in"
       >
-        Sign in
+        <Icon name="user" size="md" />
       </Link>
     );
   }
