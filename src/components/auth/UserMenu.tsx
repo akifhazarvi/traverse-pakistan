@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "./AuthProvider";
+import { Icon } from "@/components/ui/Icon";
 
 function initials(name?: string | null, email?: string | null) {
   const src = (name || email || "").trim();
@@ -33,20 +34,13 @@ export function UserMenu() {
 
   if (!user) {
     return (
-      <div className="hidden sm:flex items-center gap-2">
-        <Link
-          href="/auth/sign-in"
-          className="h-9 inline-flex items-center px-4 text-[13px] font-semibold text-[var(--text-primary)] border border-[var(--border-default)] rounded-[var(--radius-full)] hover:bg-[var(--bg-subtle)] transition-colors whitespace-nowrap"
-        >
-          Sign in
-        </Link>
-        <Link
-          href="/auth/sign-up"
-          className="h-9 inline-flex items-center px-4 text-[13px] font-semibold text-[var(--text-inverse)] bg-[var(--primary)] rounded-[var(--radius-full)] hover:bg-[var(--primary-hover)] transition-colors whitespace-nowrap"
-        >
-          Sign up
-        </Link>
-      </div>
+      <Link
+        href="/auth/sign-in"
+        className="w-9 h-9 rounded-full border border-[var(--border-default)] flex items-center justify-center text-[var(--text-primary)] hover:border-[var(--primary)] hover:bg-[var(--bg-subtle)] transition-colors"
+        aria-label="Sign in"
+      >
+        <Icon name="user" size="md" />
+      </Link>
     );
   }
 

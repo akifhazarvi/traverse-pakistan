@@ -2,15 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { getSupabaseBrowser } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { Icon } from "@/components/ui/Icon";
-
-function getResetCallbackUrl() {
-  if (typeof window === "undefined") return "/auth/reset-password";
-  const base = window.location.origin + (process.env.NEXT_PUBLIC_BASE_PATH ?? "");
-  return `${base}/auth/callback?next=${encodeURIComponent("/auth/reset-password")}`;
-}
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -52,10 +45,15 @@ export function ForgotPasswordForm() {
     setError(null);
     setSubmitting(true);
     try {
-      const { error: err } = await getSupabaseBrowser().auth.resetPasswordForEmail(email, {
-        redirectTo: getResetCallbackUrl(),
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
       });
-      if (err) throw err;
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error((body as { error?: string }).error ?? "Could not send reset link");
+      }
       setSent(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not send reset link");

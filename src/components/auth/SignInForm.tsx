@@ -176,7 +176,6 @@ function SignInInner({ defaultMode = "sign-in" }: Props) {
           password,
           options: {
             data: { full_name: name.trim() },
-            emailRedirectTo: getCallbackUrl(redirectTo),
           },
         });
         if (err) throw err;
@@ -185,6 +184,12 @@ function SignInInner({ defaultMode = "sign-in" }: Props) {
           router.push(redirectTo);
           router.refresh();
         } else {
+          // Send branded confirmation email via Resend
+          await fetch("/api/auth/send-confirmation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, name: name.trim() || undefined }),
+          });
           setAwaitingConfirmation(true);
         }
       }
