@@ -19,13 +19,23 @@ export async function POST(req: NextRequest) {
 
     if (orderId) {
       const supabase = await getSupabaseServer();
-      await supabase
-        .from("bookings")
-        .update({
-          status: isPaid ? "confirmed" : "cancelled",
-          updated_at: new Date().toISOString(),
-        })
-        .eq("booking_ref", orderId);
+      if (orderId.startsWith("PKG-")) {
+        await supabase
+          .from("package_bookings")
+          .update({
+            payment_status: isPaid ? "paid" : "failed",
+            updated_at: new Date().toISOString(),
+          })
+          .eq("booking_ref", orderId);
+      } else {
+        await supabase
+          .from("bookings")
+          .update({
+            status: isPaid ? "confirmed" : "cancelled",
+            updated_at: new Date().toISOString(),
+          })
+          .eq("booking_ref", orderId);
+      }
     }
 
     return NextResponse.json({ received: true });
@@ -53,13 +63,23 @@ export async function GET(req: NextRequest) {
 
     if (bookingRef) {
       const supabase = await getSupabaseServer();
-      await supabase
-        .from("bookings")
-        .update({
-          status: isPaid ? "confirmed" : "cancelled",
-          updated_at: new Date().toISOString(),
-        })
-        .eq("booking_ref", bookingRef);
+      if (bookingRef.startsWith("PKG-")) {
+        await supabase
+          .from("package_bookings")
+          .update({
+            payment_status: isPaid ? "paid" : "failed",
+            updated_at: new Date().toISOString(),
+          })
+          .eq("booking_ref", bookingRef);
+      } else {
+        await supabase
+          .from("bookings")
+          .update({
+            status: isPaid ? "confirmed" : "cancelled",
+            updated_at: new Date().toISOString(),
+          })
+          .eq("booking_ref", bookingRef);
+      }
     }
 
     return NextResponse.json({
