@@ -40,6 +40,7 @@ export interface Package {
   duration: number;
   route: string;
   destinationSlug: string;
+  relatedDestinationSlugs?: string[];
   regionSlug: string;
   rating: number;
   reviewCount: number;
