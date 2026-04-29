@@ -21,6 +21,10 @@ export const getPackageItinerary = cache(async (slug: string) => {
 
 export const getPackagesByDestination = cache(
   async (destinationSlug: string): Promise<Package[]> => {
-    return packages.filter((p) => p.destinationSlug === destinationSlug);
+    return packages.filter(
+      (p) =>
+        p.destinationSlug === destinationSlug ||
+        p.relatedDestinationSlugs?.includes(destinationSlug)
+    );
   }
 );
