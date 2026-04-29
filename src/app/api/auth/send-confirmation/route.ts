@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
     const admin = getSupabaseAdmin();
     const { data, error } = await admin.auth.admin.generateLink({
-      type: "signup",
+      type: "magiclink",
       email,
       options: { redirectTo },
     });
