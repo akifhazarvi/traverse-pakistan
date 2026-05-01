@@ -242,7 +242,7 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange, departu
         </div>
 
         {/* Departure City */}
-        {(pricing.lahore || pricing.karachi) && (
+        {(pricing.lahore !== null || pricing.karachi !== null) && (
           <div className="mb-5">
             <label className="text-[12px] font-bold uppercase tracking-[0.08em] text-[var(--text-secondary)] block mb-2">Starting Location</label>
             <div className={`grid gap-2 ${pricing.karachi ? "grid-cols-3" : "grid-cols-2"}`}>

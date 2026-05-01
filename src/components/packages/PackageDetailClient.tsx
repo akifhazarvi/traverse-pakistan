@@ -66,26 +66,51 @@ export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages
               </div>
             </div>
 
-            {/* Tier selector — inline for mobile */}
-            <div className="mt-6 lg:hidden p-4 bg-[var(--bg-subtle)] rounded-xl border border-[var(--border-default)]">
-              <p className="text-[12px] font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-3">Choose Your Tier</p>
-              <div className="grid grid-cols-2 gap-2">
-                {(["deluxe", "luxury"] as PackageTier[]).map((tier) => (
-                  <button
-                    key={tier}
-                    type="button"
-                    onClick={() => setSelectedTier(tier)}
-                    className={`h-10 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer ${
-                      selectedTier === tier
-                        ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
-                        : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)]"
-                    }`}
-                  >
-                    {tier.charAt(0).toUpperCase() + tier.slice(1)}
-                    {" · "}{formatPrice(pkg.tiers[tier].islamabad)}
-                  </button>
-                ))}
+            {/* Tier + city selector — inline for mobile */}
+            <div className="mt-6 lg:hidden p-4 bg-[var(--bg-subtle)] rounded-xl border border-[var(--border-default)] space-y-4">
+              <div>
+                <p className="text-[12px] font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-3">Choose Your Tier</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {(["deluxe", "luxury"] as PackageTier[]).map((tier) => (
+                    <button
+                      key={tier}
+                      type="button"
+                      onClick={() => setSelectedTier(tier)}
+                      className={`h-10 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer ${
+                        selectedTier === tier
+                          ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
+                          : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)]"
+                      }`}
+                    >
+                      {tier.charAt(0).toUpperCase() + tier.slice(1)}
+                      {" · "}{formatPrice(pkg.tiers[tier].islamabad)}
+                    </button>
+                  ))}
+                </div>
               </div>
+              {(pkg.tiers[selectedTier].lahore !== null || pkg.tiers[selectedTier].karachi !== null) && (
+                <div>
+                  <p className="text-[12px] font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-3">Starting Location</p>
+                  <div className={`grid gap-2 ${pkg.tiers[selectedTier].karachi !== null ? "grid-cols-3" : "grid-cols-2"}`}>
+                    {(["islamabad", "lahore", "karachi"] as const)
+                      .filter((city) => city === "islamabad" || pkg.tiers[selectedTier][city] !== null)
+                      .map((city) => (
+                        <button
+                          key={city}
+                          type="button"
+                          onClick={() => setDepartureCity(city)}
+                          className={`h-10 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer capitalize ${
+                            departureCity === city
+                              ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
+                              : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)]"
+                          }`}
+                        >
+                          {city.charAt(0).toUpperCase() + city.slice(1)}
+                        </button>
+                      ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Overview */}

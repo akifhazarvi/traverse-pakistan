@@ -23,7 +23,7 @@ export interface PackageItineraryDay {
   stops: ItineraryStop[];
   drivingTime: string;
   overnight: string;
-  cityOnly?: DepartureCity;
+  cityOnly?: DepartureCity | DepartureCity[];
 }
 
 export interface PackageItinerary {
