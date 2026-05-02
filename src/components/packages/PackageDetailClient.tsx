@@ -24,7 +24,9 @@ interface PackageDetailClientProps {
 
 export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages }: PackageDetailClientProps) {
   const [selectedTier, setSelectedTier] = useState<PackageTier>("deluxe");
-  const [departureCity, setDepartureCity] = useState<"islamabad" | "lahore" | "karachi">("islamabad");
+  const [departureCity, setDepartureCity] = useState<"islamabad" | "lahore" | "karachi">(
+    pkg.tiers.deluxe.islamabad !== null ? "islamabad" : pkg.tiers.deluxe.lahore !== null ? "lahore" : "karachi"
+  );
   const [mobileQuoteOpen, setMobileQuoteOpen] = useState(false);
 
   return (
@@ -66,26 +68,51 @@ export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages
               </div>
             </div>
 
-            {/* Tier selector — inline for mobile */}
-            <div className="mt-6 lg:hidden p-4 bg-[var(--bg-subtle)] rounded-xl border border-[var(--border-default)]">
-              <p className="text-[12px] font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-3">Choose Your Tier</p>
-              <div className="grid grid-cols-2 gap-2">
-                {(["deluxe", "luxury"] as PackageTier[]).map((tier) => (
-                  <button
-                    key={tier}
-                    type="button"
-                    onClick={() => setSelectedTier(tier)}
-                    className={`h-10 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer ${
-                      selectedTier === tier
-                        ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
-                        : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)]"
-                    }`}
-                  >
-                    {tier.charAt(0).toUpperCase() + tier.slice(1)}
-                    {" · "}{formatPrice(pkg.tiers[tier].islamabad)}
-                  </button>
-                ))}
+            {/* Tier + city selector — inline for mobile */}
+            <div className="mt-6 lg:hidden p-4 bg-[var(--bg-subtle)] rounded-xl border border-[var(--border-default)] space-y-4">
+              <div>
+                <p className="text-[12px] font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-3">Choose Your Tier</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {(["deluxe", "luxury"] as PackageTier[]).map((tier) => (
+                    <button
+                      key={tier}
+                      type="button"
+                      onClick={() => setSelectedTier(tier)}
+                      className={`h-10 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer ${
+                        selectedTier === tier
+                          ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
+                          : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)]"
+                      }`}
+                    >
+                      {tier.charAt(0).toUpperCase() + tier.slice(1)}
+                      {" · "}{formatPrice(pkg.tiers[tier].islamabad ?? pkg.tiers[tier].lahore ?? 0)}
+                    </button>
+                  ))}
+                </div>
               </div>
+              {(() => { const cities = (["islamabad", "lahore", "karachi"] as const).filter(c => pkg.tiers[selectedTier][c] !== null); return cities.length > 1; })() && (
+                <div>
+                  <p className="text-[12px] font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-3">Starting Location</p>
+                  <div className={`grid gap-2 ${(["islamabad", "lahore", "karachi"] as const).filter(c => pkg.tiers[selectedTier][c] !== null).length === 3 ? "grid-cols-3" : "grid-cols-2"}`}>
+                    {(["islamabad", "lahore", "karachi"] as const)
+                      .filter((city) => pkg.tiers[selectedTier][city] !== null)
+                      .map((city) => (
+                        <button
+                          key={city}
+                          type="button"
+                          onClick={() => setDepartureCity(city)}
+                          className={`h-10 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer capitalize ${
+                            departureCity === city
+                              ? "bg-[var(--primary)] text-[var(--text-inverse)] border-[var(--primary)]"
+                              : "bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-default)]"
+                          }`}
+                        >
+                          {city.charAt(0).toUpperCase() + city.slice(1)}
+                        </button>
+                      ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Overview */}
@@ -200,7 +227,7 @@ export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages
         <div className="fixed bottom-0 left-0 right-0 lg:hidden z-40 bg-[var(--bg-primary)] border-t border-[var(--border-default)] px-5 py-3 flex items-center justify-between">
           <div>
             <span className="text-lg font-bold text-[var(--text-primary)]">
-              {formatPrice(pkg.tiers[selectedTier].islamabad)}
+              {formatPrice(pkg.tiers[selectedTier][departureCity] ?? pkg.tiers[selectedTier].islamabad ?? pkg.tiers[selectedTier].lahore ?? 0)}
             </span>
             <span className="text-[13px] text-[var(--text-tertiary)] ml-1">per person</span>
           </div>

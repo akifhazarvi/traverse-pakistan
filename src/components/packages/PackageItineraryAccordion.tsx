@@ -26,7 +26,11 @@ const TIER_COLORS: Record<PackageTier, string> = {
 };
 
 export function PackageItineraryAccordion({ days, selectedTier, hotelsMap, departureCity }: PackageItineraryAccordionProps) {
-  const visibleDays = days.filter((d) => !d.cityOnly || d.cityOnly === departureCity);
+  const visibleDays = days.filter((d) => {
+    if (!d.cityOnly) return true;
+    const allowed = Array.isArray(d.cityOnly) ? d.cityOnly : [d.cityOnly];
+    return allowed.includes(departureCity);
+  });
   return (
     <div className="border border-[var(--border-default)] rounded-xl overflow-hidden">
       {visibleDays.map((day) => {

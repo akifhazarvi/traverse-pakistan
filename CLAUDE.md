@@ -77,7 +77,7 @@ Tourism booking platform for traversepakistan.com.
 
 ```bash
 npm run dev    # Dev server (Turbopack) on :3000
-npm run build  # Production build, static-generates ~80 pages
+npm run build  # Production build, static-generates 565 pages (as of pkg-51, now pkg-56)
 npm run lint   # ESLint
 ```
 
@@ -88,3 +88,96 @@ npm run lint   # ESLint
 - Pakistan's highest-rated tourism company — 4.9 ★ · 1,300+ reviews · TripAdvisor Travelers' Choice 2025
 - Phone `+92-321-6650670` · WhatsApp `923216650670` · Office E-11/1, Islamabad
 - Image host: `https://traversepakistan.com/wp-content/uploads/` (`images.unoptimized: true` in [next.config.ts](next.config.ts) due to upstream SSL)
+
+---
+
+## Package data — current state
+
+### Package IDs in use: pkg-1 → pkg-56
+
+| Range | Region | Notes |
+|-------|--------|-------|
+| pkg-1 – pkg-14 | Gilgit-Baltistan / KPK | Hunza, Fairy Meadows, Chitral, Skardu (original set) |
+| pkg-15 – pkg-30 | Gilgit-Baltistan / KPK | Kaghan, Kumrat, Hunza extensions (added in bulk) |
+| pkg-31 – pkg-40 | Gilgit-Baltistan | Skardu — 10 packages (4-day flights → 8-day road epics) |
+| pkg-41 – pkg-43 | Balochistan | Gwadar / Makran Coast — 3 packages |
+| pkg-44 – pkg-48 | Sindh | Karachi day trip, Mohen Jo Daro, Sindh circuit, 10-day & 12-day historical tours |
+| pkg-49 – pkg-51 | KPK / Swat | Malam Jabba 3-day winter, Swat+Kalam+Malam Jabba 4-day, Malam Jabba+Kalam 5-day winter |
+| pkg-52 – pkg-56 | Azad Kashmir | Neelam Valley — Arrang Kel, Ratti Galli, Taobut (3–7 day, ISB & Lahore departures) |
+
+**Next package ID: pkg-57**
+
+### Neelam Valley packages (pkg-52–56) — key conventions
+- `destinationSlug: "neelam-valley"`, `regionSlug: "azad-kashmir"`
+- KHI pricing = null for all (no direct Karachi departure)
+- ISB and LHR priced separately; lahore: 0 placeholder for ISB-only packages too — confirm per package
+- All pricing currently 0 (placeholder) — fill before launch
+- Images use MEDIA CDN: `${MEDIA}/destinations/{arang-kel,keran,ratti-galli,sharda,neelam-valley}/cover.jpg`
+- Taobut hotels: `shabistan-inn-taobut` (hotel-28), `corner-view-guest-house-taobut` (hotel-29)
+
+### Skardu packages (pkg-31–40) — key conventions
+- `destinationSlug: "skardu"` except pkg-34 (`"astore"` + `relatedDestinationSlugs: ["skardu", "deosai"]`)
+- Flight packages: ISB and LHR priced separately (+5k LHR vs ISB); KHI = null on road packages
+- Road packages via Naran/Babusar: described as "Naran & Babusar" route, not "KKH"
+- Pricing range: 225k–545k deluxe/luxury per person
+
+### Gwadar / Makran packages (pkg-41–43) — key conventions
+- `destinationSlug: "makran"`, `regionSlug: "balochistan"`
+- KHI is primary departure for all three; ISB/LHR travelers add 1 night KHI each way (+2 days total)
+- KHI prices are the base; ISB = LHR prices (same flight cost differential)
+- Pricing: deluxe KHI 125k–175k, deluxe ISB/LHR 225k–295k, luxury KHI 145k–195k, luxury ISB/LHR 265k–395k
+
+### Adding a new package — checklist
+1. Add entry to [src/data/packages.ts](src/data/packages.ts) with next `pkg-N` id
+2. Add itinerary to [src/data/package-itineraries.ts](src/data/package-itineraries.ts) matching `packageSlug`
+3. Ensure hotel slugs in `hotels` field exist in [src/data/hotels.ts](src/data/hotels.ts)
+4. Run `npm run build` — confirms static page generated
+
+---
+
+## Hotels — current state
+
+### Hotel IDs in use: hotel-1 → hotel-29
+
+| ID | Slug | Destination | Tier |
+|----|------|-------------|------|
+| hotel-1 | eagles-nest-hotel | hunza | premium |
+| hotel-2 | luxus-hunza-attabad-lake | hunza | luxury |
+| hotel-3 | shangrila-resort-skardu | skardu | premium |
+| hotel-4 | nanga-parbat-base-camp-hotel | fairy-meadows | standard |
+| hotel-5 | swat-serena-hotel | swat | luxury |
+| hotel-6 | concordia-hotel-skardu | skardu | deluxe |
+| hotel-7 | glamp-pakistan-deosai | skardu | premium |
+| hotel-8 | sadaf-resort-gwadar | **gwadar** | deluxe |
+| hotel-9 | pc-gwadar | **gwadar** | luxury |
+| hotel-10 | haft-talar-resort-ormara | **ormara** | deluxe |
+| hotel-11 | gidan-beach-resort-ormara | **ormara** | luxury |
+| hotel-12 | lokal-karachi | **karachi** | deluxe |
+| hotel-13 | ambiance-karachi | **karachi** | luxury |
+| hotel-24 | shabistan-inn-arrang-kel | **arang-kel** | deluxe |
+| hotel-25 | wanderlust-arrang-kel | **arang-kel** | premium |
+| hotel-26 | keran-riverside-resort | **keran** | deluxe |
+| hotel-27 | green-village-resort-upper-neelam | **keran** | deluxe |
+| hotel-28 | shabistan-inn-taobut | **taobut** | deluxe |
+| hotel-29 | corner-view-guest-house-taobut | **taobut** | standard |
+
+**Next hotel ID: hotel-30**
+
+### Gwadar/Makran hotel destinations
+`gwadar`, `ormara`, and `karachi` are valid destination slugs confirmed by the user. `makran` is the **region** — do not use it as a hotel `destinationSlug`.
+
+### Glamp Pakistan Deosai (hotel-7) — special notes
+- Located at Bara Pani inside Deosai National Park at 4,114m
+- Deluxe room: "Standard Glamps"; Luxury room: "Arch of View"
+- `destinationSlug: "skardu"` (no separate Deosai destination slug exists in static data)
+
+---
+
+## Pending / known gaps
+
+- **Gwadar media images not yet uploaded** — `media.traversepakistan.com/destinations/gwadar/`, `/ormara/`, `/karachi/` all 404. Currently using WP uploads for all Gwadar package and hotel images. Once uploaded, update `images[]` in packages.ts, hotels.ts and `heroImage` in destinations.ts.
+- **Kashmir media images** — `media.traversepakistan.com/destinations/arang-kel/`, `/keran/`, `/ratti-galli/`, `/sharda/` CDN paths used in pkg-52–56. Upload images before launch.
+- **Skardu packages itineraries (pkg-31–40)** — package-itineraries.ts entries not yet written for these. Gwadar (pkg-41–43) itineraries are complete.
+- **Pricing on pkg-41–43** — single supplements are estimates (~15% of deluxe KHI). Confirm if adjustment needed.
+- **Pricing on pkg-52–56** — all tiers currently 0 placeholder. Fill before launch.
+- **Hotel IDs 14–23 gap** — hotel-24 through hotel-29 are Kashmir hotels; IDs 14–23 may be assigned to Sindh/other hotels added in a prior session not reflected here.

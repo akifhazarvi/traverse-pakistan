@@ -4,7 +4,7 @@ import type { ItineraryStop, DepartureCity } from "./itinerary";
 export type PackageTier = "deluxe" | "luxury";
 
 export interface PackageTierPricing {
-  islamabad: number;
+  islamabad: number | null;
   lahore: number | null;
   karachi: number | null;
   singleSupplement: number | null;
@@ -23,7 +23,7 @@ export interface PackageItineraryDay {
   stops: ItineraryStop[];
   drivingTime: string;
   overnight: string;
-  cityOnly?: DepartureCity;
+  cityOnly?: DepartureCity | DepartureCity[];
 }
 
 export interface PackageItinerary {
