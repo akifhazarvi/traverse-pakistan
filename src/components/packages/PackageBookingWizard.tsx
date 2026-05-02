@@ -147,7 +147,7 @@ export function PackageBookingWizard({ pkg, reviews }: { pkg: Package; reviews: 
   const [state, setState] = useState<WizardState>({
     step: 1,
     tier: "deluxe",
-    city: "islamabad",
+    city: pkg.tiers.deluxe.islamabad !== null ? "islamabad" : pkg.tiers.deluxe.lahore !== null ? "lahore" : "karachi",
     startDate: null,
     adults: 2,
     rooms: 1,
@@ -167,7 +167,7 @@ export function PackageBookingWizard({ pkg, reviews }: { pkg: Package; reviews: 
   const pricePerPerson =
     state.city === "lahore" && pricing.lahore ? pricing.lahore :
     state.city === "karachi" && pricing.karachi ? pricing.karachi :
-    pricing.islamabad;
+    (pricing.islamabad ?? pricing.lahore ?? pricing.karachi ?? 0);
 
   const defaultRooms = Math.ceil(state.adults / 3);
   const extraRooms = Math.max(0, state.rooms - defaultRooms);
@@ -265,7 +265,7 @@ export function PackageBookingWizard({ pkg, reviews }: { pkg: Package; reviews: 
                     }`}
                   >
                     <span className="text-[14px] font-bold text-[var(--text-primary)] capitalize">{tier}</span>
-                    <span className="text-[12px] text-[var(--text-secondary)]">{formatPrice(pkg.tiers[tier].islamabad)} / person</span>
+                    <span className="text-[12px] text-[var(--text-secondary)]">{formatPrice(pkg.tiers[tier].islamabad ?? pkg.tiers[tier].lahore ?? 0)} / person</span>
                   </button>
                 ))}
               </div>
@@ -277,7 +277,7 @@ export function PackageBookingWizard({ pkg, reviews }: { pkg: Package; reviews: 
                 <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)] block mb-2">Departure city</label>
                 <div className={`grid gap-3 ${pricing.karachi ? "grid-cols-3" : "grid-cols-2"}`}>
                   {(["islamabad", "lahore", "karachi"] as DepartureCity[])
-                    .filter(c => c === "islamabad" || pricing[c] !== null)
+                    .filter(c => pricing[c] !== null)
                     .map(city => (
                       <button
                         key={city} type="button" onClick={() => patch({ city })}

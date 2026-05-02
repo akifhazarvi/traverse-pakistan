@@ -202,7 +202,7 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange, departu
   const pricePerPerson =
     (departureCity === "lahore" && pricing.lahore) ? pricing.lahore :
     (departureCity === "karachi" && pricing.karachi) ? pricing.karachi :
-    pricing.islamabad;
+    (pricing.islamabad ?? pricing.lahore ?? pricing.karachi ?? 0);
   const baseTotal = pricePerPerson * adults;
   const roomSurcharge = extraRooms * singleSupp;
   const totalPrice = baseTotal + roomSurcharge;
@@ -247,7 +247,7 @@ export function PackageBookingSidebar({ pkg, selectedTier, onTierChange, departu
             <label className="text-[12px] font-bold uppercase tracking-[0.08em] text-[var(--text-secondary)] block mb-2">Starting Location</label>
             <div className={`grid gap-2 ${pricing.karachi ? "grid-cols-3" : "grid-cols-2"}`}>
               {(["islamabad", "lahore", "karachi"] as DepartureCityOption[])
-                .filter((city) => city === "islamabad" || pricing[city] !== null)
+                .filter((city) => pricing[city] !== null)
                 .map((city) => (
                   <button key={city} type="button" onClick={() => onDepartureCityChange(city)}
                     className={`h-11 rounded-[var(--radius-sm)] text-[13px] font-semibold border transition-colors cursor-pointer capitalize ${

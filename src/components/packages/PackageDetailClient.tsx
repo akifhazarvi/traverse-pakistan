@@ -24,7 +24,9 @@ interface PackageDetailClientProps {
 
 export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages }: PackageDetailClientProps) {
   const [selectedTier, setSelectedTier] = useState<PackageTier>("deluxe");
-  const [departureCity, setDepartureCity] = useState<"islamabad" | "lahore" | "karachi">("islamabad");
+  const [departureCity, setDepartureCity] = useState<"islamabad" | "lahore" | "karachi">(
+    pkg.tiers.deluxe.islamabad !== null ? "islamabad" : pkg.tiers.deluxe.lahore !== null ? "lahore" : "karachi"
+  );
   const [mobileQuoteOpen, setMobileQuoteOpen] = useState(false);
 
   return (
@@ -83,17 +85,17 @@ export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages
                       }`}
                     >
                       {tier.charAt(0).toUpperCase() + tier.slice(1)}
-                      {" · "}{formatPrice(pkg.tiers[tier].islamabad)}
+                      {" · "}{formatPrice(pkg.tiers[tier].islamabad ?? pkg.tiers[tier].lahore ?? 0)}
                     </button>
                   ))}
                 </div>
               </div>
-              {(pkg.tiers[selectedTier].lahore !== null || pkg.tiers[selectedTier].karachi !== null) && (
+              {(() => { const cities = (["islamabad", "lahore", "karachi"] as const).filter(c => pkg.tiers[selectedTier][c] !== null); return cities.length > 1; })() && (
                 <div>
                   <p className="text-[12px] font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-3">Starting Location</p>
-                  <div className={`grid gap-2 ${pkg.tiers[selectedTier].karachi !== null ? "grid-cols-3" : "grid-cols-2"}`}>
+                  <div className={`grid gap-2 ${(["islamabad", "lahore", "karachi"] as const).filter(c => pkg.tiers[selectedTier][c] !== null).length === 3 ? "grid-cols-3" : "grid-cols-2"}`}>
                     {(["islamabad", "lahore", "karachi"] as const)
-                      .filter((city) => city === "islamabad" || pkg.tiers[selectedTier][city] !== null)
+                      .filter((city) => pkg.tiers[selectedTier][city] !== null)
                       .map((city) => (
                         <button
                           key={city}
@@ -225,7 +227,7 @@ export function PackageDetailClient({ pkg, itinerary, hotelsMap, relatedPackages
         <div className="fixed bottom-0 left-0 right-0 lg:hidden z-40 bg-[var(--bg-primary)] border-t border-[var(--border-default)] px-5 py-3 flex items-center justify-between">
           <div>
             <span className="text-lg font-bold text-[var(--text-primary)]">
-              {formatPrice(pkg.tiers[selectedTier].islamabad)}
+              {formatPrice(pkg.tiers[selectedTier][departureCity] ?? pkg.tiers[selectedTier].islamabad ?? pkg.tiers[selectedTier].lahore ?? 0)}
             </span>
             <span className="text-[13px] text-[var(--text-tertiary)] ml-1">per person</span>
           </div>

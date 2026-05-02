@@ -3656,8 +3656,8 @@ export const packages: Package[] = [
     relatedDestinationSlugs: [],
     regionSlug: "punjab",
     tiers: {
-      deluxe: { islamabad: 0, lahore: 0, karachi: null, singleSupplement: null },
-      luxury: { islamabad: 0, lahore: 0, karachi: null, singleSupplement: null },
+      deluxe: { islamabad: null, lahore: 0, karachi: null, singleSupplement: null },
+      luxury: { islamabad: null, lahore: 0, karachi: null, singleSupplement: null },
     },
     rating: 4.9,
     reviewCount: 0,
