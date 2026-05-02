@@ -652,7 +652,7 @@ export const packageItineraries: PackageItinerary[] = [
       {
         dayNumber: 0,
         title: "Karachi → Islamabad",
-        description: "Take an evening flight from Karachi to Islamabad. Transfer to 108 Hotel in the heart of Islamabad for the night. The group departs at 06:00 am tomorrow.",
+        description: "Take an evening flight from Karachi to Islamabad. Transfer to 108 Hotel in the heart of Islamabad for the night. Departure from Islamabad at 06:00 am.",
         hotels: { deluxe: "108-hotel-islamabad", luxury: "108-hotel-islamabad" },
         stops: [
           { name: "Karachi", detail: "Evening departure flight" },
@@ -744,7 +744,7 @@ export const packageItineraries: PackageItinerary[] = [
       {
         dayNumber: 0,
         title: "Karachi → Islamabad",
-        description: "Take an evening flight from Karachi to Islamabad. Transfer to 108 Hotel in the heart of Islamabad for the night. The group departs at 06:00 am tomorrow.",
+        description: "Take an evening flight from Karachi to Islamabad. Transfer to 108 Hotel in the heart of Islamabad for the night. Departure from Islamabad at 06:00 am.",
         hotels: { deluxe: "108-hotel-islamabad", luxury: "108-hotel-islamabad" },
         stops: [
           { name: "Karachi", detail: "Evening departure flight" },
@@ -835,7 +835,7 @@ export const packageItineraries: PackageItinerary[] = [
       {
         dayNumber: 0,
         title: "Karachi → Islamabad",
-        description: "Take an evening flight from Karachi to Islamabad. Transfer to 108 Hotel in the heart of Islamabad for the night. The group departs at 06:00 am tomorrow.",
+        description: "Take an evening flight from Karachi to Islamabad. Transfer to 108 Hotel in the heart of Islamabad for the night. Departure from Islamabad at 06:00 am.",
         hotels: { deluxe: "108-hotel-islamabad", luxury: "108-hotel-islamabad" },
         stops: [
           { name: "Karachi", detail: "Evening departure flight" },
@@ -940,7 +940,7 @@ export const packageItineraries: PackageItinerary[] = [
       {
         dayNumber: 0,
         title: "Karachi → Islamabad",
-        description: "Take an evening flight from Karachi to Islamabad. Transfer to 108 Hotel in the heart of Islamabad for the night. The group departs at 06:00 am tomorrow.",
+        description: "Take an evening flight from Karachi to Islamabad. Transfer to 108 Hotel in the heart of Islamabad for the night. Departure from Islamabad at 06:00 am.",
         hotels: { deluxe: "108-hotel-islamabad", luxury: "108-hotel-islamabad" },
         stops: [
           { name: "Karachi", detail: "Evening departure flight" },
@@ -1075,7 +1075,7 @@ export const packageItineraries: PackageItinerary[] = [
       {
         dayNumber: 0,
         title: "Karachi → Islamabad",
-        description: "Take an evening flight from Karachi to Islamabad. Transfer to 108 Hotel in the heart of Islamabad for the night. The group departs at 06:00 am tomorrow.",
+        description: "Take an evening flight from Karachi to Islamabad. Transfer to 108 Hotel in the heart of Islamabad for the night. Departure from Islamabad at 06:00 am.",
         hotels: { deluxe: "108-hotel-islamabad", luxury: "108-hotel-islamabad" },
         stops: [
           { name: "Karachi", detail: "Evening departure flight" },
@@ -1205,7 +1205,7 @@ export const packageItineraries: PackageItinerary[] = [
       {
         dayNumber: 0,
         title: "Karachi → Islamabad",
-        description: "Take an evening flight from Karachi to Islamabad. Transfer to 108 Hotel in the heart of Islamabad for the night. The group departs at 06:00 am tomorrow.",
+        description: "Take an evening flight from Karachi to Islamabad. Transfer to 108 Hotel in the heart of Islamabad for the night. Departure from Islamabad at 06:00 am.",
         hotels: { deluxe: "108-hotel-islamabad", luxury: "108-hotel-islamabad" },
         stops: [
           { name: "Karachi", detail: "Evening departure flight" },
@@ -3885,7 +3885,7 @@ export const packageItineraries: PackageItinerary[] = [
       {
         dayNumber: 1,
         title: "Lahore / Islamabad → White Palace Murghazar → Malam Jabba",
-        description: "Lahore travelers depart at midnight, arriving in Islamabad by 05:00 am to join the main group. The convoy leaves Islamabad at 08:00 am, climbing into the Swat Valley via the Malakand Pass. The first stop is the White Palace at Murghazar — a serene colonial-era residence of the Wali of Swat, set against a backdrop of pine-covered hills and a bubbling stream. Lunch at Fizagat's riverside picnic ground before the final climb to Malam Jabba at 2,800m, where the Mountain View Resort offers sweeping winter panoramas. Watch the sunset paint the Hindu Kush ridgeline golden before dinner.",
+        description: "Lahore travelers depart at midnight, arriving in Islamabad by 05:00 am. The convoy leaves Islamabad at 08:00 am, climbing into the Swat Valley via the Malakand Pass. The first stop is the White Palace at Murghazar — a serene colonial-era residence of the Wali of Swat, set against a backdrop of pine-covered hills and a bubbling stream. Lunch at Fizagat's riverside picnic ground before the final climb to Malam Jabba at 2,800m, where the Mountain View Resort offers sweeping winter panoramas. Watch the sunset paint the Hindu Kush ridgeline golden before dinner.",
         hotels: { deluxe: "", luxury: "mountain-view-resort-malam-jabba" },
         stops: [
           { name: "Lahore", detail: "Departure 12:00 am (midnight)", cityOnly: "lahore" },
@@ -3939,7 +3939,7 @@ export const packageItineraries: PackageItinerary[] = [
       {
         dayNumber: 1,
         title: "Lahore / Islamabad → White Palace Murghazar → Kalam",
-        description: "Lahore travelers depart at midnight, arriving in Islamabad by 05:00 am to join the main group. The drive from Islamabad begins at 07:30 am, winding north through the Swat motorway and into the valley. The first cultural stop is the White Palace at Murghazar — the elegant summer residence of the last Wali of Swat, set in a garden of roses and a clear mountain stream. Continue up the valley to Kalam, arriving early afternoon to the sight of pine-forested ridges and the rushing Swat River. Check in at Walnut Heights, take lunch, then walk through the nearby Ushu Forest before dinner.",
+        description: "Lahore travelers depart at midnight, arriving in Islamabad by 05:00 am. The drive from Islamabad begins at 07:30 am, winding north through the Swat motorway and into the valley. The first cultural stop is the White Palace at Murghazar — the elegant summer residence of the last Wali of Swat, set in a garden of roses and a clear mountain stream. Continue up the valley to Kalam, arriving early afternoon to the sight of pine-forested ridges and the rushing Swat River. Check in at Walnut Heights, take lunch, then walk through the nearby Ushu Forest before dinner.",
         hotels: { deluxe: "", luxury: "walnut-heights-kalam" },
         stops: [
           { name: "Lahore", detail: "Departure 12:00 am (midnight)", cityOnly: "lahore" },
@@ -4010,7 +4010,7 @@ export const packageItineraries: PackageItinerary[] = [
       {
         dayNumber: 1,
         title: "Lahore / Islamabad → Kalam",
-        description: "Lahore travelers depart at midnight, arriving in Islamabad by 05:00 am to join the main group. The convoy leaves Islamabad at 07:00 am, driving north through the Swat motorway. No cultural stops today — the goal is to reach Kalam before dark. The long valley drive rewards with views of pine forests, terraced fields and the rushing Swat River narrowing to a gorge. Arrive Kalam by early afternoon, check in at Zen Luxus or Walnut Heights, and spend the evening watching the winter sunset over the snow-dusted ridgelines before dinner.",
+        description: "Lahore travelers depart at midnight, arriving in Islamabad by 05:00 am. The convoy leaves Islamabad at 07:00 am, driving north through the Swat motorway. No cultural stops today — the goal is to reach Kalam before dark. The long valley drive rewards with views of pine forests, terraced fields and the rushing Swat River narrowing to a gorge. Arrive Kalam by early afternoon, check in at Zen Luxus or Walnut Heights, and spend the evening watching the winter sunset over the snow-dusted ridgelines before dinner.",
         hotels: { deluxe: "", luxury: "zen-luxus-kalam" },
         stops: [
           { name: "Lahore", detail: "Departure 12:00 am (midnight)", cityOnly: "lahore" },
@@ -5240,12 +5240,38 @@ export const packageItineraries: PackageItinerary[] = [
     packageSlug: "deosai-minimarg-5day",
     days: [
       {
+        dayNumber: 0,
+        title: "Lahore — Pre-departure evening",
+        description: "Lahore passengers board the overnight coach at 07:00 pm and travel through the night toward Islamabad, arriving in time for the midnight departure.",
+        hotels: { deluxe: "", luxury: "" },
+        stops: [
+          { name: "Lahore", detail: "07:00 pm — board overnight coach" },
+          { name: "Islamabad", detail: "Arrive ~11:30 pm" },
+        ],
+        drivingTime: "~5 hrs (Lahore → Islamabad)",
+        overnight: "Coach",
+        cityOnly: "lahore",
+      },
+      {
+        dayNumber: 0,
+        title: "Karachi — Evening flight to Islamabad",
+        description: "Karachi passengers take an evening flight to Islamabad. On arrival at Islamabad International Airport, passengers are ready for the onward journey.",
+        hotels: { deluxe: "", luxury: "" },
+        stops: [
+          { name: "Jinnah International Airport, Karachi", detail: "Evening flight departure" },
+          { name: "Islamabad International Airport", detail: "Arrival" },
+        ],
+        drivingTime: "~2 hrs flight",
+        overnight: "Coach",
+        cityOnly: "karachi",
+      },
+      {
         dayNumber: 1,
         title: "Islamabad → Babusar Top → Astore",
         description: "Midnight departure from Islamabad along the Karakoram Highway, reaching Naran at dawn for breakfast. Lulusar Lake at 3,400m and Babusar Top at 4,173m follow in quick succession. The descent leads through the Astore valley — one of the north's most unspoilt river valleys — arriving at Mulberry Lodge by evening.",
         hotels: { deluxe: "mulberry-lodge-astore", luxury: "mulberry-lodge-astore" },
         stops: [
-          { name: "Lahore", detail: "07:00 pm departure", cityOnly: "lahore" },
+          { name: "Islamabad International Airport", detail: "12:00 am — departure", cityOnly: "karachi" },
           { name: "Islamabad", detail: "12:00 am midnight departure" },
           { name: "Baesar / Naran", detail: "Breakfast 08:00 am" },
           { name: "Lulusar Lake", detail: "Visit 10:00 am" },
@@ -5310,9 +5336,24 @@ export const packageItineraries: PackageItinerary[] = [
           { name: "Naran", detail: "Optional river rafting 04:00 pm" },
           { name: "Islamabad", detail: "Arrival 11:30 pm", cityOnly: "islamabad" },
           { name: "Lahore", detail: "Arrival ~04:30 am", cityOnly: "lahore" },
+          { name: "Islamabad", detail: "Overnight hotel — KHI passengers check in here", cityOnly: "karachi" },
         ],
         drivingTime: "~16 hrs (Astore → Islamabad)",
         overnight: "Home",
+      },
+      {
+        dayNumber: 6,
+        title: "Islamabad — Morning flight to Karachi",
+        description: "Karachi passengers enjoy breakfast before transferring to Islamabad International Airport for the morning flight home.",
+        hotels: { deluxe: "", luxury: "" },
+        stops: [
+          { name: "Islamabad", detail: "Breakfast & check-out" },
+          { name: "Islamabad International Airport", detail: "Morning departure to Karachi" },
+          { name: "Jinnah International Airport, Karachi", detail: "Arrival — tour ends" },
+        ],
+        drivingTime: "~2 hrs flight",
+        overnight: "Home",
+        cityOnly: "karachi",
       },
     ],
   },
@@ -5583,12 +5624,38 @@ export const packageItineraries: PackageItinerary[] = [
     packageSlug: "skardu-khaplu-naran-6day",
     days: [
       {
+        dayNumber: 0,
+        title: "Lahore — Pre-departure evening",
+        description: "Lahore passengers board the overnight coach at 07:00 pm and travel through the night toward Islamabad, arriving in time for the midnight departure.",
+        hotels: { deluxe: "", luxury: "" },
+        stops: [
+          { name: "Lahore", detail: "07:00 pm — board overnight coach" },
+          { name: "Islamabad", detail: "Arrive ~11:30 pm" },
+        ],
+        drivingTime: "~5 hrs (Lahore → Islamabad)",
+        overnight: "Coach",
+        cityOnly: "lahore",
+      },
+      {
+        dayNumber: 0,
+        title: "Karachi — Evening flight to Islamabad",
+        description: "Karachi passengers take an evening flight to Islamabad. On arrival at Islamabad International Airport, passengers are ready for the onward journey.",
+        hotels: { deluxe: "", luxury: "" },
+        stops: [
+          { name: "Jinnah International Airport, Karachi", detail: "Evening flight departure" },
+          { name: "Islamabad International Airport", detail: "Arrival" },
+        ],
+        drivingTime: "~2 hrs flight",
+        overnight: "Coach",
+        cityOnly: "karachi",
+      },
+      {
         dayNumber: 1,
         title: "Islamabad → Lulusar Lake → Babusar Top → Gilgit",
         description: "Midnight departure from Islamabad along the Karakoram Highway. Breakfast at Baesar in the Naran valley, then climb to Lulusar Lake at 3,400m and Babusar Top at 4,173m. The descent takes you through the Junction of Three Mountain Ranges and into Gilgit for the night.",
         hotels: { deluxe: "dumaani-inn-gilgit", luxury: "dumaani-inn-gilgit" },
         stops: [
-          { name: "Lahore", detail: "07:00 pm departure", cityOnly: "lahore" },
+          { name: "Islamabad International Airport", detail: "12:00 am — departure", cityOnly: "karachi" },
           { name: "Islamabad", detail: "12:00 am midnight departure" },
           { name: "Baesar / Naran", detail: "Breakfast 08:00 am" },
           { name: "Lulusar Lake", detail: "Visit 10:00 am" },
@@ -5671,9 +5738,24 @@ export const packageItineraries: PackageItinerary[] = [
           { name: "Naran", detail: "Optional river rafting 04:00 pm" },
           { name: "Islamabad", detail: "Arrival 11:00 pm", cityOnly: "islamabad" },
           { name: "Lahore", detail: "Arrival ~04:00 am", cityOnly: "lahore" },
+          { name: "Islamabad", detail: "Overnight hotel — KHI passengers check in here", cityOnly: "karachi" },
         ],
         drivingTime: "~16 hrs (Gilgit → Islamabad)",
         overnight: "Home",
+      },
+      {
+        dayNumber: 7,
+        title: "Islamabad — Morning flight to Karachi",
+        description: "Karachi passengers enjoy breakfast before transferring to Islamabad International Airport for the morning flight home.",
+        hotels: { deluxe: "", luxury: "" },
+        stops: [
+          { name: "Islamabad", detail: "Breakfast & check-out" },
+          { name: "Islamabad International Airport", detail: "Morning departure to Karachi" },
+          { name: "Jinnah International Airport, Karachi", detail: "Arrival — tour ends" },
+        ],
+        drivingTime: "~2 hrs flight",
+        overnight: "Home",
+        cityOnly: "karachi",
       },
     ],
   },
@@ -5682,12 +5764,37 @@ export const packageItineraries: PackageItinerary[] = [
     packageSlug: "skardu-khaplu-naran-7day",
     days: [
       {
+        dayNumber: 0,
+        title: "Lahore — Pre-departure evening",
+        description: "Lahore passengers check in to a hotel and rest before the 12:00 am midnight departure on the Karakoram Highway.",
+        hotels: { deluxe: "", luxury: "" },
+        stops: [
+          { name: "Lahore", detail: "Check-in hotel, rest before midnight departure" },
+        ],
+        drivingTime: "",
+        overnight: "Lahore",
+        cityOnly: "lahore",
+      },
+      {
+        dayNumber: 0,
+        title: "Karachi — Evening flight to Islamabad",
+        description: "Karachi passengers take an evening flight to Islamabad. On arrival at Islamabad International Airport, passengers are ready for the onward journey.",
+        hotels: { deluxe: "", luxury: "" },
+        stops: [
+          { name: "Jinnah International Airport, Karachi", detail: "Evening flight departure" },
+          { name: "Islamabad International Airport", detail: "Arrival" },
+        ],
+        drivingTime: "~2 hrs flight",
+        overnight: "Coach",
+        cityOnly: "karachi",
+      },
+      {
         dayNumber: 1,
         title: "Lahore → Balakot → Lulusar Lake → Babusar Top → Gilgit",
         description: "Midnight departure from Lahore via the Hazara Expressway. Breakfast at Balakot at the gateway to the Kaghan valley. Lunch at Baesar, then the long climb to Lulusar Lake and Babusar Top (4,173m). Descend through the Junction of Three Mountain Ranges and drive into Gilgit for the night.",
         hotels: { deluxe: "dumaani-inn-gilgit", luxury: "gilgit-serena-hotel" },
         stops: [
-          { name: "Lahore", detail: "12:00 am midnight departure", cityOnly: "lahore" },
+          { name: "Islamabad International Airport", detail: "12:00 am — departure", cityOnly: "karachi" },
           { name: "Islamabad", detail: "05:30 am departure", cityOnly: "islamabad" },
           { name: "Balakot", detail: "Breakfast 07:00 am" },
           { name: "Baesar / Naran", detail: "Lunch 12:30 pm" },
@@ -5783,9 +5890,24 @@ export const packageItineraries: PackageItinerary[] = [
           { name: "Baesar / Naran", detail: "Lunch 01:00 pm" },
           { name: "Islamabad", detail: "Drop-off ~08:00 pm", cityOnly: "islamabad" },
           { name: "Lahore", detail: "Arrival 11:30 pm", cityOnly: "lahore" },
+          { name: "Islamabad", detail: "Overnight hotel — KHI passengers check in here", cityOnly: "karachi" },
         ],
         drivingTime: "~18 hrs (Gilgit → Lahore)",
         overnight: "Home",
+      },
+      {
+        dayNumber: 8,
+        title: "Islamabad — Morning flight to Karachi",
+        description: "Karachi passengers enjoy breakfast before transferring to Islamabad International Airport for the morning flight home.",
+        hotels: { deluxe: "", luxury: "" },
+        stops: [
+          { name: "Islamabad", detail: "Breakfast & check-out" },
+          { name: "Islamabad International Airport", detail: "Morning departure to Karachi" },
+          { name: "Jinnah International Airport, Karachi", detail: "Arrival — tour ends" },
+        ],
+        drivingTime: "~2 hrs flight",
+        overnight: "Home",
+        cityOnly: "karachi",
       },
     ],
   },

@@ -2066,8 +2066,8 @@ export const packages: Package[] = [
       "No ATMs at Minimarg — carry all cash from Islamabad",
     ],
     tiers: {
-      deluxe: { islamabad: 285000, lahore: 290000, karachi: null, singleSupplement: 40000 },
-      luxury: { islamabad: 315000, lahore: 320000, karachi: null, singleSupplement: 45000 },
+      deluxe: { islamabad: 285000, lahore: 290000, karachi: 335000, singleSupplement: 40000 },
+      luxury: { islamabad: 315000, lahore: 320000, karachi: 365000, singleSupplement: 45000 },
     },
     metaTitle: "Deosai & Minimarg via Astore | 5-Day Road Adventure from Islamabad",
     metaDescription: "5-day road adventure to Minimarg and Deosai via Astore. Burzil Pass, Rainbow Lake, Sheosar Lake & Bara Pani glamping. Islamabad departure.",
@@ -2300,8 +2300,8 @@ export const packages: Package[] = [
       "Day 1 is overnight departure — rest beforehand",
     ],
     tiers: {
-      deluxe: { islamabad: 335000, lahore: 340000, karachi: null, singleSupplement: 50000 },
-      luxury: { islamabad: 385000, lahore: 390000, karachi: null, singleSupplement: 60000 },
+      deluxe: { islamabad: 335000, lahore: 340000, karachi: 385000, singleSupplement: 50000 },
+      luxury: { islamabad: 385000, lahore: 390000, karachi: 435000, singleSupplement: 60000 },
     },
     metaTitle: "Skardu, Khaplu & Naran | 6-Day Road Trip via Naran & Babusar",
     metaDescription: "6-day Skardu road trip via Naran & Babusar Top. Lulusar Lake, Gilgit, Shangrila, Deosai Plains, Khamosh Waterfall, Manthoka Waterfall & Khaplu Fort.",
@@ -2357,8 +2357,8 @@ export const packages: Package[] = [
       "Day 1 is an overnight departure — rest beforehand and bring a neck pillow",
     ],
     tiers: {
-      deluxe: { islamabad: 380000, lahore: 375000, karachi: null, singleSupplement: 55000 },
-      luxury: { islamabad: 430000, lahore: 425000, karachi: null, singleSupplement: 65000 },
+      deluxe: { islamabad: 380000, lahore: 375000, karachi: 430000, singleSupplement: 55000 },
+      luxury: { islamabad: 430000, lahore: 425000, karachi: 480000, singleSupplement: 65000 },
     },
     metaTitle: "Skardu, Khaplu & Naran | 7-Day KKH Road Trip from Lahore",
     metaDescription: "7-day KKH road trip from Lahore. Balakot, Babusar Top, Skardu, Deosai Plains, Khamosh Waterfall, Khaplu Fort & Shigar Fort. Drive both ways.",
