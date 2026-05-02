@@ -35,7 +35,7 @@ export function Navbar() {
         </div>
 
         {/* Search bar — col 2 of grid, auto width, naturally centered */}
-        <div className="flex justify-center py-3 min-h-[76px] w-[714px]">
+        <div className="flex justify-center py-3 min-h-[76px] w-[850px]">
           {showSearch && <NavSearchBar />}
         </div>
 
