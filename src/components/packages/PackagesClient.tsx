@@ -10,12 +10,15 @@ const allDestinations = [
   { name: "Hunza Valley", slug: "hunza" },
   { name: "Skardu", slug: "skardu" },
   { name: "Fairy Meadows", slug: "fairy-meadows" },
-  { name: "Ghizar & Phandar", slug: "ghizar" },
+  { name: "Ghizar & Phandar", slug: "ghizer" },
   { name: "Chitral & Kalash", slug: "chitral" },
   { name: "Kumrat Valley", slug: "kumrat" },
   { name: "Swat & Malam Jabba", slug: "swat" },
   { name: "Neelam Valley", slug: "neelam-valley" },
   { name: "Makran Coast & Gwadar", slug: "makran" },
+  { name: "Interior Sindh", slug: "interior-sindh" },
+  { name: "Multan & Bahawalpur", slug: "multan" },
+  { name: "Kaghan & Sharan", slug: "kaghan" },
 ];
 
 export function PackagesClient({ packages }: { packages: Package[] }) {
@@ -24,7 +27,13 @@ export function PackagesClient({ packages }: { packages: Package[] }) {
   const dateFilter = searchParams.get("checkin") ?? "";
 
   const filtered = useMemo(() => (
-    destFilter ? packages.filter((p) => p.destinationSlug === destFilter) : packages
+    destFilter
+      ? packages.filter(
+          (p) =>
+            p.destinationSlug === destFilter ||
+            p.relatedDestinationSlugs?.includes(destFilter)
+        )
+      : packages
   ), [packages, destFilter]);
 
   const destName = allDestinations.find((d) => d.slug === destFilter)?.name;

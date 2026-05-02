@@ -16,7 +16,7 @@ const allDestinations = [
   { name: "Hunza Valley", slug: "hunza", region: "Gilgit Baltistan" },
   { name: "Skardu", slug: "skardu", region: "Gilgit Baltistan" },
   { name: "Fairy Meadows", slug: "fairy-meadows", region: "Gilgit Baltistan" },
-  { name: "Ghizar & Phandar", slug: "ghizar", region: "Gilgit Baltistan" },
+  { name: "Ghizar & Phandar", slug: "ghizer", region: "Gilgit Baltistan" },
   { name: "Chitral & Kalash", slug: "chitral", region: "KPK" },
   { name: "Kumrat Valley", slug: "kumrat", region: "KPK" },
   { name: "Swat & Malam Jabba", slug: "swat", region: "KPK" },
@@ -112,40 +112,40 @@ function CalendarPanel({
   return (
     <div className="flex">
       {/* Left: Shortcuts */}
-      <div className="w-[160px] shrink-0 border-r border-[var(--border-default)] p-3 space-y-2">
+      <div className="w-[200px] shrink-0 border-r border-[var(--border-default)] p-4 space-y-3">
         {shortcuts.map((s) => (
           <button
             key={s.label}
             type="button"
             onClick={() => handleShortcut(s.start, s.end)}
             className={cn(
-              "w-full text-left px-3 py-3 rounded-xl border transition-all cursor-pointer",
+              "w-full text-left px-4 py-4 rounded-xl border transition-all cursor-pointer",
               isShortcutActive(s)
                 ? "border-[var(--text-primary)] bg-[var(--bg-subtle)]"
                 : "border-[var(--border-default)] hover:border-[var(--border-strong)]"
             )}
           >
-            <p className="text-[14px] font-semibold text-[var(--text-primary)]">{s.label}</p>
-            <p className="text-[12px] text-[var(--text-tertiary)] mt-0.5">{s.sub}</p>
+            <p className="text-[15px] font-semibold text-[var(--text-primary)]">{s.label}</p>
+            <p className="text-[13px] text-[var(--text-tertiary)] mt-0.5">{s.sub}</p>
           </button>
         ))}
       </div>
 
       {/* Right: Calendar */}
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-5">
         {/* Month navigation */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-5">
           <button type="button" onClick={prevMonth}
-            className="w-8 h-8 rounded-full hover:bg-[var(--bg-subtle)] flex items-center justify-center transition-colors cursor-pointer">
+            className="w-9 h-9 rounded-full hover:bg-[var(--bg-subtle)] flex items-center justify-center transition-colors cursor-pointer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
-          <span className="text-[15px] font-semibold text-[var(--text-primary)]">
+          <span className="text-[16px] font-semibold text-[var(--text-primary)]">
             {MONTH_NAMES[viewMonth]} {viewYear}
           </span>
           <button type="button" onClick={nextMonth}
-            className="w-8 h-8 rounded-full hover:bg-[var(--bg-subtle)] flex items-center justify-center transition-colors cursor-pointer">
+            className="w-9 h-9 rounded-full hover:bg-[var(--bg-subtle)] flex items-center justify-center transition-colors cursor-pointer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <polyline points="9 18 15 12 9 6" />
             </svg>
@@ -155,14 +155,14 @@ function CalendarPanel({
         {/* Day labels */}
         <div className="grid grid-cols-7 mb-2">
           {DAYS.map(d => (
-            <div key={d} className="text-center text-[12px] font-semibold text-[var(--text-tertiary)] py-1">{d}</div>
+            <div key={d} className="text-center text-[13px] font-semibold text-[var(--text-tertiary)] py-1.5">{d}</div>
           ))}
         </div>
 
         {/* Days grid */}
         <div className="grid grid-cols-7">
           {cells.map((date, i) => {
-            if (!date) return <div key={i} className="h-10" />;
+            if (!date) return <div key={i} className="h-11" />;
             const isPast = date < today;
             const isStart = startDate ? isSameDay(date, startDate) : false;
             const isEnd = endDate ? isSameDay(date, endDate) : false;
@@ -170,7 +170,7 @@ function CalendarPanel({
             const isToday = isSameDay(date, today);
 
             return (
-              <div key={i} className="relative flex items-center justify-center h-8">
+              <div key={i} className="relative flex items-center justify-center h-11">
                 {/* Range background strip */}
                 {inRange && <div className="absolute inset-y-1 left-0 right-0 bg-[var(--bg-subtle)]" />}
                 {isStart && effectiveEnd && <div className="absolute inset-y-1 left-1/2 right-0 bg-[var(--bg-subtle)]" />}
@@ -183,7 +183,7 @@ function CalendarPanel({
                   onMouseEnter={() => setHovered(date)}
                   onMouseLeave={() => setHovered(null)}
                   className={cn(
-                    "relative z-10 w-9 h-9 rounded-full text-[14px] font-medium transition-all cursor-pointer select-none",
+                    "relative z-10 w-11 h-11 rounded-full text-[15px] font-medium transition-all cursor-pointer select-none",
                     isPast && "text-[var(--text-tertiary)] opacity-30 cursor-not-allowed",
                     !isPast && !isStart && !isEnd && "hover:bg-[var(--bg-elevated)] text-[var(--text-primary)]",
                     isToday && !isStart && !isEnd && !isPast && "font-bold",
@@ -199,7 +199,7 @@ function CalendarPanel({
 
         {/* Footer */}
         {startDate && (
-          <div className="mt-3 pt-3 border-t border-[var(--border-default)] flex items-center justify-between">
+          <div className="mt-4 pt-4 border-t border-[var(--border-default)] flex items-center justify-between">
             <button type="button" onClick={() => onSelect(new Date(0))}
               className="text-[13px] text-[var(--text-tertiary)] hover:text-[var(--primary)] underline cursor-pointer">
               Clear dates
@@ -253,11 +253,11 @@ function StaysCalendarPanel({
 
   const flexOptions = [
     { label: "Exact dates", value: "exact" },
-    { label: "1 day", value: "1" },
-    { label: "2 days", value: "2" },
-    { label: "3 days", value: "3" },
-    { label: "7 days", value: "7" },
-    { label: "14 days", value: "14" },
+    { label: "± 1 day", value: "1" },
+    { label: "± 2 days", value: "2" },
+    { label: "± 3 days", value: "3" },
+    { label: "± 7 days", value: "7" },
+    { label: "± 14 days", value: "14" },
   ];
 
   function renderMonth(year: number, month: number, showPrev: boolean, showNext: boolean) {
@@ -285,9 +285,9 @@ function StaysCalendarPanel({
           ) : <div className="w-8" />}
         </div>
 
-        <div className="grid grid-cols-7 mb-1">
+        <div className="grid grid-cols-7 mb-2">
           {DAYS.map(d => (
-            <div key={d} className="text-center text-[11px] font-semibold text-[var(--text-tertiary)] py-0.5">{d}</div>
+            <div key={d} className="text-center text-[12px] font-semibold text-[var(--text-tertiary)] py-1">{d}</div>
           ))}
         </div>
 
@@ -301,7 +301,7 @@ function StaysCalendarPanel({
             const isToday = isSameDay(date, today);
 
             return (
-              <div key={i} className="relative flex items-center justify-center h-8">
+              <div key={i} className="relative flex items-center justify-center h-10">
                 {inRange && <div className="absolute inset-y-1 left-0 right-0 bg-[var(--primary-light)]" />}
                 {isStart && effectiveEnd && <div className="absolute inset-y-1 left-1/2 right-0 bg-[var(--primary-light)]" />}
                 {isEnd && effectiveStart && <div className="absolute inset-y-1 left-0 right-1/2 bg-[var(--primary-light)]" />}
@@ -312,7 +312,7 @@ function StaysCalendarPanel({
                   onMouseEnter={() => setHovered(date)}
                   onMouseLeave={() => setHovered(null)}
                   className={cn(
-                    "relative z-10 w-8 h-8 rounded-full text-[13px] font-medium transition-all cursor-pointer select-none",
+                    "relative z-10 w-10 h-10 rounded-full text-[14px] font-medium transition-all cursor-pointer select-none",
                     isPast && "text-[var(--text-tertiary)] opacity-30 cursor-not-allowed",
                     !isPast && !isStart && !isEnd && "hover:border hover:border-[var(--text-primary)] text-[var(--text-primary)]",
                     isToday && !isStart && !isEnd && !isPast && "font-bold underline decoration-[var(--primary)] underline-offset-2",
@@ -359,14 +359,14 @@ function StaysCalendarPanel({
       </div>
 
       {/* Two-month grid */}
-      <div className="flex gap-6 px-5 py-3">
+      <div className="flex gap-8 px-8 py-4">
         {renderMonth(viewYear, viewMonth, true, false)}
         <div className="w-px bg-[var(--border-default)] shrink-0" />
         {renderMonth(secondYear, secondMonth, false, true)}
       </div>
 
       {/* Flexibility pills */}
-      <div className="px-5 pb-3 border-t border-[var(--border-default)] pt-3">
+      <div className="px-8 pb-4 border-t border-[var(--border-default)] pt-4">
         <div className="flex items-center gap-2 flex-wrap">
           {flexOptions.map((opt) => (
             <button
@@ -387,7 +387,7 @@ function StaysCalendarPanel({
       </div>
 
       {/* Footer */}
-      <div className="px-5 pb-3 flex items-center justify-between">
+      <div className="px-8 pb-4 flex items-center justify-between">
         <button type="button"
           onClick={() => onSelect(new Date(0))}
           className="text-[13px] font-semibold text-[var(--text-primary)] underline hover:text-[var(--primary)] cursor-pointer">
@@ -427,11 +427,48 @@ export function SearchWidget({
   const [selectedDest, setSelectedDest] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [travelers, setTravelers] = useState({ adults: 2, children: 0 });
+  const [travelers, setTravelers] = useState({ adults: 2, children: 0, infants: 0 });
   const [destSearch, setDestSearch] = useState("");
   const widgetRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
+
+  // Restore previous search state from sessionStorage on mount
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("tp_search");
+      if (!raw) return;
+      const s = JSON.parse(raw) as {
+        activeTab?: TabId;
+        selectedDest?: string;
+        startDate?: string;
+        endDate?: string;
+        travelers?: { adults: number; children: number; infants: number };
+      };
+      if (s.activeTab) setActiveTab(s.activeTab);
+      if (s.selectedDest) {
+        setSelectedDest(s.selectedDest);
+        const name = allDestinations.find((d) => d.slug === s.selectedDest)?.name;
+        if (name) setDestSearch(name);
+      }
+      if (s.startDate) setStartDate(new Date(s.startDate));
+      if (s.endDate) setEndDate(new Date(s.endDate));
+      if (s.travelers) setTravelers(s.travelers);
+    } catch { /* ignore */ }
+  }, []);
+
+  // Persist search state to sessionStorage whenever it changes
+  useEffect(() => {
+    try {
+      sessionStorage.setItem("tp_search", JSON.stringify({
+        activeTab,
+        selectedDest,
+        startDate: startDate?.toISOString() ?? null,
+        endDate: endDate?.toISOString() ?? null,
+        travelers,
+      }));
+    } catch { /* ignore */ }
+  }, [activeTab, selectedDest, startDate, endDate, travelers]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -443,14 +480,17 @@ export function SearchWidget({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const filteredDests = allDestinations.filter(
-    (d) =>
-      d.name.toLowerCase().includes(destSearch.toLowerCase()) ||
-      d.region.toLowerCase().includes(destSearch.toLowerCase())
-  );
+  const isDestSearchPrefilled = !!selectedDest && destSearch === (allDestinations.find((d) => d.slug === selectedDest)?.name ?? "");
+  const filteredDests = !destSearch || isDestSearchPrefilled
+    ? allDestinations
+    : allDestinations.filter(
+        (d) =>
+          d.name.toLowerCase().includes(destSearch.toLowerCase()) ||
+          d.region.toLowerCase().includes(destSearch.toLowerCase())
+      );
 
   const selectedDestName = allDestinations.find((d) => d.slug === selectedDest)?.name;
-  const totalTravelers = travelers.adults + travelers.children;
+  const totalTravelers = travelers.adults + travelers.children + travelers.infants;
   const isHotels = activeTab === "hotels";
 
   // Format date label
@@ -495,8 +535,7 @@ export function SearchWidget({
     if (selectedDest) params.set("destination", selectedDest);
     if (startDate) params.set("checkin", startDate.toISOString().split("T")[0]);
     if (endDate) params.set("checkout", endDate.toISOString().split("T")[0]);
-    if (travelers.adults !== 2 || travelers.children !== 0)
-      params.set("guests", String(travelers.adults + travelers.children));
+    params.set("guests", String(Math.max(1, travelers.adults + travelers.children)));
 
     if (mode === "filter") {
       const tabPath = activeTab === "hotels" ? "/hotels" : activeTab === "grouptours" ? "/grouptours" : "/packages";
@@ -546,10 +585,10 @@ export function SearchWidget({
       <div className="relative">
         <div
           className={cn(
-            "rounded-[var(--radius-full)] flex items-center",
+            "rounded-[var(--radius-full)] flex",
             mode === "filter"
-              ? "bg-[var(--bg-subtle)] h-[66px] px-2"
-              : "bg-[var(--bg-primary)] p-1.5 sm:p-2"
+              ? "bg-[var(--bg-subtle)] h-[66px] grid grid-cols-[1fr_1px_1fr_1px_1fr]"
+              : "bg-[var(--bg-primary)] p-1.5 sm:p-2 flex items-center"
           )}
           style={mode !== "filter" ? { boxShadow: "0 8px 40px rgba(0,0,0,0.25)" } : undefined}
         >
@@ -557,28 +596,31 @@ export function SearchWidget({
           {activeTab === "packages" && (
             <>
               <DestinationField value={selectedDestName} active={activeField === "destination"}
-                destSearch={destSearch} onDestSearchChange={setDestSearch} className="flex-1"
-                onActivate={() => setActiveField(activeField === "destination" ? null : "destination")} />
-              <Divider />
+                destSearch={destSearch} onDestSearchChange={setDestSearch} className={mode === "navigate" ? "flex-[4_1_0%] min-w-0" : "flex-1"}
+                onActivate={() => setActiveField(activeField === "destination" ? null : "destination")}
+                onClear={() => { setSelectedDest(null); setDestSearch(""); setActiveField("destination"); }} />
+              <Divider className={mode === "navigate" ? "mx-1" : ""} />
               <FieldButton label="When" value={fmtDate(startDate)} placeholder="Add dates"
                 active={activeField === "when"} className="flex-1"
-                onClick={() => setActiveField(activeField === "when" ? null : "when")} />
-              <Divider className="" />
-              <div className={cn("flex items-center rounded-[var(--radius-full)] transition-colors", mode === "navigate" ? "flex-1" : "ml-1", activeField === "travelers" && "bg-[var(--bg-primary)] shadow-sm")}>
+                onClick={() => setActiveField(activeField === "when" ? null : "when")}
+                onClear={() => { setStartDate(null); setEndDate(null); }} />
+              <Divider className={mode === "navigate" ? "mx-1" : ""} />
+              <div className={cn("flex items-center rounded-[var(--radius-full)] transition-colors", "flex-1", activeField === "travelers" && "bg-[var(--bg-primary)] shadow-sm")}>
                 <FieldButton label="Who"
                   value={totalTravelers > 0 ? `${totalTravelers} guest${totalTravelers > 1 ? "s" : ""}` : undefined}
                   placeholder="Add guests" active={activeField === "travelers"} className="flex-1" noActiveBg
-                  onClick={() => setActiveField(activeField === "travelers" ? null : "travelers")} />
+                  onClick={() => setActiveField(activeField === "travelers" ? null : "travelers")}
+                  onClear={() => setTravelers({ adults: 0, children: 0, infants: 0 })} />
                 <button type="button" onClick={handleSearch}
                   className={cn(
                     "shrink-0 bg-[var(--primary)] rounded-full flex items-center justify-center text-[var(--text-inverse)] hover:bg-[var(--primary-hover)] active:scale-95 transition-all duration-200 cursor-pointer",
-                    mode === "filter" ? "gap-2 px-5 py-3 h-auto" : "w-12 h-12 sm:w-14 sm:h-14"
+                    mode === "filter" ? "gap-1.5 px-4 h-12 self-center mr-1.5" : "w-12 h-12 sm:w-14 sm:h-14"
                   )}
                   style={{ boxShadow: "var(--shadow-sm)" }} aria-label="Search">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
                   </svg>
-                  {mode === "filter" && <span className="text-[14px] font-semibold">Search</span>}
+                  {mode === "filter" && <span className="text-[13px] font-semibold">Search</span>}
                 </button>
               </div>
             </>
@@ -588,28 +630,31 @@ export function SearchWidget({
           {activeTab === "grouptours" && (
             <>
               <DestinationField value={selectedDestName} active={activeField === "destination"}
-                destSearch={destSearch} onDestSearchChange={setDestSearch} className="flex-1"
-                onActivate={() => setActiveField(activeField === "destination" ? null : "destination")} />
-              <Divider />
+                destSearch={destSearch} onDestSearchChange={setDestSearch} className={mode === "navigate" ? "flex-[4_1_0%] min-w-0" : "flex-1"}
+                onActivate={() => setActiveField(activeField === "destination" ? null : "destination")}
+                onClear={() => { setSelectedDest(null); setDestSearch(""); setActiveField("destination"); }} />
+              <Divider className={mode === "navigate" ? "mx-1" : ""} />
               <FieldButton label="When" value={fmtDate(startDate)} placeholder="Add dates"
                 active={activeField === "month"} className="flex-1"
-                onClick={() => setActiveField(activeField === "month" ? null : "month")} />
-              <Divider className="" />
-              <div className={cn("flex items-center rounded-[var(--radius-full)] transition-colors", mode === "navigate" ? "flex-1" : "ml-1", activeField === "groupsize" && "bg-[var(--bg-primary)] shadow-sm")}>
+                onClick={() => setActiveField(activeField === "month" ? null : "month")}
+                onClear={() => { setStartDate(null); setEndDate(null); }} />
+              <Divider className={mode === "navigate" ? "mx-1" : ""} />
+              <div className={cn("flex items-center rounded-[var(--radius-full)] transition-colors", "flex-1", activeField === "groupsize" && "bg-[var(--bg-primary)] shadow-sm")}>
                 <FieldButton label="Who"
                   value={totalTravelers > 0 ? `${totalTravelers} guest${totalTravelers > 1 ? "s" : ""}` : undefined}
                   placeholder="Add guests" active={activeField === "groupsize"} className="flex-1" noActiveBg
-                  onClick={() => setActiveField(activeField === "groupsize" ? null : "groupsize")} />
+                  onClick={() => setActiveField(activeField === "groupsize" ? null : "groupsize")}
+                  onClear={() => setTravelers({ adults: 0, children: 0, infants: 0 })} />
                 <button type="button" onClick={handleSearch}
                   className={cn(
                     "shrink-0 bg-[var(--primary)] rounded-full flex items-center justify-center text-[var(--text-inverse)] hover:bg-[var(--primary-hover)] active:scale-95 transition-all duration-200 cursor-pointer",
-                    mode === "filter" ? "gap-2 px-5 py-3 h-auto" : "w-12 h-12 sm:w-14 sm:h-14"
+                    mode === "filter" ? "gap-1.5 px-4 h-12 self-center mr-1.5" : "w-12 h-12 sm:w-14 sm:h-14"
                   )}
                   style={{ boxShadow: "var(--shadow-sm)" }} aria-label="Search">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
                   </svg>
-                  {mode === "filter" && <span className="text-[14px] font-semibold">Search</span>}
+                  {mode === "filter" && <span className="text-[13px] font-semibold">Search</span>}
                 </button>
               </div>
             </>
@@ -619,28 +664,31 @@ export function SearchWidget({
           {activeTab === "hotels" && (
             <>
               <DestinationField value={selectedDestName} active={activeField === "destination"}
-                destSearch={destSearch} onDestSearchChange={setDestSearch} className="flex-1"
-                onActivate={() => setActiveField(activeField === "destination" ? null : "destination")} />
-              <Divider />
+                destSearch={destSearch} onDestSearchChange={setDestSearch} className={mode === "navigate" ? "flex-[4_1_0%] min-w-0" : "flex-1"}
+                onActivate={() => setActiveField(activeField === "destination" ? null : "destination")}
+                onClear={() => { setSelectedDest(null); setDestSearch(""); setActiveField("destination"); }} />
+              <Divider className={mode === "navigate" ? "mx-1" : ""} />
               <FieldButton label="When" value={fmtDateRange(startDate, endDate)} placeholder="Add dates"
                 active={activeField === "checkin" || activeField === "checkout"} className="flex-1"
-                onClick={() => setActiveField(activeField === "checkin" || activeField === "checkout" ? null : "checkin")} />
-              <Divider className="" />
-              <div className={cn("flex items-center rounded-[var(--radius-full)] transition-colors", mode === "navigate" ? "flex-1" : "ml-1", activeField === "guests" && "bg-[var(--bg-primary)] shadow-sm")}>
+                onClick={() => setActiveField(activeField === "checkin" || activeField === "checkout" ? null : "checkin")}
+                onClear={() => { setStartDate(null); setEndDate(null); }} />
+              <Divider className={mode === "navigate" ? "mx-1" : ""} />
+              <div className={cn("flex items-center rounded-[var(--radius-full)] transition-colors", "flex-1", activeField === "guests" && "bg-[var(--bg-primary)] shadow-sm")}>
                 <FieldButton label="Who"
                   value={totalTravelers > 0 ? `${totalTravelers} guest${totalTravelers > 1 ? "s" : ""}` : undefined}
                   placeholder="Add guests" active={activeField === "guests"} className="flex-1" noActiveBg
-                  onClick={() => setActiveField(activeField === "guests" ? null : "guests")} />
+                  onClick={() => setActiveField(activeField === "guests" ? null : "guests")}
+                  onClear={() => setTravelers({ adults: 0, children: 0, infants: 0 })} />
                 <button type="button" onClick={handleSearch}
                   className={cn(
                     "shrink-0 bg-[var(--primary)] rounded-full flex items-center justify-center text-[var(--text-inverse)] hover:bg-[var(--primary-hover)] active:scale-95 transition-all duration-200 cursor-pointer",
-                    mode === "filter" ? "gap-2 px-5 py-3 h-auto" : "w-12 h-12 sm:w-14 sm:h-14"
+                    mode === "filter" ? "gap-1.5 px-4 h-12 self-center mr-1.5" : "w-12 h-12 sm:w-14 sm:h-14"
                   )}
                   style={{ boxShadow: "var(--shadow-sm)" }} aria-label="Search">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
                   </svg>
-                  {mode === "filter" && <span className="text-[14px] font-semibold">Search</span>}
+                  {mode === "filter" && <span className="text-[13px] font-semibold">Search</span>}
                 </button>
               </div>
             </>
@@ -651,28 +699,28 @@ export function SearchWidget({
 
         {/* Destination dropdown */}
         {activeField === "destination" && (
-          <DropdownPanel className="left-0 w-full sm:w-[420px]">
+          <DropdownPanel className="left-0 w-full sm:w-[460px]">
 
-            <div className="max-h-[320px] overflow-y-auto py-1">
+            <div className="max-h-[400px] overflow-y-auto py-2">
               {filteredDests.length === 0 && (
-                <p className="px-4 py-6 text-center text-[14px] text-[var(--text-tertiary)]">No destinations found</p>
+                <p className="px-5 py-6 text-center text-[14px] text-[var(--text-tertiary)]">No destinations found</p>
               )}
               {filteredDests.map((dest) => (
                 <button key={dest.slug} type="button"
                   onClick={() => { setSelectedDest(dest.slug); setDestSearch(""); setActiveField(activeTab === "hotels" ? "checkin" : activeTab === "grouptours" ? "month" : "when"); }}
                   className={cn(
-                    "w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer",
+                    "w-full flex items-center gap-4 px-5 py-3.5 text-left hover:bg-[var(--bg-subtle)] transition-colors cursor-pointer",
                     selectedDest === dest.slug && "bg-[var(--primary-light)]"
                   )}>
-                  <span className="w-8 h-8 rounded-full bg-[var(--bg-subtle)] flex items-center justify-center shrink-0">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2">
+                  <span className="w-12 h-12 rounded-[var(--radius-md)] bg-[var(--bg-subtle)] flex items-center justify-center shrink-0">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" strokeWidth="1.8">
                       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
                       <circle cx="12" cy="10" r="3" />
                     </svg>
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[14px] font-medium text-[var(--text-primary)]">{dest.name}</p>
-                    <p className="text-[12px] text-[var(--text-tertiary)]">{dest.region}</p>
+                    <p className="text-[15px] font-semibold text-[var(--text-primary)]">{dest.name}</p>
+                    <p className="text-[12px] text-[var(--text-tertiary)] mt-0.5">{dest.region}</p>
                   </div>
                   {selectedDest === dest.slug && (
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2.5">
@@ -687,7 +735,7 @@ export function SearchWidget({
 
         {/* Experiences/Tours calendar (single month + shortcuts) */}
         {isCalendarField(activeField) && !isHotels && (
-          <DropdownPanel className="left-1/2 -translate-x-1/2 w-[340px] sm:w-[520px]">
+          <DropdownPanel className="left-1/2 -translate-x-1/2 w-[340px] sm:w-[640px]">
             <CalendarPanel
               rangeMode={false}
               startDate={startDate}
@@ -699,7 +747,7 @@ export function SearchWidget({
 
         {/* Stays calendar (two months, Airbnb Stays style) */}
         {isCalendarField(activeField) && isHotels && (
-          <DropdownPanel className="left-1/2 -translate-x-1/2 w-[340px] sm:w-[720px]">
+          <DropdownPanel className="left-1/2 -translate-x-1/2 w-[340px] sm:w-[850px]">
             <StaysCalendarPanel
               startDate={startDate}
               endDate={endDate}
@@ -710,34 +758,45 @@ export function SearchWidget({
 
         {/* Travelers / Group size / Guests dropdown */}
         {(activeField === "travelers" || activeField === "groupsize" || activeField === "guests") && (
-          <DropdownPanel className="right-0 sm:right-16 w-[320px]">
-            <div className="p-4 space-y-5">
-              <div className="flex items-center justify-between">
+          <DropdownPanel className="right-0 w-[370px]">
+            <div className="px-6 pt-6 pb-4 divide-y divide-[var(--border-default)]">
+              <div className="flex items-center justify-between pb-5">
                 <div>
-                  <p className="text-[14px] font-medium text-[var(--text-primary)]">Adults</p>
-                  <p className="text-[12px] text-[var(--text-tertiary)]">Ages 13+</p>
+                  <p className="text-[16px] font-semibold text-[var(--text-primary)]">Adults</p>
+                  <p className="text-[13px] text-[var(--text-tertiary)] mt-0.5">Ages 13+</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <StepperButton onClick={() => setTravelers((p) => ({ ...p, adults: Math.max(1, p.adults - 1) }))} disabled={travelers.adults <= 1}>−</StepperButton>
-                  <span className="w-8 text-center text-[15px] font-semibold tabular-nums">{travelers.adults}</span>
+                  <span className="w-8 text-center text-[16px] font-semibold tabular-nums">{travelers.adults}</span>
                   <StepperButton onClick={() => setTravelers((p) => ({ ...p, adults: Math.min(20, p.adults + 1) }))}>+</StepperButton>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between py-5">
                 <div>
-                  <p className="text-[14px] font-medium text-[var(--text-primary)]">Children</p>
-                  <p className="text-[12px] text-[var(--text-tertiary)]">Ages 2-12</p>
+                  <p className="text-[16px] font-semibold text-[var(--text-primary)]">Children</p>
+                  <p className="text-[13px] text-[var(--text-tertiary)] mt-0.5">Ages 2–12</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <StepperButton onClick={() => setTravelers((p) => ({ ...p, children: Math.max(0, p.children - 1) }))} disabled={travelers.children <= 0}>−</StepperButton>
-                  <span className="w-8 text-center text-[15px] font-semibold tabular-nums">{travelers.children}</span>
+                  <span className="w-8 text-center text-[16px] font-semibold tabular-nums">{travelers.children}</span>
                   <StepperButton onClick={() => setTravelers((p) => ({ ...p, children: p.children + 1 }))}>+</StepperButton>
                 </div>
               </div>
-              <div className="pt-3 border-t border-[var(--border-default)] flex items-center justify-between">
-                <span className="text-[13px] text-[var(--text-tertiary)]">{totalTravelers} traveler{totalTravelers !== 1 ? "s" : ""} total</span>
+              <div className="flex items-center justify-between py-5">
+                <div>
+                  <p className="text-[16px] font-semibold text-[var(--text-primary)]">Infants</p>
+                  <p className="text-[13px] text-[var(--text-tertiary)] mt-0.5">Under 2</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <StepperButton onClick={() => setTravelers((p) => ({ ...p, infants: Math.max(0, p.infants - 1) }))} disabled={travelers.infants <= 0}>−</StepperButton>
+                  <span className="w-8 text-center text-[16px] font-semibold tabular-nums">{travelers.infants}</span>
+                  <StepperButton onClick={() => setTravelers((p) => ({ ...p, infants: p.infants + 1 }))}>+</StepperButton>
+                </div>
+              </div>
+              <div className="pt-4 flex items-center justify-between">
+                <span className="text-[14px] text-[var(--text-tertiary)]">{totalTravelers} traveler{totalTravelers !== 1 ? "s" : ""} total</span>
                 <button type="button" onClick={() => setActiveField(null)}
-                  className="text-[13px] font-semibold text-[var(--primary)] hover:underline cursor-pointer">Done</button>
+                  className="text-[14px] font-semibold text-[var(--primary)] hover:underline cursor-pointer">Done</button>
               </div>
             </div>
           </DropdownPanel>
@@ -748,20 +807,36 @@ export function SearchWidget({
 }
 
 /* ── Sub-components ── */
-function FieldButton({ label, value, placeholder, active, onClick, className, noActiveBg }: {
-  label: string; value?: string; placeholder: string; active: boolean; onClick: () => void; className?: string; noActiveBg?: boolean;
+function FieldButton({ label, value, placeholder, active, onClick, onClear, className, noActiveBg }: {
+  label: string; value?: string; placeholder: string; active: boolean; onClick: () => void; onClear?: () => void; className?: string; noActiveBg?: boolean;
 }) {
   return (
-    <button type="button" onClick={onClick}
+    <div
       className={cn(
-        "flex flex-col px-4 sm:px-6 py-2 rounded-[var(--radius-full)] transition-colors cursor-pointer text-left",
+        "flex items-center gap-2 px-4 sm:px-6 rounded-[var(--radius-full)] transition-colors cursor-pointer text-left",
         !noActiveBg && active ? "bg-[var(--bg-primary)] shadow-sm" : !active ? "hover:bg-[var(--bg-elevated)]/60" : "", className
-      )}>
-      <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-[var(--text-secondary)]">{label}</span>
-      <span className={cn("text-[14px] truncate", value ? "text-[var(--text-primary)] font-medium" : "text-[var(--text-tertiary)]")}>
-        {value || placeholder}
-      </span>
-    </button>
+      )}
+      onClick={onClick}
+    >
+      <div className="flex flex-col min-w-0 flex-1">
+        <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--text-secondary)]">{label}</span>
+        <span className={cn("text-[13px] truncate", value ? "text-[var(--text-primary)] font-medium" : "text-[var(--text-tertiary)]")}>
+          {value || placeholder}
+        </span>
+      </div>
+      {value && onClear && active && (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onClear(); }}
+          className="shrink-0 w-6 h-6 rounded-full bg-[var(--bg-subtle)] hover:bg-[var(--bg-elevated)] flex items-center justify-center transition-colors cursor-pointer"
+          aria-label="Clear dates"
+        >
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      )}
+    </div>
   );
 }
 
@@ -780,8 +855,8 @@ function StepperButton({ children, onClick, disabled }: { children: React.ReactN
   return (
     <button type="button" onClick={onClick} disabled={disabled}
       className={cn(
-        "w-9 h-9 border border-[var(--border-default)] rounded-full flex items-center justify-center",
-        "text-[16px] font-medium text-[var(--text-secondary)] cursor-pointer",
+        "w-7 h-7 border border-[var(--border-default)] rounded-full flex items-center justify-center leading-none",
+        "text-[14px] font-medium text-[var(--text-secondary)] cursor-pointer",
         "hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors",
         "disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-[var(--border-default)] disabled:hover:text-[var(--text-secondary)]"
       )}>
@@ -790,9 +865,9 @@ function StepperButton({ children, onClick, disabled }: { children: React.ReactN
   );
 }
 
-function DestinationField({ value, active, destSearch, onDestSearchChange, onActivate, className }: {
+function DestinationField({ value, active, destSearch, onDestSearchChange, onActivate, onClear, className }: {
   value?: string; active: boolean; destSearch: string;
-  onDestSearchChange: (v: string) => void; onActivate: () => void; className?: string;
+  onDestSearchChange: (v: string) => void; onActivate: () => void; onClear?: () => void; className?: string;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => { if (active) { setTimeout(() => inputRef.current?.focus(), 0); } }, [active]);
@@ -800,31 +875,45 @@ function DestinationField({ value, active, destSearch, onDestSearchChange, onAct
     <div
       onClick={onActivate}
       className={cn(
-        "flex flex-col px-4 sm:px-6 py-2 rounded-[var(--radius-full)] transition-colors cursor-pointer text-left",
+        "flex items-center gap-2 px-4 sm:px-6 rounded-[var(--radius-full)] transition-colors cursor-pointer text-left min-w-0",
         active ? "bg-[var(--bg-primary)] shadow-sm" : "hover:bg-[var(--bg-elevated)]/60", className
       )}
     >
-      <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-[var(--text-secondary)]">Where</span>
-      {active ? (
-        <input
-          ref={inputRef}
-          type="text"
-          value={destSearch}
-          onChange={(e) => onDestSearchChange(e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-          placeholder="Search destinations"
-          className="text-[14px] text-[var(--text-primary)] bg-transparent placeholder:text-[var(--text-tertiary)] w-full min-w-0"
-          style={{ outline: "none", boxShadow: "none", border: "none" }}
-        />
-      ) : (
-        <span className={cn("text-[14px] truncate", value ? "text-[var(--text-primary)] font-medium" : "text-[var(--text-tertiary)]")}>
-          {value || "Search destinations"}
-        </span>
+      <div className="flex flex-col min-w-0 flex-1">
+        <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--text-secondary)]">Where</span>
+        {active ? (
+          <input
+            ref={inputRef}
+            type="text"
+            value={destSearch}
+            onChange={(e) => onDestSearchChange(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            placeholder="Search destinations"
+            className="text-[13px] text-[var(--text-primary)] bg-transparent placeholder:text-[var(--text-tertiary)] w-full min-w-0"
+            style={{ outline: "none", boxShadow: "none", border: "none" }}
+          />
+        ) : (
+          <span className={cn("text-[13px] truncate", value ? "text-[var(--text-primary)] font-medium" : "text-[var(--text-tertiary)]")}>
+            {value || "Search destinations"}
+          </span>
+        )}
+      </div>
+      {value && onClear && active && (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onClear(); }}
+          className="shrink-0 w-6 h-6 rounded-full bg-[var(--bg-subtle)] hover:bg-[var(--bg-elevated)] flex items-center justify-center transition-colors cursor-pointer"
+          aria-label="Clear destination"
+        >
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
       )}
     </div>
   );
 }
 
 function Divider({ className }: { className?: string }) {
-  return <div className={cn("w-px h-8 bg-[var(--border-default)]/60 shrink-0 mx-1", className)} />;
+  return <div className={cn("w-px h-6 bg-[var(--border-default)]/60 shrink-0 self-center", className)} />;
 }

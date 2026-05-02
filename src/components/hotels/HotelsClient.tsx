@@ -12,7 +12,7 @@ const allDestinations = [
   { name: "Hunza Valley", slug: "hunza" },
   { name: "Skardu", slug: "skardu" },
   { name: "Fairy Meadows", slug: "fairy-meadows" },
-  { name: "Ghizar & Phandar", slug: "ghizar" },
+  { name: "Ghizar & Phandar", slug: "ghizer" },
   { name: "Chitral & Kalash", slug: "chitral" },
   { name: "Kumrat Valley", slug: "kumrat" },
   { name: "Swat & Malam Jabba", slug: "swat" },
