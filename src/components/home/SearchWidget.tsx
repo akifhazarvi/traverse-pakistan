@@ -272,7 +272,7 @@ function StaysCalendarPanel({
     while (cells.length % 7 !== 0) cells.push(null);
 
     return (
-      <div className={mode === "navigate" ? "w-[295px] shrink-0" : "flex-1"}>
+      <div className="flex-1">
         <div className="flex items-center justify-between mb-2">
           {showPrev ? (
             <button type="button" onClick={prevMonth}
