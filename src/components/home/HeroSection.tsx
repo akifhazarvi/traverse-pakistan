@@ -36,7 +36,7 @@ export function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-[480px] sm:min-h-[540px] px-5 sm:px-8 pt-10 pb-16">
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-[480px] sm:min-h-[540px] px-5 sm:px-8 pt-6 pb-24">
         <h1
           className="text-[var(--on-dark)] leading-[1.05] tracking-[-0.03em] font-extrabold text-center max-w-3xl"
           style={{
@@ -55,7 +55,7 @@ export function HeroSection() {
         </p>
 
         {/* Search Widget */}
-        <div id="hero-search" className="w-full max-w-[920px] mt-6 relative z-20">
+        <div id="hero-search" className="w-full max-w-[920px] mt-4 relative z-20">
           <SearchWidget />
         </div>
       </div>
