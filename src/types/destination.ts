@@ -19,6 +19,7 @@ export interface Destination {
   slug: string;
   name: string;
   regionSlug: string;
+  parentSlug?: string | null;
   heroImage: string;
   subtitle: string;
   description: string;

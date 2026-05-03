@@ -8,8 +8,9 @@ import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { NavSearchBar } from "./NavSearchBar";
 import { UserMenu } from "@/components/auth/UserMenu";
+import type { DestinationOption } from "@/components/home/SearchWidget";
 
-export function Navbar() {
+export function Navbar({ destinations = [] }: { destinations?: DestinationOption[] }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const showSearch = pathname !== "/";
@@ -36,7 +37,7 @@ export function Navbar() {
 
         {/* Search bar — col 2 of grid, auto width, naturally centered */}
         <div className="flex justify-center py-3 min-h-[76px] w-[850px]">
-          {showSearch && <NavSearchBar />}
+          {showSearch && <NavSearchBar destinations={destinations} />}
         </div>
 
         {/* Right CTAs — fixed height so they never move when search expands */}

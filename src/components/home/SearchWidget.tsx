@@ -16,20 +16,12 @@ const tabs = [
 
 type TabId = (typeof tabs)[number]["id"];
 
-const allDestinations = [
-  { name: "Hunza Valley", slug: "hunza", region: "Gilgit Baltistan" },
-  { name: "Skardu", slug: "skardu", region: "Gilgit Baltistan" },
-  { name: "Fairy Meadows", slug: "fairy-meadows", region: "Gilgit Baltistan" },
-  { name: "Ghizar & Phandar", slug: "ghizer", region: "Gilgit Baltistan" },
-  { name: "Chitral & Kalash", slug: "chitral", region: "KPK" },
-  { name: "Kumrat Valley", slug: "kumrat", region: "KPK" },
-  { name: "Swat & Malam Jabba", slug: "swat", region: "KPK" },
-  { name: "Neelam Valley", slug: "neelam-valley", region: "Azad Kashmir" },
-  { name: "Makran Coast & Gwadar", slug: "makran", region: "Balochistan" },
-  { name: "Interior Sindh", slug: "interior-sindh", region: "Sindh" },
-  { name: "Multan & Bahawalpur", slug: "multan", region: "Punjab" },
-  { name: "Kaghan & Sharan", slug: "kaghan", region: "KPK" },
-];
+export type DestinationOption = {
+  name: string;
+  slug: string;
+  region: string;
+  parentSlug?: string | null;
+};
 
 const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
@@ -416,6 +408,7 @@ export function SearchWidget({
   defaultTab = "packages",
   hideTabs = false,
   defaultActiveField = null,
+  destinations = [],
   onFilter,
   onClose,
 }: {
@@ -423,6 +416,7 @@ export function SearchWidget({
   defaultTab?: "packages" | "hotels" | "grouptours";
   hideTabs?: boolean;
   defaultActiveField?: ActiveField;
+  destinations?: DestinationOption[];
   onFilter?: (params: Record<string, string>) => void;
   onClose?: () => void;
 } = {}) {
@@ -460,7 +454,7 @@ export function SearchWidget({
       if (s.activeTab) setActiveTab(s.activeTab);
       if (s.selectedDest) {
         setSelectedDest(s.selectedDest);
-        const name = allDestinations.find((d) => d.slug === s.selectedDest)?.name;
+        const name = destinations.find((d) => d.slug === s.selectedDest)?.name;
         if (name) setDestSearch(name);
       }
       if (s.startDate) setStartDate(new Date(s.startDate));
@@ -492,16 +486,17 @@ export function SearchWidget({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const isDestSearchPrefilled = !!selectedDest && destSearch === (allDestinations.find((d) => d.slug === selectedDest)?.name ?? "");
+  const isDestSearchPrefilled = !!selectedDest && destSearch === (destinations.find((d) => d.slug === selectedDest)?.name ?? "");
+  const parentDests = destinations.filter((d) => !d.parentSlug);
   const filteredDests = !destSearch || isDestSearchPrefilled
-    ? allDestinations
-    : allDestinations.filter(
+    ? parentDests
+    : destinations.filter(
         (d) =>
           d.name.toLowerCase().includes(destSearch.toLowerCase()) ||
           d.region.toLowerCase().includes(destSearch.toLowerCase())
       );
 
-  const selectedDestName = allDestinations.find((d) => d.slug === selectedDest)?.name;
+  const selectedDestName = destinations.find((d) => d.slug === selectedDest)?.name;
   const totalTravelers = travelers.adults + travelers.children + travelers.infants;
   const isHotels = activeTab === "hotels";
 
@@ -544,7 +539,10 @@ export function SearchWidget({
 
   const handleSearch = () => {
     const params = new URLSearchParams();
-    if (selectedDest) params.set("destination", selectedDest);
+    if (selectedDest) {
+      const dest = destinations.find((d) => d.slug === selectedDest);
+      params.set("destination", dest?.parentSlug ?? selectedDest);
+    }
     if (startDate) params.set("checkin", startDate.toISOString().split("T")[0]);
     if (endDate) params.set("checkout", endDate.toISOString().split("T")[0]);
     params.set("guests", String(Math.max(1, travelers.adults + travelers.children)));
