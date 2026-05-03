@@ -814,7 +814,7 @@ export const hotels: Hotel[] = [
   },
   {
     id: "hotel-21",
-    slug: "jehlum-inn",
+    slug: "jhelum-inn",
     name: "Jehlum Inn Hotel",
     destinationSlug: "jhelum",
     location: "Jhelum, Punjab",
