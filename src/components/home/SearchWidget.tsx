@@ -603,7 +603,7 @@ export function SearchWidget({
             "rounded-[var(--radius-full)]",
             mode === "filter"
               ? "bg-[var(--bg-subtle)] h-[66px] grid grid-cols-[1fr_1px_1fr_1px_1fr]"
-              : "bg-[#EBEBEB] h-[66px] flex items-stretch overflow-hidden"
+              : "bg-[var(--bg-subtle)] h-[66px] flex items-stretch overflow-hidden"
           )}
           style={mode !== "filter" ? { boxShadow: "0 8px 40px rgba(0,0,0,0.25)" } : undefined}
         >
@@ -916,7 +916,7 @@ function DestinationField({ value, active, destSearch, onDestSearchChange, onAct
     <div
       onClick={onActivate}
       className={cn(
-        "relative flex items-center gap-2 px-4 sm:px-6 rounded-[var(--radius-full)] cursor-pointer text-left min-w-0",
+        "relative flex items-center gap-2 pl-4 sm:pl-8 pr-4 sm:pr-6 rounded-[var(--radius-full)] cursor-pointer text-left min-w-0",
         className
       )}
     >
