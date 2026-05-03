@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { SearchWidget } from "./SearchWidget";
+import { SearchWidget, type DestinationOption } from "./SearchWidget";
 import { Icon } from "@/components/ui/Icon";
 
 const MEDIA = "https://media.traversepakistan.com";
@@ -9,7 +9,7 @@ const heroImages = [15, 1, 9, 12, 14, 10].map((n) => ({
   alt: "Pakistan travel destination",
 }));
 
-export function HeroSection() {
+export function HeroSection({ destinations = [] }: { destinations?: DestinationOption[] }) {
   return (
     <section className="relative">
       <div className="absolute inset-0 overflow-hidden">
@@ -56,7 +56,7 @@ export function HeroSection() {
 
         {/* Search Widget */}
         <div id="hero-search" className="w-full max-w-[920px] mt-4 relative z-20">
-          <SearchWidget />
+          <SearchWidget destinations={destinations} />
         </div>
       </div>
 
