@@ -490,11 +490,22 @@ export function SearchWidget({
   const parentDests = destinations.filter((d) => !d.parentSlug);
   const filteredDests = !destSearch || isDestSearchPrefilled
     ? parentDests
-    : destinations.filter(
-        (d) =>
-          d.name.toLowerCase().includes(destSearch.toLowerCase()) ||
-          d.region.toLowerCase().includes(destSearch.toLowerCase())
-      );
+    : destinations
+        .filter(
+          (d) =>
+            d.name.toLowerCase().includes(destSearch.toLowerCase()) ||
+            d.region.toLowerCase().includes(destSearch.toLowerCase())
+        )
+        .sort((a, b) => {
+          const q = destSearch.toLowerCase();
+          const aStarts = a.name.toLowerCase().startsWith(q);
+          const bStarts = b.name.toLowerCase().startsWith(q);
+          if (aStarts !== bStarts) return aStarts ? -1 : 1;
+          const aParent = !a.parentSlug;
+          const bParent = !b.parentSlug;
+          if (aParent !== bParent) return aParent ? -1 : 1;
+          return a.name.localeCompare(b.name);
+        });
 
   const selectedDestName = destinations.find((d) => d.slug === selectedDest)?.name;
   const totalTravelers = travelers.adults + travelers.children + travelers.infants;
