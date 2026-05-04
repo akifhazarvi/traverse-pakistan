@@ -101,9 +101,30 @@ export const getPackageItinerary = cache(async (slug: string): Promise<PackageIt
   };
 });
 
-export const getFeaturedPackages = cache(async (limit = 5): Promise<Package[]> => {
-  const all = await getAllPackages();
-  return all.slice(0, limit);
+const FEATURED_PACKAGE_SLUGS = [
+  "northern-pakistan-grand-tour",
+  "hunza-valley-escape",
+  "skardu-heaven-on-earth",
+  "chitral-kailash-gol-4day",
+  "old-lahore-day-tour",
+  "historical-sindh-3day",
+  "sharan-forest-3day",
+  "galiyat-nathiagali-3day",
+  "gwadar-makran-3day",
+  "swat-kalam-malam-jabba-4day",
+];
+
+export const getFeaturedPackages = cache(async (): Promise<Package[]> => {
+  const supabase = getSupabaseAnon();
+  const { data, error } = await supabase
+    .from("packages")
+    .select("*")
+    .in("slug", FEATURED_PACKAGE_SLUGS);
+
+  if (error) throw new Error(`getFeaturedPackages: ${error.message}`);
+  const rows = (data as unknown as PackageRow[]).map(toPackage);
+  // Return in the defined display order
+  return FEATURED_PACKAGE_SLUGS.flatMap((slug) => rows.filter((p) => p.slug === slug));
 });
 
 export const getPackagesByDestination = cache(

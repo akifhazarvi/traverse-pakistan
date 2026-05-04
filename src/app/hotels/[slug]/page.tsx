@@ -14,9 +14,15 @@ import {
   combineSchemas,
 } from "@/lib/seo/schema";
 import { formatPrice } from "@/lib/utils";
+import { applyHotelMargin } from "@/lib/constants";
 import { getHotelBySlug, getAllHotels, getHotelsByDestination } from "@/services/hotel.service";
+import { listR2Images } from "@/lib/r2";
 import Link from "next/link";
 import { HotelBookingSidebar } from "@/components/hotels/HotelBookingSidebar";
+import { RoomImageCarousel } from "@/components/hotels/RoomImageCarousel";
+
+// Hotel pages re-validate every hour so R2 image uploads are picked up without a full rebuild
+export const revalidate = 3600;
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -56,7 +62,23 @@ export default async function HotelDetailPage({ params }: Props) {
   if (!hotel) notFound();
 
   const moreHotels = (await getHotelsByDestination(hotel.destinationSlug)).filter((h) => h.slug !== slug);
-  const galleryImages = hotel.images.map((url, i) => ({ url, alt: `${hotel.name} photo ${i + 1}` }));
+
+  // Fetch gallery + per-room images from R2 in parallel; fall back to static data if empty
+  const base = `hotels/${hotel.slug}`;
+  const roomFolders = hotel.rooms.map((r) => r.folder ?? null);
+  const [r2Gallery, ...r2RoomImages] = await Promise.all([
+    listR2Images(`${base}/gallery/`),
+    ...roomFolders.map((f) => (f ? listR2Images(`${base}/rooms/${f}/`) : Promise.resolve([]))),
+  ]);
+
+  const galleryUrls = r2Gallery.length > 0 ? r2Gallery : hotel.images;
+  const galleryImages = galleryUrls.map((url, i) => ({ url, alt: `${hotel.name} photo ${i + 1}` }));
+
+  // Map room index → R2 image list (falls back to [] → component uses room.image)
+  const roomImagesMap: Record<number, string[]> = {};
+  hotel.rooms.forEach((_, i) => {
+    if (r2RoomImages[i]?.length) roomImagesMap[i] = r2RoomImages[i];
+  });
 
   const schema = combineSchemas(
     hotelSchema(hotel),
@@ -160,23 +182,40 @@ export default async function HotelDetailPage({ params }: Props) {
             <div className="py-8 border-b border-[var(--border-default)]" id="rooms">
               <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6">Where you&apos;ll sleep</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {hotel.rooms.map((room) => (
+                {hotel.rooms.map((room, i) => {
+                  const r2imgs = roomImagesMap[i] ?? [];
+                  return (
                   <div key={room.name} className="rounded-[var(--radius-md)] border border-[var(--border-default)] overflow-hidden">
-                    <div className="relative aspect-[3/2]">
-                      <Image src={room.image} alt={room.name} fill className="object-cover" sizes="300px" />
-                      <span className={`absolute top-2 right-2 px-2 py-0.5 text-[10px] font-bold uppercase rounded-[var(--radius-full)] ${room.available <= 2 ? "bg-[var(--warning)] text-[var(--on-dark)]" : "bg-[var(--bg-primary)]/80 backdrop-blur-sm text-[var(--text-primary)]"}`}>
-                        {room.available} left
-                      </span>
-                    </div>
+                    <RoomImageCarousel
+                      images={r2imgs}
+                      fallback={room.image}
+                      alt={room.name}
+                      available={room.available}
+                    />
                     <div className="p-4">
                       <h3 className="text-[15px] font-bold text-[var(--text-primary)]">{room.name}</h3>
                       <p className="text-[13px] text-[var(--text-tertiary)] mt-0.5">{room.beds}</p>
-                      <p className="text-[16px] font-bold text-[var(--text-primary)] mt-2 tabular-nums">
-                        {formatPrice(room.price)} <span className="text-[13px] font-normal text-[var(--text-tertiary)]">/ night</span>
-                      </p>
+                      {room.prices ? (
+                        <div className="mt-2 space-y-0.5">
+                          {room.prices.map((sp) => (
+                            <div key={sp.season} className="flex items-center justify-between">
+                              <span className="text-[11px] text-[var(--text-tertiary)]">{sp.season}</span>
+                              <span className="text-[13px] font-semibold text-[var(--text-primary)] tabular-nums">
+                                {formatPrice(applyHotelMargin(sp.price))}
+                              </span>
+                            </div>
+                          ))}
+                          <p className="text-[10px] text-[var(--text-tertiary)] pt-0.5">/ night · rates vary by season</p>
+                        </div>
+                      ) : (
+                        <p className="text-[16px] font-bold text-[var(--text-primary)] mt-2 tabular-nums">
+                          {formatPrice(room.price)} <span className="text-[13px] font-normal text-[var(--text-tertiary)]">/ night</span>
+                        </p>
+                      )}
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
@@ -252,6 +291,16 @@ export default async function HotelDetailPage({ params }: Props) {
                   </ul>
                 </div>
               </div>
+
+              {/* Tax note */}
+              {hotel.taxNote && (
+                <div className="mt-8 flex items-start gap-3 px-4 py-3 bg-[var(--bg-subtle)] border border-[var(--border-default)] rounded-[var(--radius-sm)]">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2" className="shrink-0 mt-0.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <p className="text-[13px] text-[var(--text-secondary)]">{hotel.taxNote}</p>
+                </div>
+              )}
             </div>
           </div>
 

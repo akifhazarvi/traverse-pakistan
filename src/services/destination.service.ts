@@ -31,6 +31,7 @@ function toDestination(row: DestinationWithRegion): Destination {
     opening: local?.opening,
     regionSlug: row.regions?.slug ?? "",
     parentSlug: row.parent_id ?? null,
+    ancestorSlugs: [],
     heroImage: row.hero_image ?? "",
     elevation: row.elevation ?? undefined,
     tourCount: 0,
@@ -47,6 +48,16 @@ function toDestination(row: DestinationWithRegion): Destination {
   };
 }
 
+function buildAncestorSlugs(slug: string, slugToParent: Record<string, string | null>): string[] {
+  const ancestors: string[] = [];
+  let current = slugToParent[slug];
+  while (current) {
+    ancestors.push(current);
+    current = slugToParent[current] ?? null;
+  }
+  return ancestors;
+}
+
 const DESTINATION_QUERY = "*, regions ( slug, name )";
 
 const _fetchAllDestinations = unstable_cache(
@@ -61,13 +72,18 @@ const _fetchAllDestinations = unstable_cache(
     const rows = data as unknown as DestinationWithRegion[];
 
     const idToSlug = Object.fromEntries(rows.map((r) => [r.id, r.slug]));
+    const slugToParent: Record<string, string | null> = Object.fromEntries(
+      rows.map((r) => [r.slug, r.parent_id ? (idToSlug[r.parent_id] ?? null) : null])
+    );
 
-    return rows.map((row) => ({
-      ...toDestination(row),
-      parentSlug: row.parent_id
-        ? (idToSlug[row.parent_id] ?? row.parent_id)
-        : null,
-    }));
+    return rows.map((row) => {
+      const parentSlug = row.parent_id ? (idToSlug[row.parent_id] ?? null) : null;
+      return {
+        ...toDestination(row),
+        parentSlug,
+        ancestorSlugs: buildAncestorSlugs(row.slug, slugToParent),
+      };
+    });
   },
   ["all-destinations"],
   { tags: ["destinations"], revalidate: 86400 }
@@ -76,20 +92,10 @@ const _fetchAllDestinations = unstable_cache(
 // React cache deduplicates within a single request on top of the Next.js Data Cache
 export const getAllDestinations = cache(_fetchAllDestinations);
 
-export const getDestinationBySlug = cache(
-  async (slug: string): Promise<Destination | null> => {
-    const supabase = getSupabaseAnon();
-    const { data, error } = await supabase
-      .from("destinations")
-      .select(DESTINATION_QUERY)
-      .eq("slug", slug)
-      .single();
-
-    if (error?.code === "PGRST116") return null;
-    if (error) throw new Error(`getDestinationBySlug: ${error.message}`);
-    return toDestination(data as unknown as DestinationWithRegion);
-  }
-);
+export const getDestinationBySlug = cache(async (slug: string): Promise<Destination | null> => {
+  const all = await getAllDestinations();
+  return all.find((d) => d.slug === slug) ?? null;
+});
 
 export const getDestinationsByRegion = cache(
   async (regionSlug: string): Promise<Destination[]> => {
