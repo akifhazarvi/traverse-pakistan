@@ -3638,7 +3638,7 @@ export const packageItineraries: PackageItinerary[] = [
         dayNumber: 8,
         title: "Multan → Harappa → Lahore",
         description: "Morning in Multan's old city — visit Multan Fort and the Walled City gates. Drive north to Harappa, the lesser-visited twin of Mohen Jo Daro in the Indus Valley Civilisation. Walk the excavation mounds and the Harappa Museum before pushing on to Lahore. Arrive in time for dinner at the legendary Cooco's Den restaurant above the old city.",
-        hotels: { deluxe: "nine-tree-lahore", luxury: "ambiance-lahore" },
+        hotels: { deluxe: "nine-tree-lahore", luxury: "ambiance-boutique-lahore" },
         stops: [
           { name: "Hotel, Multan", detail: "Breakfast 08:00 am" },
           { name: "Multan Fort & Walled City gates", detail: "Visit 09:00 am" },
@@ -3655,7 +3655,7 @@ export const packageItineraries: PackageItinerary[] = [
         dayNumber: 9,
         title: "Lahore — Walled City, Lahore Fort & Badshahi Mosque",
         description: "A full day in Lahore's Mughal heart. Begin at Lahore Fort — the great Mughal citadel with Sheesh Mahal (Mirror Palace), Naulakha Pavilion and the Jahangir Quadrangle. Cross the road to Badshahi Mosque, one of the world's largest. Walk through the Delhi Gate into the old Walled City, visiting Wazir Khan Mosque with its exquisite kashi tile-work, the Food Street at Gawalmandi for lunch, and the Fakir Khana Museum — Pakistan's finest private art collection.",
-        hotels: { deluxe: "nine-tree-lahore", luxury: "ambiance-lahore" },
+        hotels: { deluxe: "nine-tree-lahore", luxury: "ambiance-boutique-lahore" },
         stops: [
           { name: "Hotel, Lahore", detail: "Breakfast 08:30 am" },
           { name: "Lahore Fort", detail: "Visit 09:30 am" },
@@ -3763,7 +3763,7 @@ export const packageItineraries: PackageItinerary[] = [
         dayNumber: 5,
         title: "Karachi → Lahore (Flight) → Lahore Walled City",
         description: "Morning flight from Karachi to Lahore. After hotel check-in, spend the afternoon in the Walled City — Lahore Fort, Badshahi Mosque and Wazir Khan Mosque. Evening dinner at the New Food Street by Roshnai Gate.",
-        hotels: { deluxe: "nine-tree-lahore", luxury: "ambiance-lahore" },
+        hotels: { deluxe: "nine-tree-lahore", luxury: "ambiance-boutique-lahore" },
         stops: [
           { name: "Hotel, Karachi", detail: "Breakfast & checkout 07:00 am" },
           { name: "Karachi Airport", detail: "Departure (morning flight)" },
@@ -3780,7 +3780,7 @@ export const packageItineraries: PackageItinerary[] = [
         dayNumber: 6,
         title: "Nankana Sahib → Kasur → Lahore",
         description: "Day trip from Lahore. Begin at Nankana Sahib — the birthplace of Guru Nanak Dev Ji, founder of Sikhism, with its seven historic gurdwaras. Continue to Kasur to pay respects at the shrine of Bulleh Shah, the great Punjabi Sufi poet. Return to Lahore for dinner and the Fakir Khana Museum.",
-        hotels: { deluxe: "nine-tree-lahore", luxury: "ambiance-lahore" },
+        hotels: { deluxe: "nine-tree-lahore", luxury: "ambiance-boutique-lahore" },
         stops: [
           { name: "Hotel, Lahore", detail: "Breakfast 08:00 am" },
           { name: "Nankana Sahib Gurdwaras", detail: "Visit 09:30 am" },
