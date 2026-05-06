@@ -39,7 +39,7 @@ function isInRange(d: Date, start: Date | null, end: Date | null) {
 type ActiveField = "destination" | "when" | "travelers" | "month" | "groupsize" | "checkin" | "checkout" | "guests" | null;
 
 // ── Calendar Panel ──────────────────────────────────────────────────────────
-function CalendarPanel({
+export function CalendarPanel({
   rangeMode,
   startDate,
   endDate,
@@ -213,7 +213,7 @@ function CalendarPanel({
 }
 
 // ── Stays Calendar (two months, Airbnb Stays style) ─────────────────────────
-function StaysCalendarPanel({
+export function StaysCalendarPanel({
   startDate,
   endDate,
   onSelect,
@@ -487,14 +487,35 @@ export function SearchWidget({
   }, []);
 
   const isDestSearchPrefilled = !!selectedDest && destSearch === (destinations.find((d) => d.slug === selectedDest)?.name ?? "");
-  const parentDests = destinations.filter((d) => !d.parentSlug);
+  const PINNED = ["hunza", "skardu", "chitral", "naran", "kumrat", "lahore"];
+  const parentDests = destinations
+    .filter((d) => !d.parentSlug)
+    .sort((a, b) => {
+      const ai = PINNED.indexOf(a.slug);
+      const bi = PINNED.indexOf(b.slug);
+      if (ai !== -1 && bi !== -1) return ai - bi;
+      if (ai !== -1) return -1;
+      if (bi !== -1) return 1;
+      return a.name.localeCompare(b.name);
+    });
   const filteredDests = !destSearch || isDestSearchPrefilled
     ? parentDests
-    : destinations.filter(
-        (d) =>
-          d.name.toLowerCase().includes(destSearch.toLowerCase()) ||
-          d.region.toLowerCase().includes(destSearch.toLowerCase())
-      );
+    : destinations
+        .filter(
+          (d) =>
+            d.name.toLowerCase().includes(destSearch.toLowerCase()) ||
+            d.region.toLowerCase().includes(destSearch.toLowerCase())
+        )
+        .sort((a, b) => {
+          const q = destSearch.toLowerCase();
+          const aStarts = a.name.toLowerCase().startsWith(q);
+          const bStarts = b.name.toLowerCase().startsWith(q);
+          if (aStarts !== bStarts) return aStarts ? -1 : 1;
+          const aParent = !a.parentSlug;
+          const bParent = !b.parentSlug;
+          if (aParent !== bParent) return aParent ? -1 : 1;
+          return a.name.localeCompare(b.name);
+        });
 
   const selectedDestName = destinations.find((d) => d.slug === selectedDest)?.name;
   const totalTravelers = travelers.adults + travelers.children + travelers.infants;
