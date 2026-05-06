@@ -40,7 +40,7 @@ function isInRange(d: Date, start: Date | null, end: Date | null) {
 type ActiveField = "destination" | "when" | "travelers" | "month" | "groupsize" | "checkin" | "checkout" | "guests" | null;
 
 // ── Calendar Panel ──────────────────────────────────────────────────────────
-function CalendarPanel({
+export function CalendarPanel({
   rangeMode,
   startDate,
   endDate,
@@ -222,7 +222,7 @@ function computeFlexEnd(start: Date, dur: FlexDuration): Date {
   return new Date(start.getFullYear(), start.getMonth() + 1, 0);
 }
 
-function StaysCalendarPanel({
+export function StaysCalendarPanel({
   startDate,
   endDate,
   onSelect,
@@ -536,7 +536,17 @@ export function SearchWidget({
   }, []);
 
   const isDestSearchPrefilled = !!selectedDest && destSearch === (destinations.find((d) => d.slug === selectedDest)?.name ?? "");
-  const parentDests = destinations.filter((d) => !d.parentSlug);
+  const PINNED = ["hunza", "skardu", "chitral", "naran", "kumrat", "lahore"];
+  const parentDests = destinations
+    .filter((d) => !d.parentSlug)
+    .sort((a, b) => {
+      const ai = PINNED.indexOf(a.slug);
+      const bi = PINNED.indexOf(b.slug);
+      if (ai !== -1 && bi !== -1) return ai - bi;
+      if (ai !== -1) return -1;
+      if (bi !== -1) return 1;
+      return a.name.localeCompare(b.name);
+    });
   const filteredDests = !destSearch || isDestSearchPrefilled
     ? parentDests
     : destinations
