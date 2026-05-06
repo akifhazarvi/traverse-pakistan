@@ -255,6 +255,31 @@ export function HotelBookingSidebar({ hotel }: HotelBookingSidebarProps) {
   const calRef = useRef<HTMLDivElement>(null);
   const guestsRef = useRef<HTMLDivElement>(null);
 
+  // Pre-fill from search widget session
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("tp_search");
+      if (!raw) return;
+      const s = JSON.parse(raw) as {
+        startDate?: string;
+        endDate?: string;
+        travelers?: { adults: number; children: number; infants: number };
+      };
+      if (s.startDate) {
+        const d = new Date(s.startDate);
+        setCheckIn(d);
+        setCalYear(d.getFullYear());
+        setCalMonth(d.getMonth());
+      }
+      if (s.endDate) setCheckOut(new Date(s.endDate));
+      if (s.travelers) {
+        setAdults(Math.max(1, s.travelers.adults));
+        setChildren(s.travelers.children);
+        setInfants(s.travelers.infants);
+      }
+    } catch { /* ignore */ }
+  }, []);
+
   useEffect(() => {
     function handleOutside(e: MouseEvent) {
       if (calRef.current && !calRef.current.contains(e.target as Node)) setCalOpen(false);
@@ -284,6 +309,7 @@ export function HotelBookingSidebar({ hotel }: HotelBookingSidebarProps) {
       } else {
         setCheckOut(date);
         setCalOpen(false);
+        setGuestsOpen(true);
       }
     }
   }
