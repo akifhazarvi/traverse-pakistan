@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { Icon } from "@/components/ui/Icon";
 import { useState, useRef, useEffect, useId } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
@@ -39,7 +40,7 @@ function isInRange(d: Date, start: Date | null, end: Date | null) {
 type ActiveField = "destination" | "when" | "travelers" | "month" | "groupsize" | "checkin" | "checkout" | "guests" | null;
 
 // ── Calendar Panel ──────────────────────────────────────────────────────────
-function CalendarPanel({
+export function CalendarPanel({
   rangeMode,
   startDate,
   endDate,
@@ -213,14 +214,24 @@ function CalendarPanel({
 }
 
 // ── Stays Calendar (two months, Airbnb Stays style) ─────────────────────────
-function StaysCalendarPanel({
+type FlexDuration = "weekend" | "week" | "month";
+
+function computeFlexEnd(start: Date, dur: FlexDuration): Date {
+  if (dur === "weekend") { const d = new Date(start); d.setDate(d.getDate() + 2); return d; }
+  if (dur === "week") { const d = new Date(start); d.setDate(d.getDate() + 7); return d; }
+  return new Date(start.getFullYear(), start.getMonth() + 1, 0);
+}
+
+export function StaysCalendarPanel({
   startDate,
   endDate,
   onSelect,
+  onFlexSelect,
 }: {
   startDate: Date | null;
   endDate: Date | null;
   onSelect: (date: Date) => void;
+  onFlexSelect?: (start: Date, end: Date) => void;
 }) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -228,7 +239,8 @@ function StaysCalendarPanel({
   const [viewMonth, setViewMonth] = useState(today.getMonth());
   const [hovered, setHovered] = useState<Date | null>(null);
   const [mode, setMode] = useState<"dates" | "flexible">("dates");
-  const [flexibility, setFlexibility] = useState<string>("exact");
+  const [flexDuration, setFlexDuration] = useState<FlexDuration | null>(null);
+  const [flexMonth, setFlexMonth] = useState<Date | null>(null);
 
   const secondMonth = viewMonth === 11 ? 0 : viewMonth + 1;
   const secondYear = viewMonth === 11 ? viewYear + 1 : viewYear;
@@ -247,14 +259,19 @@ function StaysCalendarPanel({
   const effectiveStart = startDate && !endDate && hovered && hovered < startDate
     ? hovered : startDate;
 
-  const flexOptions = [
-    { label: "Exact dates", value: "exact" },
-    { label: "± 1 day", value: "1" },
-    { label: "± 2 days", value: "2" },
-    { label: "± 3 days", value: "3" },
-    { label: "± 7 days", value: "7" },
-    { label: "± 14 days", value: "14" },
-  ];
+  function handleFlexDuration(dur: FlexDuration) {
+    setFlexDuration(dur);
+    if (flexMonth && onFlexSelect) onFlexSelect(flexMonth, computeFlexEnd(flexMonth, dur));
+  }
+
+  function handleFlexMonth(monthStart: Date) {
+    setFlexMonth(monthStart);
+    if (flexDuration && onFlexSelect) onFlexSelect(monthStart, computeFlexEnd(monthStart, flexDuration));
+  }
+
+  const upcomingMonths = Array.from({ length: 12 }, (_, i) =>
+    new Date(today.getFullYear(), today.getMonth() + i, 1)
+  );
 
   function renderMonth(year: number, month: number, showPrev: boolean, showNext: boolean) {
     const firstDay = new Date(year, month, 1).getDay();
@@ -354,48 +371,80 @@ function StaysCalendarPanel({
         </div>
       </div>
 
-      {/* Two-month grid */}
-      <div className="flex gap-8 px-8 py-3">
-        {renderMonth(viewYear, viewMonth, true, false)}
-        <div className="w-px bg-[var(--border-default)] shrink-0" />
-        {renderMonth(secondYear, secondMonth, false, true)}
-      </div>
-
-      {/* Flexibility pills */}
-      <div className="px-8 pb-3 border-t border-[var(--border-default)] pt-3">
-        <div className="flex items-center gap-2 flex-wrap">
-          {flexOptions.map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => setFlexibility(opt.value)}
-              className={cn(
-                "h-9 px-4 rounded-full text-[13px] font-medium border transition-all cursor-pointer",
-                flexibility === opt.value
-                  ? "border-[var(--text-primary)] bg-[var(--bg-subtle)] text-[var(--text-primary)] font-semibold"
-                  : "border-[var(--border-default)] text-[var(--text-secondary)] hover:border-[var(--border-strong)]"
-              )}
-            >
-              {opt.label}
+      {/* Dates mode — two-month calendar */}
+      {mode === "dates" && (
+        <>
+          <div className="flex gap-8 px-8 py-3">
+            {renderMonth(viewYear, viewMonth, true, false)}
+            <div className="w-px bg-[var(--border-default)] shrink-0" />
+            {renderMonth(secondYear, secondMonth, false, true)}
+          </div>
+          <div className="px-8 pb-4 border-t border-[var(--border-default)] pt-3 flex items-center justify-between">
+            <button type="button" onClick={() => onSelect(new Date(0))}
+              className="text-[13px] font-semibold text-[var(--text-primary)] underline hover:text-[var(--primary)] cursor-pointer">
+              Clear dates
             </button>
-          ))}
-        </div>
-      </div>
+            {startDate && endDate && (
+              <p className="text-[13px] text-[var(--text-tertiary)]">
+                {nights} night{nights !== 1 ? "s" : ""}
+              </p>
+            )}
+          </div>
+        </>
+      )}
 
-      {/* Footer */}
-      <div className="px-8 pb-4 flex items-center justify-between">
-        <button type="button"
-          onClick={() => onSelect(new Date(0))}
-          className="text-[13px] font-semibold text-[var(--text-primary)] underline hover:text-[var(--primary)] cursor-pointer">
-          Clear dates
-        </button>
-        {startDate && endDate && (
-          <p className="text-[13px] text-[var(--text-tertiary)]">
-            {nights} night{nights !== 1 ? "s" : ""}
-            {flexibility !== "exact" ? ` ± ${flexibility} day${flexibility !== "1" ? "s" : ""}` : ""}
-          </p>
-        )}
-      </div>
+      {/* Flexible mode — duration + month cards */}
+      {mode === "flexible" && (
+        <div className="px-8 py-6 space-y-6">
+          <div className="text-center">
+            <p className="text-[15px] font-semibold text-[var(--text-primary)] mb-4">How long would you like to stay?</p>
+            <div className="flex justify-center gap-3">
+              {(["weekend", "week", "month"] as FlexDuration[]).map((dur) => (
+                <button
+                  key={dur}
+                  type="button"
+                  onClick={() => handleFlexDuration(dur)}
+                  className={cn(
+                    "h-10 px-6 rounded-full text-[14px] font-medium border transition-all cursor-pointer",
+                    flexDuration === dur
+                      ? "border-[var(--text-primary)] bg-[var(--bg-subtle)] text-[var(--text-primary)] font-semibold"
+                      : "border-[var(--border-default)] text-[var(--text-secondary)] hover:border-[var(--border-strong)]"
+                  )}
+                >
+                  {dur === "weekend" ? "Weekend" : dur === "week" ? "Week" : "Month"}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-[15px] font-semibold text-[var(--text-primary)] mb-4 text-center">Go anytime</p>
+            <div className="flex gap-3 overflow-x-auto pb-2">
+              {upcomingMonths.map((d, i) => {
+                const isSelected = flexMonth
+                  && d.getFullYear() === flexMonth.getFullYear()
+                  && d.getMonth() === flexMonth.getMonth();
+                return (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => handleFlexMonth(d)}
+                    className={cn(
+                      "shrink-0 flex flex-col items-center gap-2 w-[110px] py-4 px-3 rounded-[var(--radius-md)] border transition-all cursor-pointer",
+                      isSelected
+                        ? "border-[var(--text-primary)] bg-[var(--bg-subtle)]"
+                        : "border-[var(--border-default)] hover:border-[var(--border-strong)]"
+                    )}
+                  >
+                    <Icon name="calendar" size={24} color="var(--text-secondary)" />
+                    <span className="text-[14px] font-semibold text-[var(--text-primary)]">{MONTH_NAMES[d.getMonth()]}</span>
+                    <span className="text-[12px] text-[var(--text-tertiary)]">{d.getFullYear()}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -487,14 +536,35 @@ export function SearchWidget({
   }, []);
 
   const isDestSearchPrefilled = !!selectedDest && destSearch === (destinations.find((d) => d.slug === selectedDest)?.name ?? "");
-  const parentDests = destinations.filter((d) => !d.parentSlug);
+  const PINNED = ["hunza", "skardu", "chitral", "naran", "kumrat", "lahore"];
+  const parentDests = destinations
+    .filter((d) => !d.parentSlug)
+    .sort((a, b) => {
+      const ai = PINNED.indexOf(a.slug);
+      const bi = PINNED.indexOf(b.slug);
+      if (ai !== -1 && bi !== -1) return ai - bi;
+      if (ai !== -1) return -1;
+      if (bi !== -1) return 1;
+      return a.name.localeCompare(b.name);
+    });
   const filteredDests = !destSearch || isDestSearchPrefilled
     ? parentDests
-    : destinations.filter(
-        (d) =>
-          d.name.toLowerCase().includes(destSearch.toLowerCase()) ||
-          d.region.toLowerCase().includes(destSearch.toLowerCase())
-      );
+    : destinations
+        .filter(
+          (d) =>
+            d.name.toLowerCase().includes(destSearch.toLowerCase()) ||
+            d.region.toLowerCase().includes(destSearch.toLowerCase())
+        )
+        .sort((a, b) => {
+          const q = destSearch.toLowerCase();
+          const aStarts = a.name.toLowerCase().startsWith(q);
+          const bStarts = b.name.toLowerCase().startsWith(q);
+          if (aStarts !== bStarts) return aStarts ? -1 : 1;
+          const aParent = !a.parentSlug;
+          const bParent = !b.parentSlug;
+          if (aParent !== bParent) return aParent ? -1 : 1;
+          return a.name.localeCompare(b.name);
+        });
 
   const selectedDestName = destinations.find((d) => d.slug === selectedDest)?.name;
   const totalTravelers = travelers.adults + travelers.children + travelers.infants;
@@ -775,6 +845,11 @@ export function SearchWidget({
               startDate={startDate}
               endDate={endDate}
               onSelect={handleCalendarSelect}
+              onFlexSelect={(start, end) => {
+                setStartDate(start);
+                setEndDate(end);
+                setActiveField("guests");
+              }}
             />
           </DropdownPanel>
         )}
