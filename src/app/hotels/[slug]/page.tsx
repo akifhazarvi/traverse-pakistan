@@ -19,7 +19,7 @@ import { getHotelBySlug, getAllHotels, getHotelsByDestination } from "@/services
 import { listR2Images } from "@/lib/r2";
 import Link from "next/link";
 import { HotelBookingSidebar } from "@/components/hotels/HotelBookingSidebar";
-import { RoomImageCarousel } from "@/components/hotels/RoomImageCarousel";
+import { HotelRoomsBookingClient } from "@/components/hotels/HotelRoomsBookingClient";
 
 // Hotel pages re-validate every hour so R2 image uploads are picked up without a full rebuild
 export const revalidate = 3600;
@@ -80,6 +80,14 @@ export default async function HotelDetailPage({ params }: Props) {
     if (r2RoomImages[i]?.length) roomImagesMap[i] = r2RoomImages[i];
   });
 
+  // Pre-compute display prices server-side so applyHotelMargin never ships to the client bundle
+  const roomDisplayPrices: Record<string, { season: string; price: number }[] | null> = {};
+  hotel.rooms.forEach((room) => {
+    roomDisplayPrices[room.name] = room.prices
+      ? room.prices.map((sp) => ({ season: sp.season, price: applyHotelMargin(sp.price) }))
+      : null;
+  });
+
   const schema = combineSchemas(
     hotelSchema(hotel),
     breadcrumbSchema([
@@ -90,7 +98,7 @@ export default async function HotelDetailPage({ params }: Props) {
   );
 
   return (
-    <div className="py-6 sm:py-8">
+    <div className="pt-0 sm:pt-6 pb-24 sm:pb-8">
       <JsonLd data={schema} id={`hotel-${hotel.slug}-jsonld`} />
       <Container>
         {/* Breadcrumb */}
@@ -102,7 +110,7 @@ export default async function HotelDetailPage({ params }: Props) {
         />
 
         {/* Gallery */}
-        <div className="mt-5">
+        <div className="mt-1 sm:mt-5">
           <MosaicGallery images={galleryImages} tourName={hotel.name} />
         </div>
 
@@ -178,46 +186,8 @@ export default async function HotelDetailPage({ params }: Props) {
               <p className="text-[15px] text-[var(--text-secondary)] leading-[1.7]">{hotel.description}</p>
             </div>
 
-            {/* Rooms */}
-            <div className="py-8 border-b border-[var(--border-default)]" id="rooms">
-              <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6">Where you&apos;ll sleep</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {hotel.rooms.map((room, i) => {
-                  const r2imgs = roomImagesMap[i] ?? [];
-                  return (
-                  <div key={room.name} className="rounded-[var(--radius-md)] border border-[var(--border-default)] overflow-hidden">
-                    <RoomImageCarousel
-                      images={r2imgs}
-                      fallback={room.image}
-                      alt={room.name}
-                      available={room.available}
-                    />
-                    <div className="p-4">
-                      <h3 className="text-[15px] font-bold text-[var(--text-primary)]">{room.name}</h3>
-                      <p className="text-[13px] text-[var(--text-tertiary)] mt-0.5">{room.beds}</p>
-                      {room.prices ? (
-                        <div className="mt-2 space-y-0.5">
-                          {room.prices.map((sp) => (
-                            <div key={sp.season} className="flex items-center justify-between">
-                              <span className="text-[11px] text-[var(--text-tertiary)]">{sp.season}</span>
-                              <span className="text-[13px] font-semibold text-[var(--text-primary)] tabular-nums">
-                                {formatPrice(applyHotelMargin(sp.price))}
-                              </span>
-                            </div>
-                          ))}
-                          <p className="text-[10px] text-[var(--text-tertiary)] pt-0.5">/ night · rates vary by season</p>
-                        </div>
-                      ) : (
-                        <p className="text-[16px] font-bold text-[var(--text-primary)] mt-2 tabular-nums">
-                          {formatPrice(room.price)} <span className="text-[13px] font-normal text-[var(--text-tertiary)]">/ night</span>
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  );
-                })}
-              </div>
-            </div>
+            {/* Rooms — client component handles mobile tap-to-select + booking bar */}
+            <HotelRoomsBookingClient hotel={hotel} roomImagesMap={roomImagesMap} roomDisplayPrices={roomDisplayPrices} />
 
             {/* Amenities */}
             <div className="py-8 border-b border-[var(--border-default)]" id="amenities">
@@ -345,23 +315,6 @@ export default async function HotelDetailPage({ params }: Props) {
           </section>
         )}
 
-        {/* Mobile sticky bar */}
-        <div className="fixed bottom-0 left-0 right-0 lg:hidden z-40 bg-[var(--bg-primary)] border-t border-[var(--border-default)] px-5 py-3 flex items-center justify-between">
-          <div>
-            <span className="text-lg font-bold text-[var(--text-primary)] tabular-nums">{formatPrice(hotel.pricePerNight)}</span>
-            <span className="text-[13px] text-[var(--text-tertiary)]"> / night</span>
-            <p className="text-[12px] text-[var(--text-tertiary)] inline-flex items-center gap-1">
-              <Icon name="star" size="xs" weight="fill" color="var(--primary-muted)" />
-              {hotel.rating} · {hotel.reviewCount} reviews
-            </p>
-          </div>
-          <Link
-            href={`/hotels/${hotel.slug}/checkout`}
-            className="h-11 px-6 bg-[var(--primary)] text-[var(--on-dark)] text-[14px] font-semibold rounded-[var(--radius-full)] flex items-center justify-center hover:bg-[var(--primary-hover)] transition-colors"
-          >
-            Book Now
-          </Link>
-        </div>
       </Container>
     </div>
   );

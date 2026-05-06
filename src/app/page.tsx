@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { HeroSection } from "@/components/home/HeroSection";
+import { MobileHomeContent } from "@/components/home/MobileHomeContent";
 import { getDestinationOptions } from "@/services/destination.service";
 import { StatsBar } from "@/components/home/StatsBar";
 import { PopularToursCarousel } from "@/components/home/PopularToursCarousel";
@@ -39,8 +40,13 @@ export default async function Home() {
 
   return (
     <>
+      {/* Desktop hero — hidden on mobile */}
       <HeroSection destinations={destinations} />
-      <StatsBar />
+
+      {/* Mobile home — search pill + tabs + featured cards */}
+      <MobileHomeContent destinations={destinations} />
+
+      <div className="hidden md:block"><StatsBar /></div>
       <FeaturedPackagesCarousel />
       <PopularToursCarousel />
       <FeaturedHotels />
