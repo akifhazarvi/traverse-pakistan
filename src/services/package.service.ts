@@ -5,6 +5,22 @@ import type { PackageRow, PackageItineraryDayRow } from "@/lib/supabase/types";
 import type { Package } from "@/types/package";
 import type { PackageItinerary, PackageItineraryDay } from "@/types/package";
 
+function shuffleGallery(slug: string, images: Package["images"]): Package["images"] {
+  if (images.length <= 1) return images;
+  const coverIdx = images.findIndex(img => /\/cover\./i.test(img.url));
+  const result = coverIdx >= 0
+    ? [images[coverIdx], ...images.filter((_, i) => i !== coverIdx)]
+    : [...images];
+  let seed = 0;
+  for (let i = 0; i < slug.length; i++) seed = (seed * 31 + slug.charCodeAt(i)) & 0x7fffffff;
+  for (let i = result.length - 1; i > 1; i--) {
+    seed = (seed * 1664525 + 1013904223) & 0x7fffffff;
+    const j = 1 + (seed % i);
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
 function toPackage(row: PackageRow): Package {
   return {
     id: row.id,
@@ -23,7 +39,7 @@ function toPackage(row: PackageRow): Package {
     languages: row.languages ?? [],
     freeCancellation: row.free_cancellation,
     reserveNowPayLater: row.reserve_now_pay_later,
-    images: (row.images as Package["images"]) ?? [],
+    images: shuffleGallery(row.slug, ((row.images as string[] | null) ?? []).map((url) => ({ url: encodeURI(url), alt: row.name }))),
     highlights: row.highlights ?? [],
     inclusions: row.inclusions ?? [],
     exclusions: row.exclusions ?? [],
@@ -104,6 +120,7 @@ export const getPackageItinerary = cache(async (slug: string): Promise<PackageIt
 const FEATURED_PACKAGE_SLUGS = [
   "northern-pakistan-grand-tour",
   "hunza-valley-escape",
+  "pakistan-historical-12day",
   "skardu-heaven-on-earth",
   "chitral-kailash-gol-4day",
   "old-lahore-day-tour",
